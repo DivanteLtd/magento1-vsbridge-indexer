@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+    <sections>
+        <vuestorefront>
+            <label>VueStorefront</label>
+            <tab>advanced</tab>
+            <frontend_type>text</frontend_type>
+            <sort_order>99990</sort_order>
+            <show_in_default>1</show_in_default>
+            <show_in_website>1</show_in_website>
+            <show_in_store>1</show_in_store>
+            <groups>
+                <es_client>
+                    <label>Elasticsearch Client</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>1</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <host translate="label">
+                            <label>Elasticsearch host</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <validate>required-entry</validate>
+                        </host>
+                        <port translate="label">
+                            <label>Elasticsearch port number</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>20</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <validate>required-entry</validate>
+                        </port>
+                        <enable_https_mode>
+                            <label>Use HTTPS</label>
+                            <comment>Select yes if you want to connect to your Elasticsearch server over HTTPS.</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </enable_https_mode>
+                        <enable_http_auth>
+                            <label>Enable basic HTTP authentication</label>
+                            <comment>Enable this option when your Elasticsearch server use basic HTTP authentication.</comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </enable_http_auth>
+                        <auth_user>
+                            <label>Basic HTTP authentication user</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <enable_http_auth>1</enable_http_auth>
+                            </depends>
+                        </auth_user>
+                        <auth_pwd>
+                            <label>Basic HTTP authentication password</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <depends>
+                                <enable_http_auth>1</enable_http_auth>
+                            </depends>
+                        </auth_pwd>
+                    </fields>
+                </es_client>
+                <indices_settings>
+                    <label>Indices Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>20</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <batch_indexing_size>
+                            <label>Batch Indexing Size</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <validate>required-entry</validate>
+                        </batch_indexing_size>
+                        <index_name>
+                            <label>Index name prefix</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <validate>required-entry</validate>
+                            <comment>defaut name: "vue_storefront_magento". For each store view, store id will be added to index name, e.g. "vue_storefront_magento_1"</comment>
+                        </index_name>
+                    </fields>
+                </indices_settings>
+            </groups>
+        </vuestorefront>
+    </sections>
+</config>

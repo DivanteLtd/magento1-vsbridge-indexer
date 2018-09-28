@@ -1,0 +1,4 @@
+src/app/code/community/Divante/VueStorefrontIndexer app/code/community/Divante/VueStorefrontIndexer/
+src/app/etc/modules/*    app/etc/modules/
+src/shell/* shell/
+src/lib/* lib/

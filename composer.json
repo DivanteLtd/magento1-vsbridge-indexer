@@ -1,0 +1,15 @@
+{
+    "name": "divante/VueStorefrontIndexer",
+    "license": "",
+    "type": "magento-module",
+    "description": "",
+    "require": {
+        "magento-hackathon/magento-composer-installer": "*"
+    },
+    "authors":[
+        {
+            "name":"Agata Firlejczyk",
+            "email":"afirlejczyk@divante.pl"
+        }
+    ]
+}
