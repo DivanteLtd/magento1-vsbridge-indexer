@@ -1,6 +1,7 @@
 <?php
 
 use Mage_Eav_Model_Entity_Attribute as Attribute;
+use Divante_VueStorefrontIndexer_Api_Mapping_FieldInterface as FieldInterface;
 
 /**
  * Class Divante_VueStorefrontIndexer_Model_Index_Mapping_Eav_Abstract
@@ -50,7 +51,7 @@ abstract class Divante_VueStorefrontIndexer_Model_Index_Mapping_Eav_Abstract
 
         $type = $this->getAttributeType($attribute);
 
-        if ($type === 'string' && !$attribute->getBackendModel() && $attribute->getFrontendInput() != 'media_image') {
+        if ($type === 'text' && !$attribute->getBackendModel() && $attribute->getFrontendInput() != 'media_image') {
             $fieldName = $attributeCode;
             $mapping[$fieldName] = ['type' => $type];
         } else if ($type === 'date') {
@@ -83,29 +84,29 @@ abstract class Divante_VueStorefrontIndexer_Model_Index_Mapping_Eav_Abstract
         $attributeCode = $attribute->getAttributeCode();
 
         if ('sku' === $attributeCode) {
-            return 'keyword';
+            return FieldInterface::TYPE_KEYWORD;
         }
 
         if ('level' === $attributeCode) {
-            return 'long';
+            return FieldInterface::TYPE_LONG;
         }
 
         if (strstr($attributeCode, 'is_')) {
-            return 'boolean';
+            return FieldInterface::TYPE_BOOLEAN;
         }
 
-        $type = 'string';
+        $type = FieldInterface::TYPE_TEXT;
 
         if ($attribute->getBackendType() == 'int' || $attribute->getFrontendClass() == 'validate-digits') {
-            $type = 'long';
+            $type = FieldInterface::TYPE_LONG;
         } elseif ($attribute->getBackendType() == 'decimal' || $attribute->getFrontendClass() == 'validate-number') {
-            $type = 'double';
+            $type = FieldInterface::TYPE_DOUBLE;
         } elseif ($attribute->getSourceModel() == 'eav/entity_attribute_source_boolean') {
-            $type = 'boolean';
+            $type = FieldInterface::TYPE_BOOLEAN;
         } elseif ($attribute->getBackendType() == 'datetime') {
-            $type = 'date';
+            $type = FieldInterface::TYPE_DATE;
         } elseif ($attribute->usesSource()) {
-            $type = $attribute->getSourceModel() ? 'keyword' : 'long' ;
+            $type = $attribute->getSourceModel() ? FieldInterface::TYPE_KEYWORD : FieldInterface::TYPE_LONG;
         }
 
         return $type;

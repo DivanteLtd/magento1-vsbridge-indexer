@@ -130,7 +130,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Bundle
                 'id' => $selection['selection_id'],
                 'is_default' => (bool)$selection['is_default'],
                 'qty' => (float)$selection['selection_qty'],
-                'can_change_quantity' => (bool)$selection['selection_can_change_quantity'],
+                'can_change_quantity' => (bool)$selection['selection_can_change_qty'],
                 'price' => (float)$selectionPrice,
                 'price_type' => $selectionPriceType,
                 'position' => intval($selection['position']),

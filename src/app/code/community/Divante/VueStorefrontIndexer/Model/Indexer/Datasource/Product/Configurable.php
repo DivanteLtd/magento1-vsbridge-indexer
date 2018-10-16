@@ -124,7 +124,11 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
     private function addConfigurableAttributes(array $indexData)
     {
         foreach ($indexData as $productId => $productDTO) {
-            $configurableChildren = $productDTO['configurable_children'];
+            if (!isset($productDTO['configurable_children'])) {
+                $indexData[$productId]['configurable_children'] = [];
+            }
+
+            $configurableChildren = $indexData[$productId]['configurable_children'];
 
             if (count($configurableChildren)) {
                 $productAttributeOptions =
@@ -133,7 +137,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
                 foreach ($productAttributeOptions as $productAttribute) {
                     $attributeCode = $productAttribute['attribute_code'];
 
-                    if (!$indexData[$productId][$attributeCode . '_options']) {
+                    if (!isset($indexData[$productId][$attributeCode . '_options'])) {
                         $indexData[$productId][$attributeCode . '_options'] = [];
                     }
 

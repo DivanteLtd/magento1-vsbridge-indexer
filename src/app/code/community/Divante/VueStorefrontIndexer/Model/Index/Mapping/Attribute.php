@@ -1,6 +1,7 @@
 <?php
 
 use Divante_VueStorefrontIndexer_Api_MappingInterface as MappingInterface;
+use Divante_VueStorefrontIndexer_Api_Mapping_FieldInterface as FieldInterface;
 
 /**
  * Class Divante_VueStorefrontIndexer_Model_Index_Mapping_Attribute
@@ -95,21 +96,21 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Attribute implements Mapp
         $properties = [];
 
         foreach ($this->booleanProperties as $property) {
-            $properties[$property] = ['type' => 'boolean'];
+            $properties[$property] = ['type' => FieldInterface::TYPE_BOOLEAN];
         }
 
         foreach ($this->longProperties as $property) {
-            $properties[$property] = ['type' => 'long'];
+            $properties[$property] = ['type' => FieldInterface::TYPE_LONG];
         }
 
         foreach ($this->stringProperties as $property) {
-            $properties[$property] = ['type' => 'string'];
+            $properties[$property] = ['type' => FieldInterface::TYPE_TEXT];
         }
 
         $properties['options'] = [
             'properties' => [
                 'value' => [
-                    'type' => 'text',
+                    'type' => FieldInterface::TYPE_TEXT,
                     'index' => 'not_analyzed',
                 ]
             ]

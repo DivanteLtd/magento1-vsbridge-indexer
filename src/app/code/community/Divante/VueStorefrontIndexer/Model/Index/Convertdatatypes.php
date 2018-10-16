@@ -19,7 +19,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Convertdatatypes
      */
     private $castMapping = [
         'integer' => 'int',
-        'string' => 'string',
+        'text' => 'string',
         'long' => 'int',
         'boolean' => 'bool',
         'double' => 'double',
@@ -40,20 +40,24 @@ class Divante_VueStorefrontIndexer_Model_Index_Convertdatatypes
 
             foreach ($docs as $docId => $indexData) {
                 foreach ($mappingProperties as $fieldKey => $options) {
-                    $type = $this->getCastType($options['type']);
+                    if (isset($options['type'])) {
+                        $type = $this->getCastType($options['type']);
 
-                    if ($type && isset($indexData[$fieldKey]) && (null !== $indexData[$fieldKey])) {
-                        settype($docs[$docId][$fieldKey], $type);
+                        if ($type && isset($indexData[$fieldKey]) && (null !== $indexData[$fieldKey])) {
+                            settype($docs[$docId][$fieldKey], $type);
+                        }
                     }
                 }
 
                 if (isset($indexData['configurable_children'])) {
                     foreach ($docs[$docId]['configurable_children'] as $key => $child) {
                         foreach ($mappingProperties as $fieldKey => $options) {
-                            $type = $this->getCastType($options['type']);
+                            if (isset($options['type'])) {
+                                $type = $this->getCastType($options['type']);
 
-                            if ($type && isset($child[$fieldKey]) && (null !== $child[$fieldKey])) {
-                                settype($docs[$docId]['configurable_children'][$key][$fieldKey], $type);
+                                if ($type && isset($child[$fieldKey]) && (null !== $child[$fieldKey])) {
+                                    settype($docs[$docId]['configurable_children'][$key][$fieldKey], $type);
+                                }
                             }
                         }
                     }
@@ -83,10 +87,12 @@ class Divante_VueStorefrontIndexer_Model_Index_Convertdatatypes
 
         foreach ($childrenData as &$subCategory) {
             foreach ($mappingProperties as $fieldKey => $options) {
-                $type = $this->getCastType($options['type']);
+                if (isset($options['type'])) {
+                    $type = $this->getCastType($options['type']);
 
-                if ($type && isset($subCategory[$fieldKey]) && (null !== $subCategory[$fieldKey])) {
-                    settype($subCategory[$fieldKey], $type);
+                    if ($type && isset($subCategory[$fieldKey]) && (null !== $subCategory[$fieldKey])) {
+                        settype($subCategory[$fieldKey], $type);
+                    }
                 }
             }
 

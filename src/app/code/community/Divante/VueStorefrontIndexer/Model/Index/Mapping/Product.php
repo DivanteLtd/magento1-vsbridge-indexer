@@ -1,6 +1,7 @@
 <?php
 
 use Divante_VueStorefrontIndexer_Api_MappingInterface as MappingInterface;
+use Divante_VueStorefrontIndexer_Api_Mapping_FieldInterface as FieldInterface;
 use Divante_VueStorefrontIndexer_Model_Index_Mapping_Eav_Abstract as AbstractMapping;
 use Divante_VueStorefrontIndexer_Model_Index_Mapping_Generalmapping as GeneralMapping;
 
@@ -65,61 +66,60 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Product extends AbstractM
 
             $attributesMapping['media_gallery'] = [
                 'properties' => [
-                    'type' => ['type' => 'text'],
-                    'image' => ['type' => 'text'],
-                    'lab' => ['type' => 'text'],
-                    'pos' => ['type' => 'text'],
-                    'disabled' => ['type' => 'boolean'],
+                    'type' => ['type' => FieldInterface::TYPE_TEXT],
+                    'image' => ['type' => FieldInterface::TYPE_TEXT],
+                    'lab' => ['type' => FieldInterface::TYPE_TEXT],
+                    'pos' => ['type' => FieldInterface::TYPE_TEXT],
                 ]
             ];
 
             $properties = [
                 'bundle_options' => [
                     'properties' => [
-                        'option_id' => ['type' => 'long'],
-                        'position' => ['type' => 'long'],
-                        'sku' => ['type' => 'keyword'],
+                        'option_id' => ['type' => FieldInterface::TYPE_LONG],
+                        'position' => ['type' => FieldInterface::TYPE_LONG],
+                        'sku' => ['type' => FieldInterface::TYPE_KEYWORD],
                         'product_links' => [
                             'properties' => [
-                                'id' => ['type' => 'long'],
-                                'is_default' => ['type' => 'boolean'],
-                                'qty' => ['type' => 'long'],
-                                'can_change_quantity' => ['type' => 'boolean'],
-                                'price' => ['type' => 'long'],
-                                'price_type' => ['type' => 'string'],
-                                'position' => ['type' => 'long'],
-                                'sku' => ['type' => 'keyword'],
+                                'id' => ['type' => FieldInterface::TYPE_LONG],
+                                'is_default' => ['type' => FieldInterface::TYPE_BOOLEAN],
+                                'qty' => ['type' => FieldInterface::TYPE_LONG],
+                                'can_change_quantity' => ['type' => FieldInterface::TYPE_BOOLEAN],
+                                'price' => ['type' => FieldInterface::TYPE_LONG],
+                                'price_type' => ['type' => FieldInterface::TYPE_TEXT],
+                                'position' => ['type' => FieldInterface::TYPE_LONG],
+                                'sku' => ['type' => FieldInterface::TYPE_KEYWORD],
                             ]
                         ],
                     ]
                 ],
                 'product_links' => [
                     'properties' => [
-                        'linked_product_type' => ['type' => 'text'],
-                        'linked_product_sku' => ['type' => 'keyword'],
-                        'sku' => ['type' => 'keyword'],
-                        'position' => ['type' => 'long'],
+                        'linked_product_type' => ['type' => FieldInterface::TYPE_TEXT],
+                        'linked_product_sku' => ['type' => FieldInterface::TYPE_KEYWORD],
+                        'sku' => ['type' => FieldInterface::TYPE_KEYWORD],
+                        'position' => ['type' => FieldInterface::TYPE_LONG],
                     ]
                 ],
                 'configurable_options' => [
                     'properties' => [
-                        'label' => ['type' => 'text'],
-                        'id' => ['type' => 'long'],
-                        'product_id' => ['type' => 'long'],
-                        'attribute_code' => ['type' => 'text'],
-                        'attribute_id' => ['type' => 'long'],
-                        'position' => ['type' => 'text'],
+                        'label' => ['type' => FieldInterface::TYPE_TEXT],
+                        'id' => ['type' => FieldInterface::TYPE_LONG],
+                        'product_id' => ['type' => FieldInterface::TYPE_LONG],
+                        'attribute_code' => ['type' => FieldInterface::TYPE_TEXT],
+                        'attribute_id' => ['type' => FieldInterface::TYPE_LONG],
+                        'position' => ['type' => FieldInterface::TYPE_TEXT],
                         'values' => [
                             'properties' => [
-                                'value_index' => ['type' => 'keyword'],
+                                'value_index' => ['type' => FieldInterface::TYPE_KEYWORD],
                             ]
                         ],
                     ],
                 ],
                 'category' => [
                     'properties' => [
-                        'category_id' => ['type' => 'long'],
-                        'name' => ['type' => 'text'],
+                        'category_id' => ['type' => FieldInterface::TYPE_LONG],
+                        'name' => ['type' => FieldInterface::TYPE_TEXT],
                     ]
                 ],
                 'configurable_children' => ['properties' => $attributesMapping]

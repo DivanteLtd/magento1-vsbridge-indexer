@@ -6,22 +6,27 @@
  * @license See LICENSE_DIVANTE.txt for license details.
  */
 
+use Divante_VueStorefrontIndexer_Api_Mapping_FieldInterface as FieldInterface;
+
 /**
  * Class Divante_VueStorefrontIndexer_Model_Index_Mapping_Generalmapping
  */
 class Divante_VueStorefrontIndexer_Model_Index_Mapping_Generalmapping
 {
 
+    /**
+     * @var array
+     */
     private $commonProperties = [
-        'position' => ['type' => 'long'],
-        'level' => ['type' => 'long'],
+        'position' => ['type' => FieldInterface::TYPE_LONG],
+        'level' => ['type' => FieldInterface::TYPE_LONG],
         'created_at' => [
-            "type" => "date",
-            "format" => "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis",
+            "type" => FieldInterface::TYPE_DATE,
+            "format" => FieldInterface::DATE_FORMAT,
         ],
         'updated_at' => [
-            "type" => "date",
-            "format" => "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis",
+            "type" => FieldInterface::TYPE_DATE,
+            "format" => FieldInterface::DATE_FORMAT,
         ]
     ];
 

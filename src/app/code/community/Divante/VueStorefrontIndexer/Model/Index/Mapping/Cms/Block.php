@@ -1,6 +1,7 @@
 <?php
 
 use Divante_VueStorefrontIndexer_Api_MappingInterface as MappingInterface;
+use Divante_VueStorefrontIndexer_Api_Mapping_FieldInterface as FieldInterface;
 
 /**
  * Class Divante_VueStorefrontIndexer_Model_Index_Mapping_Attribute
@@ -40,13 +41,13 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Cms_Block implements Mapp
     public function getMappingProperties()
     {
         $properties = [
-            'id' => ['type' => 'long'],
-            'content' => ['type' => 'text'],
-            'is_active' => ['type' => 'boolean'],
-            'title' => ['type' => 'text'],
+            'id' => ['type' => FieldInterface::TYPE_LONG],
+            'content' => ['type' => FieldInterface::TYPE_TEXT],
+            'is_active' => ['type' => FieldInterface::TYPE_BOOLEAN],
+            'title' => ['type' => FieldInterface::TYPE_TEXT],
             'identifier' => [
-                'type' => 'text',
-                'fields' => ['keyword' => ['type' => 'keyword']]
+                'type' => FieldInterface::TYPE_TEXT,
+                'fields' => ['keyword' => ['type' => FieldInterface::TYPE_KEYWORD]]
             ]
         ];
 

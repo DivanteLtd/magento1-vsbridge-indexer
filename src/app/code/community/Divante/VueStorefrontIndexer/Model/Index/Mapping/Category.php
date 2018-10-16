@@ -1,6 +1,7 @@
 <?php
 
 use Divante_VueStorefrontIndexer_Api_MappingInterface as MappingInterface;
+use Divante_VueStorefrontIndexer_Api_Mapping_FieldInterface as FieldInterface;
 use Divante_VueStorefrontIndexer_Model_Index_Mapping_Eav_Abstract as AbstractMapping;
 use Divante_VueStorefrontIndexer_Model_Index_Mapping_Generalmapping as GeneralMapping;
 
@@ -68,7 +69,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Category extends Abstract
             $generalMapping = Mage::getSingleton('vsf_indexer/index_mapping_generalmapping');
             $properties = array_merge($properties, $generalMapping->getCommonProperties());
 
-            $properties['children_count'] = ['type' => 'long'];
+            $properties['children_count'] = ['type' => FieldInterface::TYPE_LONG];
             $properties['children_data'] = [
                 'properties' => $properties
             ];

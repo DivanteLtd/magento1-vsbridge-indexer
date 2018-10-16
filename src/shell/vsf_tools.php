@@ -40,6 +40,7 @@ class Divante_VueStorefrontIndexer_Tools extends Mage_Shell_Abstract
                     $tools->reindexByType($type);
                 } else {
                     $tools->fullReindex();
+                    echo "Full reindex - done \n";
                 }
                 break;
             case 'reindex':
