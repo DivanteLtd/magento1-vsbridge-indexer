@@ -1,6 +1,7 @@
 <?php
 
 use Divante_VueStorefrontIndexer_Model_Event_Handler as EventHandler;
+use Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Relation_Parentids as ParentResourceModel;
 use Mage_Catalog_Model_Product as Product;
 
 /**
@@ -19,6 +20,11 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Product_Delete
      * @var EventHandler
      */
     private $eventHandler;
+
+    /**
+     * @var ParentResourceModel
+     */
+    private $parentResourceModel;
 
     /**
      * @var Mage_Core_Model_Resource
@@ -41,7 +47,7 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Product_Delete
     public function __construct()
     {
         $this->eventHandler = Mage::getSingleton('vsf_indexer/event_handler');
-
+        $this->parentResourceModel = Mage::getResourceModel('vsf_indexer/catalog_product_relation_parentids');
         $this->resource = Mage::getSingleton('core/resource');
         /** @var Varien_Db_Adapter_Interface $adapter */
         $this->connection = $this->resource->getConnection('catalog_read');
@@ -53,10 +59,10 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Product_Delete
     public function execute(Varien_Event_Observer $observer)
     {
         $eventName = $observer->getEvent()->getName();
-        $dataObject = $observer->getEvent()->getData('product');
+        $product = $observer->getEvent()->getData('product');
 
-        if ($dataObject instanceof Product) {
-            $productId = $dataObject->getId();
+        if ($product instanceof Product) {
+            $productId = $product->getId();
 
             if ('catalog_product_delete_before' === $eventName) {
                 $this->logEvents[] = [
@@ -68,17 +74,7 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Product_Delete
                 /**
                  * Update parent product data
                  */
-                if ($dataObject->getTypeId() === Mage_Catalog_Model_Product_Type::TYPE_SIMPLE) {
-                    $parentIds = $this->getParentIds($productId);
-
-                    foreach ($parentIds as $parentId) {
-                        $this->logEvents[] = [
-                            'id' => $parentId,
-                            'type' => Divante_VueStorefrontIndexer_Model_Indexer_Products::TYPE,
-                            'action' => 'save',
-                        ];
-                    }
-                }
+                $this->updateParents($product);
             }
 
             if ('catalog_product_delete_after_done' === $eventName) {
@@ -94,16 +90,24 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Product_Delete
     }
 
     /**
-     * @param int $simpleId
-     *
-     * @return array
+     * @param Mage_Catalog_Model_Product $product
      */
-    private function getParentIds($simpleId)
+    private function updateParents(Product $product)
     {
-        $table = $this->resource->getTableName('catalog/product_super_link');
-        $select = $this->connection->select()->from($table, ['parent_id']);
-        $select->where('product_id = ?', $simpleId);
+        /**
+         * Update parent product data
+         */
+        if ($product->getTypeId() === Mage_Catalog_Model_Product_Type::TYPE_SIMPLE) {
+            $productId = $product->getId();
+            $parentIds = $this->parentResourceModel->execute([$productId]);
 
-        return $this->connection->fetchCol($select);
+            foreach ($parentIds as $parentId) {
+                $this->logEvents[] = [
+                    'id' => $parentId,
+                    'type' => Divante_VueStorefrontIndexer_Model_Indexer_Products::TYPE,
+                    'action' => 'save',
+                ];
+            }
+        }
     }
 }
