@@ -83,6 +83,10 @@ abstract class Divante_VueStorefrontIndexer_Model_Index_Mapping_Eav_Abstract
     {
         $attributeCode = $attribute->getAttributeCode();
 
+        if ('category_ids' === $attributeCode) {
+            return FieldInterface::TYPE_LONG;
+        }
+
         if ('sku' === $attributeCode) {
             return FieldInterface::TYPE_KEYWORD;
         }

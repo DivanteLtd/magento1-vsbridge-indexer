@@ -195,6 +195,19 @@ class Divante_VueStorefrontIndexer_Model_Index_Operations
     }
 
     /**
+     * @param string $indexIdentifier
+     * @param Mage_Core_Model_Store $store
+     */
+    public function deleteIndex($indexIdentifier, Store $store)
+    {
+        $index = $this->initIndex($indexIdentifier, $store);
+
+        if ($this->client->indexExists($index->getName())) {
+            $this->client->deleteIndex($index->getName());
+        }
+    }
+
+    /**
      * @param Index $index
      *
      * @return $this

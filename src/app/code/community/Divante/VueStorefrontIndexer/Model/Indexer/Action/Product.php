@@ -49,7 +49,6 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Action_Product
                 $lastProductId = $product['entity_id'];
                 $product['id'] = intval($product['entity_id']);
                 unset($product['entity_id']);
-
                 yield $lastProductId => $this->filterData($product);
             }
         } while (!empty($products));

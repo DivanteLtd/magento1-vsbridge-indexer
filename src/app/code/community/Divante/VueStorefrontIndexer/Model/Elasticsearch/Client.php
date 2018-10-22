@@ -78,6 +78,16 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Client
 
     /**
      * @param string $indexName
+     *
+     * @return array
+     */
+    public function deleteIndex($indexName)
+    {
+        return $this->esClient->indices()->delete(['index' => $indexName]);
+    }
+
+    /**
+     * @param string $indexName
      * @param string $type
      * @param array $mapping
      */

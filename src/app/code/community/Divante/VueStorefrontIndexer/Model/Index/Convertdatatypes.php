@@ -39,40 +39,54 @@ class Divante_VueStorefrontIndexer_Model_Index_Convertdatatypes
             $mappingProperties = $mapping->getMappingProperties()['properties'];
 
             foreach ($docs as $docId => $indexData) {
-                foreach ($mappingProperties as $fieldKey => $options) {
-                    if (isset($options['type'])) {
-                        $type = $this->getCastType($options['type']);
-
-                        if ($type && isset($indexData[$fieldKey]) && (null !== $indexData[$fieldKey])) {
-                            settype($docs[$docId][$fieldKey], $type);
-                        }
-                    }
-                }
+                $indexData = $this->convert($indexData, $mappingProperties);
 
                 if (isset($indexData['configurable_children'])) {
-                    foreach ($docs[$docId]['configurable_children'] as $key => $child) {
-                        foreach ($mappingProperties as $fieldKey => $options) {
-                            if (isset($options['type'])) {
-                                $type = $this->getCastType($options['type']);
-
-                                if ($type && isset($child[$fieldKey]) && (null !== $child[$fieldKey])) {
-                                    settype($docs[$docId]['configurable_children'][$key][$fieldKey], $type);
-                                }
-                            }
-                        }
+                    foreach ($indexData['configurable_children'] as $key => $child) {
+                        $child = $this->convert($child, $mappingProperties);
+                        $indexData['configurable_children'][$key] = $child;
                     }
                 }
 
                 if (isset($indexData['children_data'])) {
                     foreach ($indexData['children_data'] as $index => $subCategory) {
                         $subCategory = $this->convertChildrenData($subCategory, $mappingProperties);
-                        $docs[$docId]['children_data'][$index] = $subCategory;
+                        $indexData['children_data'][$index] = $subCategory;
+                    }
+                }
+
+                $docs[$docId] = $indexData;
+            }
+        }
+
+        return $docs;
+    }
+
+    /**
+     * @param array $indexData
+     * @param array $mappingProperties
+     *
+     * @return array
+     */
+    private function convert(array $indexData, array $mappingProperties)
+    {
+        foreach ($mappingProperties as $fieldKey => $options) {
+            if (isset($options['type'])) {
+                $type = $this->getCastType($options['type']);
+
+                if ($type && isset($indexData[$fieldKey]) && (null !== $indexData[$fieldKey])) {
+                    if (is_array($indexData[$fieldKey])) {
+                        foreach ($indexData[$fieldKey] as $value) {
+                            settype($value, $type);
+                        }
+                    } else {
+                        settype($indexData[$fieldKey], $type);
                     }
                 }
             }
         }
 
-        return $docs;
+        return $indexData;
     }
 
     /**
@@ -85,17 +99,8 @@ class Divante_VueStorefrontIndexer_Model_Index_Convertdatatypes
     {
         $childrenData = $category['children_data'];
 
-        foreach ($childrenData as &$subCategory) {
-            foreach ($mappingProperties as $fieldKey => $options) {
-                if (isset($options['type'])) {
-                    $type = $this->getCastType($options['type']);
-
-                    if ($type && isset($subCategory[$fieldKey]) && (null !== $subCategory[$fieldKey])) {
-                        settype($subCategory[$fieldKey], $type);
-                    }
-                }
-            }
-
+        foreach ($childrenData as $subCategory) {
+            $subCategory = $this->convert($subCategory, $mappingProperties);
             $subCategory = $this->convertChildrenData($subCategory, $mappingProperties);
         }
 
