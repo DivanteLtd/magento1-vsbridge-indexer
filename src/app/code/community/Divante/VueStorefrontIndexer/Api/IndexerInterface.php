@@ -18,16 +18,16 @@ interface Divante_VueStorefrontIndexer_Api_IndexerInterface
     public function getTypeName();
 
     /**
-     * @param array $ids
+     * @param array $ids Empty array -> reindex all
      *
      * @return void
      */
-    public function updateDocuments(array $ids = []);
+    public function updateDocuments($storeId = null, array $ids = []);
 
     /**
      * @param array $ids
      *
      * @return void
      */
-    public function deleteDocuments(array $ids);
+    public function deleteDocuments($storeId = null, array $ids);
 }

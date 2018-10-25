@@ -29,6 +29,15 @@ class Divante_VueStorefrontIndexer_Tools extends Mage_Shell_Abstract
             $action = '';
         }
 
+        $storeId = (int)$this->getArg('store');
+
+        if (0 === $storeId) {
+            echo "Please provide store to reindex \n\n";
+            echo $this->usageHelp();
+
+            return;
+        }
+
         /**
          * TODO add option to have full reindex per store
          */
@@ -37,13 +46,14 @@ class Divante_VueStorefrontIndexer_Tools extends Mage_Shell_Abstract
                 $type = $this->getArg('type');
 
                 if ($type) {
-                    $tools->reindexByType($type);
+                    $tools->reindexByType($type, $storeId);
                 } else {
-                    $tools->fullReindex();
+                    $tools->fullReindex($storeId);
                     echo "Full reindex - done \n";
                 }
                 break;
             case 'reindex':
+                /*TODO reindex per store*/
                 $tools->reindex();
                 break;
             case 'delete_indices':
@@ -66,7 +76,7 @@ class Divante_VueStorefrontIndexer_Tools extends Mage_Shell_Abstract
 Usage:  php -f vsf_tools.php -- [options]
 
         --action <action_name>
-                full_reindex [--type categories|products|taxrules|attributes|cms_blocks]
+                full_reindex --store STORE_ID [--type categories|products|taxrules|attributes|cms_blocks]
                 reindex
                 delete_indices
 

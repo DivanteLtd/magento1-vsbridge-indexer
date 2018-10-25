@@ -42,21 +42,24 @@ class Divante_VueStorefrontIndexer_Model_Tools
 
     /**
      * Force full reindex
+     *
+     * @param null|int $storeId
      */
-    public function fullReindex()
+    public function fullReindex($storeId)
     {
         $mappingConfig = Mage::getConfig()->getNode(self::MAPPING_CONF_ROOT_NODE)->asArray();
         $types = array_keys($mappingConfig);
 
         foreach ($types as $type) {
-            $this->reindexByType($type);
+            $this->reindexByType($type, $storeId);
         }
     }
 
     /**
      * @param string $type
+     * @param null|int $storeId
      */
-    public function reindexByType($type)
+    public function reindexByType($type, $storeId = null)
     {
         $mappingConfig = Mage::getConfig()->getNode(self::MAPPING_CONF_ROOT_NODE)->asArray();
 
@@ -67,16 +70,16 @@ class Divante_VueStorefrontIndexer_Model_Tools
 
             /** @var IndexerInterface $model */
             if ($model instanceof IndexerInterface) {
-                $model->updateDocuments();
+                $model->updateDocuments($storeId);
                 $this->deleteEvent->execute($type);
             }
         }
     }
 
     /**
-     * Reindex data
+     * Reindex data in real time
      */
-    public function reindex()
+    public function reindex($storeId = null)
     {
         $mappingConfig = Mage::getConfig()->getNode(self::MAPPING_CONF_ROOT_NODE)->asArray();
 
@@ -100,10 +103,10 @@ class Divante_VueStorefrontIndexer_Model_Tools
             $fullIndexing = $this->runFullIndexing($type);
 
             if ($fullIndexing) {
-                $model->updateDocuments();
+                $model->updateDocuments($storeId);
                 $this->deleteEvent->execute($type);
             } else {
-                $this->runPartialIndexing($model);
+                $this->runPartialIndexing($model, $storeId);
             }
         }
     }
@@ -132,8 +135,9 @@ class Divante_VueStorefrontIndexer_Model_Tools
 
     /**
      * @param Divante_VueStorefrontIndexer_Api_IndexerInterface $indexerModel
+     * @param int|null $storeId
      */
-    private function runPartialIndexing(IndexerInterface $indexerModel)
+    private function runPartialIndexing(IndexerInterface $indexerModel, $storeId = null)
     {
         $type = $indexerModel->getTypeName();
 
@@ -141,7 +145,7 @@ class Divante_VueStorefrontIndexer_Model_Tools
             $ids = $this->getUpdateEventLists($type, 'delete');
 
             if (!empty($ids)) {
-                $indexerModel->deleteDocuments($ids);
+                $indexerModel->deleteDocuments($storeId, $ids);
                 $this->deleteEvent->execute($type, $ids);
             }
         } while (!empty($ids));
@@ -150,7 +154,7 @@ class Divante_VueStorefrontIndexer_Model_Tools
             $ids = $this->getUpdateEventLists($type);
 
             if (!empty($ids)) {
-                $indexerModel->updateDocuments($ids);
+                $indexerModel->updateDocuments($storeId, $ids);
                 $this->deleteEvent->execute($type, $ids);
             }
         } while (!empty($ids));

@@ -51,11 +51,11 @@ System --> Configuration -> VueStorefront -> Indices Settings
 - adjust indexing batch size to your data
 - setup index name prefix. 
 
-### Run full synchronization:
+### Run full synchronization for chosen store views:
 
 ```
 cd [magento root dir]/shell
-php -f vsf_tools.php --action full_reindex
+php -f vsf_tools.php --action full_reindex --store STORE_ID
 ```
 
 ### Setup Cron job to update data in ElasticSearch in real time (for products, categories, attributes, cms blocks)

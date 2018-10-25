@@ -2,6 +2,7 @@
 
 use Divante_VueStorefrontIndexer_Api_IndexerInterface as IndexerInterface;
 use Divante_VueStorefrontIndexer_Model_ElasticSearch_Indexer_Handler as IndexerHandler;
+use Divante_VueStorefrontIndexer_Model_Indexer_Helper_Store as StoreHelper;
 use Mage_Core_Model_Store as Store;
 
 /**
@@ -28,6 +29,11 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Taxrules implements IndexerInte
     private $action;
 
     /**
+     * @var StoreHelper
+     */
+    private $storeHelper;
+
+    /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Attribute constructor.
      */
     public function __construct()
@@ -42,14 +48,15 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Taxrules implements IndexerInte
         );
 
         $this->action = Mage::getSingleton('vsf_indexer/indexer_action_taxrule');
+        $this->storeHelper = Mage::getSingleton('vsf_indexer/indexer_helper_store');
     }
 
     /**
      * @inheritdoc
      */
-    public function updateDocuments(array $ids = [])
+    public function updateDocuments($storeId = null, array $ids = [])
     {
-        $stores = Mage::app()->getStores();
+        $stores = $this->storeHelper->getStores($storeId);
 
         /** @var Store $store */
         foreach ($stores as $store) {
@@ -67,9 +74,9 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Taxrules implements IndexerInte
     /**
      * @inheritdoc
      */
-    public function deleteDocuments(array $ids)
+    public function deleteDocuments($storeId = null, array $ids)
     {
-        $stores = Mage::app()->getStores();
+        $stores = $this->storeHelper->getStores($storeId);
 
         if (!empty($ids)) {
             foreach ($stores as $store) {
