@@ -53,7 +53,7 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Client_Configuration
      */
     public function getHttpAuthUser()
     {
-        return (string)$this->getConfigParam('http_auth_user');
+        return (string)$this->getConfigParam('auth_user');
     }
 
     /**
@@ -61,7 +61,7 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Client_Configuration
      */
     public function getHttpAuthPassword()
     {
-        return (string)$this->getConfigParam('http_auth_pwd');
+        return (string)$this->getConfigParam('auth_pwd');
     }
 
     /**
