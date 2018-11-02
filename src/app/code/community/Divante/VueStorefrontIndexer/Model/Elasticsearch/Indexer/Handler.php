@@ -162,14 +162,6 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Indexer_Handler
 
     /**
      * @param Mage_Core_Model_Store $store
-     */
-    public function updateMappings(Store $store)
-    {
-        $this->indexOperation->updateMappings($this->indexIdentifier, $store);
-    }
-
-    /**
-     * @param Mage_Core_Model_Store $store
      *
      * @return Divante_VueStorefrontIndexer_Model_Index_Index
      */

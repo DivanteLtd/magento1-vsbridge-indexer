@@ -109,10 +109,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Attribute implements Mapp
 
         $properties['options'] = [
             'properties' => [
-                'value' => [
-                    'type' => FieldInterface::TYPE_TEXT,
-                    'index' => 'not_analyzed',
-                ]
+                'value' => ['type' => FieldInterface::TYPE_TEXT]
             ]
         ];
 

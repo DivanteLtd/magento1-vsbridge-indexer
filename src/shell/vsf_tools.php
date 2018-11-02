@@ -29,21 +29,20 @@ class Divante_VueStorefrontIndexer_Tools extends Mage_Shell_Abstract
             $action = '';
         }
 
-        $storeId = (int)$this->getArg('store');
-
-        if (0 === $storeId) {
-            echo "Please provide store to reindex \n\n";
-            echo $this->usageHelp();
-
-            return;
-        }
-
         /**
          * TODO add option to have full reindex per store
          */
         switch ($action) {
             case 'full_reindex':
                 $type = $this->getArg('type');
+                $storeId = (int)$this->getArg('store');
+
+                if (0 === $storeId) {
+                    echo "Please provide store to reindex \n\n";
+                    echo $this->usageHelp();
+
+                    return;
+                }
 
                 if ($type) {
                     $tools->reindexByType($type, $storeId);
