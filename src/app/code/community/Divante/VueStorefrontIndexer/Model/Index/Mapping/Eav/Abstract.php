@@ -53,7 +53,15 @@ abstract class Divante_VueStorefrontIndexer_Model_Index_Mapping_Eav_Abstract
 
         if ($type === 'text' && !$attribute->getBackendModel() && $attribute->getFrontendInput() != 'media_image') {
             $fieldName = $attributeCode;
-            $mapping[$fieldName] = ['type' => $type];
+            $mapping[$fieldName] = [
+                'type' => $type,
+                'fields' => [
+                    'keyword' => [
+                        'type' => FieldInterface::TYPE_KEYWORD,
+                        'ignore_above' => 256,
+                    ]
+                ]
+            ];
         } else if ($type === 'date') {
             $mapping[$attributeCode] = [
                 'type' => $type,

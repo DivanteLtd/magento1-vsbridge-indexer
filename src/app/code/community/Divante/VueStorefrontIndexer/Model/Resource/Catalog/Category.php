@@ -15,6 +15,25 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Category
 {
 
     /**
+     * @var Mage_Core_Model_Resource
+     */
+    private $coreResource;
+
+    /**
+     * @var Varien_Db_Adapter_Interface
+     */
+    private $connection;
+
+    /**
+     * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Attribute_Full constructor.
+     */
+    public function __construct()
+    {
+        $this->coreResource = Mage::getSingleton('core/resource');
+        $this->connection = $this->coreResource->getConnection('catalog_read');
+    }
+
+    /**
      * @param int   $storeId
      * @param array $categoryIds
      * @param int   $fromId
@@ -29,20 +48,18 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Category
         $rootCategoryId = Mage::app()->getStore($storeId)->getRootCategoryId();
         $rootCategory = Mage::getModel('catalog/category')->load($rootCategoryId);
 
-        /** @var CategoryCollection $collection */
-        $collection = Mage::getResourceModel('catalog/category_collection');
-        $collection->addAttributeToFilter(
-            'path',
-            ['like' => "1/{$rootCategory->getId()}%"]
-        );
+        $select = $this->connection->select()->from(['e' => $this->coreResource->getTableName('catalog/category')]);
 
         if (!empty($categoryIds)) {
-            $collection->addFieldToFilter('entity_id', ['in' => $categoryIds]);
+            $select->where('e.entity_id IN (?)', $categoryIds);
         }
 
-        $collection->setPageSize($limit);
-        $collection->addFieldToFilter('entity_id', ['gt' => $fromId]);
+        $path = "1/{$rootCategory->getId()}%";
+        $select->where('path LIKE ?', $path);
+        $select->where('e.entity_id > ?', $fromId);
+        $select->limit($limit);
+        $select->order('e.entity_id ASC');
 
-        return $collection->getItems();
+        return $this->connection->fetchAll($select);
     }
 }

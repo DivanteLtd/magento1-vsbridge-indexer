@@ -39,8 +39,9 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Action_Category
             $categories = $this->resourceModel->getCategories($storeId, $categoryIds, $lastCategoryId);
 
             foreach ($categories as $category) {
-                $lastCategoryId = $category->getId();
-                $categoryData = $category->getData();
+                $lastCategoryId = $category['entity_id'];
+                $categoryData['id'] = $category['entity_id'];
+                $categoryData = $category;
 
                 yield $lastCategoryId => $categoryData;
             }
