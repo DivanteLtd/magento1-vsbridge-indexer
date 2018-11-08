@@ -1,6 +1,8 @@
 <?php
 
 use Divante_VueStorefrontIndexer_Api_DatasourceInterface as DataSourceInterface;
+use Divante_VueStorefrontIndexer_Model_Index_Mapping_Generalmapping as GeneralMapping;
+use Divante_VueStorefrontIndexer_Api_Mapping_FieldInterface as FieldInterface;
 
 /**
  * Class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Inventory
@@ -20,11 +22,17 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Inventory im
     private $resource;
 
     /**
+     * @var GeneralMapping
+     */
+    private $generalMapping;
+
+    /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Action_Category_Full constructor.
      */
     public function __construct()
     {
         $this->resource = Mage::getResourceModel('vsf_indexer/catalog_product_inventory');
+        $this->generalMapping = Mage::getSingleton('vsf_indexer/index_mapping_generalmapping');
     }
 
     /**
@@ -51,14 +59,22 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Inventory im
      */
     private function prepareStockData(array $stockData)
     {
+        $stockMapping = $this->generalMapping->getStockMapping();
+
         foreach ($stockData as $key => $value) {
-            if (strstr($key, 'is_') || strstr($key, 'has_')) {
-                $stockData[$key] = boolval($value);
-            } elseif ('low_stock_date' !== $key) {
-                $stockData[$key] = (int)$value;
+            if (isset($stockMapping[$key]['type'])) {
+                $type = $stockMapping[$key]['type'];
+
+                if ($type === FieldInterface::TYPE_BOOLEAN) {
+                    settype($stockData[$key], 'bool');
+                }
+
+                if ($type === FieldInterface::TYPE_LONG) {
+                    settype($stockData[$key], 'int');
+                }
             }
         }
-
+        
         return $stockData;
     }
 }

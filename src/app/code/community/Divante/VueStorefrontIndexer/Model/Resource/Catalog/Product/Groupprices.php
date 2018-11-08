@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Tiers
+ * Class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Groupprices
  *
  * @package     Divante
  * @category    VueStoreFrontIndexer
@@ -9,7 +9,7 @@
  * @copyright   Copyright (C) 2018 Divante Sp. z o.o.
  * @license     See LICENSE_DIVANTE.txt for license details.
  */
-class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Tiers
+class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Groupprices
 {
 
     /**
@@ -23,7 +23,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Tiers
     private $connection;
 
     /**
-     * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Tiers constructor.
+     * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Stock constructor.
      */
     public function __construct()
     {
@@ -38,27 +38,21 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Tiers
      *
      * @return array
      */
-    public function loadTierPrices($websiteId, array $productIds)
+    public function loadGroupPrices($websiteId, array $productIds)
     {
         $columns = [
             'price_id' => 'value_id',
             'website_id' => 'website_id',
             'all_groups' => 'all_groups',
             'cust_group' => 'customer_group_id',
-            'price_qty' => 'qty',
             'price' => 'value',
             'product_id' => 'entity_id',
         ];
 
         $select = $this->connection->select()
-            ->from($this->resource->getTableName('catalog/product_attribute_tier_price'), $columns)
+            ->from($this->resource->getTableName('catalog/product_attribute_group_price'), $columns)
             ->where('entity_id IN(?)', $productIds)
-            ->order(
-                [
-                    'entity_id',
-                    'qty',
-                ]
-            );
+            ->order('entity_id');
 
         if ($websiteId === 0) {
             $select->where('website_id = ?', $websiteId);
@@ -72,19 +66,18 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Tiers
             );
         }
 
-        $tierPrices = [];
+        $groupPrices = [];
 
         foreach ($this->connection->fetchAll($select) as $row) {
-            $tierPrices[$row['product_id']][] = array(
+            $groupPrices[$row['product_id']][] = [
                 'website_id' => (int)$row['website_id'],
+                'price_qty' => 1,
                 'cust_group' => $row['all_groups'] ? Mage_Customer_Model_Group::CUST_GROUP_ALL
                     : (int)$row['cust_group'],
-                'price_qty' => (float)$row['price_qty'],
                 'price' => (float)$row['price'],
-                'website_price' => (float)$row['price'],
-            );
+            ];
         }
 
-        return $tierPrices;
+        return $groupPrices;
     }
 }

@@ -73,7 +73,11 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Product extends AbstractM
                 ]
             ];
 
+            $attributesMapping['final_price'] = ['type' => FieldInterface::TYPE_DOUBLE];
+            $attributesMapping['regular_price'] = ['type' => FieldInterface::TYPE_DOUBLE];
+
             $properties = [
+                'attribute_set_id' => ['type' => FieldInterface::TYPE_LONG],
                 'bundle_options' => [
                     'properties' => [
                         'option_id' => ['type' => FieldInterface::TYPE_LONG],
@@ -83,9 +87,9 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Product extends AbstractM
                             'properties' => [
                                 'id' => ['type' => FieldInterface::TYPE_LONG],
                                 'is_default' => ['type' => FieldInterface::TYPE_BOOLEAN],
-                                'qty' => ['type' => FieldInterface::TYPE_LONG],
+                                'qty' => ['type' => FieldInterface::TYPE_DOUBLE],
                                 'can_change_quantity' => ['type' => FieldInterface::TYPE_BOOLEAN],
-                                'price' => ['type' => FieldInterface::TYPE_LONG],
+                                'price' => ['type' => FieldInterface::TYPE_DOUBLE],
                                 'price_type' => ['type' => FieldInterface::TYPE_TEXT],
                                 'position' => ['type' => FieldInterface::TYPE_LONG],
                                 'sku' => ['type' => FieldInterface::TYPE_KEYWORD],
@@ -122,15 +126,28 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Product extends AbstractM
                         'name' => ['type' => FieldInterface::TYPE_TEXT],
                     ]
                 ],
+                'tier_prices' => [
+                    'properties' => [
+                        'customer_group_d' => ['type' => FieldInterface::TYPE_LONG],
+                        'qty' => ['type' => FieldInterface::TYPE_DOUBLE],
+                        'value' => ['type' => FieldInterface::TYPE_DOUBLE],
+                        'extension_attributes' => [
+                            'properties' => [
+                                'website_id' => ['type' => FieldInterface::TYPE_LONG]
+                            ]
+                        ]
+                    ]
+                ],
                 'configurable_children' => ['properties' => $attributesMapping]
             ];
-
-            $properties = array_merge($properties, $attributesMapping);
 
             /**
              * @var $generalMapping GeneralMapping
              */
-            $generalMapping = Mage::getModel('vsf_indexer/index_mapping_generalmapping');
+            $generalMapping = Mage::getSingleton('vsf_indexer/index_mapping_generalmapping');
+            $properties['stock']['properties'] = $generalMapping->getStockMapping();
+
+            $properties = array_merge($properties, $attributesMapping);
             $properties = array_merge($properties, $generalMapping->getCommonProperties());
 
             $mapping = ['properties' => $properties];

@@ -43,6 +43,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Attribute implements Mapp
     private $longProperties = [
         'attribute_id',
         'id',
+        'is_filterable',
         'search_weight',
         'entity_type_id',
         'position',
