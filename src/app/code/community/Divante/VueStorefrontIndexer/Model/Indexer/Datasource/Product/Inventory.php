@@ -2,7 +2,6 @@
 
 use Divante_VueStorefrontIndexer_Api_DatasourceInterface as DataSourceInterface;
 use Divante_VueStorefrontIndexer_Model_Index_Mapping_Generalmapping as GeneralMapping;
-use Divante_VueStorefrontIndexer_Api_Mapping_FieldInterface as FieldInterface;
 
 /**
  * Class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Inventory
@@ -44,37 +43,11 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Inventory im
 
         foreach ($inventoryData as $inventoryDataRow) {
             $productId = (int) $inventoryDataRow['product_id'];
-            $indexData[$productId]['stock'] = $this->prepareStockData($inventoryDataRow);
+            $indexData[$productId]['stock'] = $this->generalMapping->prepareStockData($inventoryDataRow);
         }
 
         $inventoryData = null;
 
         return $indexData;
-    }
-
-    /**
-     * @param array $stockData
-     *
-     * @return array
-     */
-    private function prepareStockData(array $stockData)
-    {
-        $stockMapping = $this->generalMapping->getStockMapping();
-
-        foreach ($stockData as $key => $value) {
-            if (isset($stockMapping[$key]['type'])) {
-                $type = $stockMapping[$key]['type'];
-
-                if ($type === FieldInterface::TYPE_BOOLEAN) {
-                    settype($stockData[$key], 'bool');
-                }
-
-                if ($type === FieldInterface::TYPE_LONG) {
-                    settype($stockData[$key], 'int');
-                }
-            }
-        }
-        
-        return $stockData;
     }
 }

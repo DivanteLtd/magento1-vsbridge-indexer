@@ -75,4 +75,34 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Generalmapping
             'use_config_qty_increments' => ['type' => FieldInterface::TYPE_BOOLEAN],
         ];
     }
+
+    /**
+     * @param array $stockData
+     *
+     * @return array
+     */
+    public function prepareStockData(array $stockData)
+    {
+        $stockMapping = $this->getStockMapping();
+
+        foreach ($stockData as $key => $value) {
+            if (isset($stockMapping[$key]['type'])) {
+                $type = $stockMapping[$key]['type'];
+
+                if ($type === FieldInterface::TYPE_BOOLEAN) {
+                    settype($stockData[$key], 'bool');
+                }
+
+                if ($type === FieldInterface::TYPE_LONG) {
+                    settype($stockData[$key], 'int');
+                }
+
+                if ($type === FieldInterface::TYPE_DOUBLE) {
+                    settype($stockData[$key], 'double');
+                }
+            }
+        }
+
+        return $stockData;
+    }
 }

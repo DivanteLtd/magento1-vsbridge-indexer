@@ -63,16 +63,53 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Inventory
         $this->connection = $this->resource->getConnection('catalog_read');
     }
 
-    public function loadInventoryData($storeId, $productIds)
+    /**
+     * @param int   $storeId
+     * @param array $productIds
+     *
+     * @return array
+     * @throws Mage_Core_Model_Store_Exception
+     */
+    public function loadInventoryData($storeId, array $productIds)
+    {
+        return $this->getInventoryData($storeId, $productIds, $this->fields);
+    }
+
+    /**
+     * @param int   $storeId
+     * @param array $productIds
+     *
+     * @return array
+     * @throws Mage_Core_Model_Store_Exception
+     */
+    public function loadChildrenData($storeId, array $productIds)
+    {
+        $fields = [
+            'product_id',
+            'is_in_stock',
+            'qty',
+        ];
+
+        return $this->getInventoryData($storeId, $productIds, $fields);
+    }
+
+    /**
+     * @param int   $storeId
+     * @param array $productIds
+     * @param array $fields
+     *
+     * @return array
+     * @throws Mage_Core_Model_Store_Exception
+     */
+    private function getInventoryData($storeId, array $productIds, array $fields)
     {
         $websiteId = Mage::app()->getStore($storeId)->getWebsiteId();
 
         $select = $this->connection->select()
             ->from(
                 ['main_table' => $this->resource->getTableName('cataloginventory/stock_item')],
-                $this->fields
-            )
-            ->where('main_table.product_id IN (?)', $productIds);
+                $fields
+            )->where('main_table.product_id IN (?)', $productIds);
 
         $select->joinLeft(
             ['status_table' => $this->resource->getTableName('cataloginventory/stock_status')],

@@ -64,6 +64,12 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Product extends AbstractM
                 $attributesMapping = array_merge($attributesMapping, $this->getAttributeMapping($attribute));
             }
 
+            /**
+             * @var $generalMapping GeneralMapping
+             */
+            $generalMapping = Mage::getSingleton('vsf_indexer/index_mapping_generalmapping');
+            $attributesMapping['stock']['properties'] = $generalMapping->getStockMapping();
+
             $attributesMapping['media_gallery'] = [
                 'properties' => [
                     'type' => ['type' => FieldInterface::TYPE_TEXT],
@@ -140,12 +146,6 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Product extends AbstractM
                 ],
                 'configurable_children' => ['properties' => $attributesMapping]
             ];
-
-            /**
-             * @var $generalMapping GeneralMapping
-             */
-            $generalMapping = Mage::getSingleton('vsf_indexer/index_mapping_generalmapping');
-            $properties['stock']['properties'] = $generalMapping->getStockMapping();
 
             $properties = array_merge($properties, $attributesMapping);
             $properties = array_merge($properties, $generalMapping->getCommonProperties());

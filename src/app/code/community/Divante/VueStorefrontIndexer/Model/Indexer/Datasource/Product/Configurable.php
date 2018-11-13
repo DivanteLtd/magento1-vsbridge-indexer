@@ -1,6 +1,7 @@
 <?php
 
 use Divante_VueStorefrontIndexer_Api_DatasourceInterface as DataSourceInterface;
+use Divante_VueStorefrontIndexer_Model_Index_Mapping_Generalmapping as GeneralMapping;
 
 /**
  * Class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
@@ -24,6 +25,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      */
     private $childBlackListConfig = [
         'entity_id',
+        'parent_id',
         'parent_ids',
     ];
 
@@ -62,6 +64,16 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
     private $resourceAttributeModel;
 
     /**
+     * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Inventory
+     */
+    private $inventoryResource;
+
+    /**
+     * @var GeneralMapping
+     */
+    private $generalMapping;
+
+    /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Action_Category_Full constructor.
      */
     public function __construct()
@@ -69,6 +81,8 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
         $this->resourceAttributeModel = Mage::getResourceModel('vsf_indexer/catalog_product_attributes');
         $this->configurableResource = Mage::getResourceModel('vsf_indexer/catalog_product_configurable');
         $this->dataFilter = Mage::getSingleton('vsf_indexer/data_filter');
+        $this->generalMapping = Mage::getSingleton('vsf_indexer/index_mapping_generalmapping');
+        $this->inventoryResource = Mage::getResourceModel('vsf_indexer/catalog_product_inventory');
     }
 
     /**
@@ -82,6 +96,8 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
         $allChildren = $this->configurableResource->getSimpleProducts($storeId);
 
         if (null !== $allChildren) {
+            $childIds = array_keys($allChildren);
+            $stockRowData = $this->inventoryResource->loadChildrenData($storeId, $childIds);
             $configurableAttributeCodes = $this->configurableResource->getConfigurableAttributeCodes();
 
             $requiredAttributes = array_merge(
@@ -93,8 +109,16 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
             $allChildren = $this->loadChildrenRawAttributesInBatches($storeId, $allChildren, $requiredAttribute);
 
             foreach ($allChildren as $child) {
+                $childId = $child['entity_id'];
                 $child['id'] = intval($child['entity_id']);
                 $parentIds = $child['parent_ids'];
+
+                if (isset($stockRowData[$childId])) {
+                    $productStockData = $stockRowData[$childId];
+                    unset($productStockData['product_id']);
+                    $productStockData = $this->generalMapping->prepareStockData($productStockData);
+                    $child['stock'] = $productStockData;
+                }
 
                 foreach ($parentIds as $parentId) {
                     $child = $this->filterData($child);
@@ -102,7 +126,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
                     if (!isset($indexData[$parentId]['configurable_options'])) {
                         $indexData[$parentId]['configurable_options'] = [];
                     }
-
+                    
                     $indexData[$parentId]['configurable_children'][] = $child;
                 }
             }
@@ -120,6 +144,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      * @param array $indexData
      *
      * @return array
+     * @throws Mage_Core_Exception
      */
     private function addConfigurableAttributes(array $indexData)
     {
