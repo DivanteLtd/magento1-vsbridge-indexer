@@ -13,6 +13,7 @@ use Divante_VueStorefrontIndexer_Api_DatasourceInterface as DataSourceInterface;
  */
 class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Attribute_Options implements DataSourceInterface
 {
+    const DEFAULT_SOURCE_MODEL = 'eav/entity_attribute_source_table';
 
     /**
      * @inheritdoc
@@ -27,7 +28,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Attribute_Options im
             }
 
             if ($this->useSource($attributeData)) {
-                $attributeData['options'] = $this->getAttributeOptions($attributeId, $storeId);
+                $attributeData['options'] = $this->getAttributeOptions($attributeData, $storeId);
             }
         }
 
@@ -35,15 +36,33 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Attribute_Options im
     }
 
     /**
-     * @param int $attributeId
+     * @param array $attributeData
      * @param int $storeId
      *
      * @return array
      */
-    private function getAttributeOptions($attributeId, $storeId)
+    private function getAttributeOptions(array $attributeData, $storeId)
     {
-        $options = Mage::getResourceModel('eav/entity_attribute_option_collection');
-        $values  = $options->setAttributeFilter($attributeId)->setStoreFilter($storeId)->toOptionArray();
+        $values = [];
+        $source = (string)$attributeData['source_model'];
+        $attributeId = $attributeData['attribute_id'];
+
+        if ('' !== $source && self::DEFAULT_SOURCE_MODEL !== $source) {
+            $sourceModel = Mage::getModel($source);
+
+            if (false !== $sourceModel) {
+                if ($sourceModel instanceof Mage_Eav_Model_Entity_Attribute_Source_Abstract) {
+                    $attribute = Mage::getModel('eav/entity_attribute')->load($attributeId);
+                    $attribute->setStoreId($storeId);
+                    $sourceModel->setAttribute($attribute);
+                }
+
+                $values = $sourceModel->getAllOptions(false);
+            }
+        } else {
+            $options = Mage::getResourceModel('eav/entity_attribute_option_collection');
+            $values  = $options->setAttributeFilter($attributeId)->setStoreFilter($storeId)->toOptionArray();
+        }
 
         return $values;
     }
