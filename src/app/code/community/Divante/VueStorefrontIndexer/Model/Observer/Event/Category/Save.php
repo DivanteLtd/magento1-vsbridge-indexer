@@ -1,6 +1,7 @@
 <?php
 
 use Divante_VueStorefrontIndexer_Model_Event_Handler as EventHandler;
+use Divante_VueStorefrontIndexer_Model_Indexer_Categories as CategoryIndexer;
 use Mage_Catalog_Model_Category as Category;
 
 /**
@@ -38,20 +39,42 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Category_Save
         if ($dataObject instanceof Category) {
             $this->logEvent(
                 $dataObject->getId(),
-                Divante_VueStorefrontIndexer_Model_Indexer_Categories::TYPE,
+                CategoryIndexer::TYPE,
                 'save'
             );
 
-            if ($dataObject->getIsActive() && $dataObject->getData('is_changed_product_list')) {
+            $this->updateParentCategories($dataObject);
+
+            if ($dataObject->getData('is_changed_product_list')) {
                 $affectedProductIds = $dataObject->getData('affected_product_ids');
+                $entityType = CategoryIndexer::TYPE;
 
                 foreach ($affectedProductIds as $productId) {
                     $this->logEvent(
                         $productId,
-                        Divante_VueStorefrontIndexer_Model_Indexer_Products::TYPE,
+                        $entityType,
                         'save'
                     );
                 }
+            }
+        }
+    }
+
+    /**
+     * @param Mage_Catalog_Model_Category $category
+     */
+    private function updateParentCategories(Category $category)
+    {
+        $path = $category->getPath();
+        $categoryIds = explode('/', $path);
+
+        foreach ($categoryIds as $categoryId) {
+            if ($categoryId != $category->getId() && $categoryId != Category::TREE_ROOT_ID) {
+                $this->logEvent(
+                    $categoryId,
+                    CategoryIndexer::TYPE,
+                    'save'
+                );
             }
         }
     }
