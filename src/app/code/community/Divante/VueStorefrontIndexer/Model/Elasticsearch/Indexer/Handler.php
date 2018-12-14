@@ -118,8 +118,13 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Indexer_Handler
             );
 
             $response = $this->indexOperation->executeBulk($bulkRequest);
-
-            Mage::dispatchEvent('search_engine_delete_documents_after', ['bulk_response' => $response]);
+            Mage::dispatchEvent(
+                'search_engine_delete_documents_after',
+                [
+                    'data_type' => $this->typeName,
+                    'bulk_response' => $response
+                ]
+            );
         }
     }
 
@@ -153,7 +158,15 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Indexer_Handler
                 $docs
             );
 
-            $this->indexOperation->executeBulk($bulkRequest);
+            $response = $this->indexOperation->executeBulk($bulkRequest);
+            Mage::dispatchEvent(
+                'search_engine_save_documents_after',
+                [
+                    'data_type' => $this->typeName,
+                    'bulk_response' => $response
+                ]
+            );
+
             $docs = null;
         }
 

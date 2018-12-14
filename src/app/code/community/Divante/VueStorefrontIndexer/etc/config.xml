@@ -235,6 +235,22 @@
             </indexer>
         </vsf_indexer>
         <events>
+            <search_engine_delete_documents_after>
+                <observers>
+                    <vsf_indexer_cache_clear>
+                        <class>vsf_indexer/observer_cache</class>
+                        <method>execute</method>
+                    </vsf_indexer_cache_clear>
+                </observers>
+            </search_engine_delete_documents_after>
+            <search_engine_save_documents_after>
+                <observers>
+                    <vsf_indexer_cache_clear>
+                        <class>vsf_indexer/observer_cache</class>
+                        <method>execute</method>
+                    </vsf_indexer_cache_clear>
+                </observers>
+            </search_engine_save_documents_after>
         </events>
     </global>
     <default>
@@ -247,6 +263,12 @@
                 <batch_indexing_size>1000</batch_indexing_size>
                 <index_name>vue_storefront_magento</index_name>
             </indices_settings>
+            <redis_cache_settings>
+                <clear_cache>0</clear_cache>
+                <vsf_base_url>http://10.0.2.2:3000/</vsf_base_url>
+                <invalidate_cache_key>aeSu7aip</invalidate_cache_key>
+                <connection_timeout>10</connection_timeout>
+            </redis_cache_settings>
         </vuestorefront>
     </default>
 </config>

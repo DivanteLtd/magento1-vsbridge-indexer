@@ -51,6 +51,20 @@ class Divante_VueStorefrontIndexer_Model_Index_Bulkresponse implements BulkRespo
 
         return $errors;
     }
+    /**
+     * {@inheritDoc}
+     */
+    public function getSuccessItems()
+    {
+        $successes = array_filter(
+            $this->rawResponse['items'],
+            function ($item) {
+                return !isset(current($item)['error']);
+            }
+        );
+
+        return $successes;
+    }
 
     /**
      * @inheritDoc

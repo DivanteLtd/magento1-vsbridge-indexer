@@ -25,5 +25,10 @@ interface Divante_VueStorefrontIndexer_Api_BulkResponseInterface
     /**
      * @return array
      */
+    public function getSuccessItems();
+
+    /**
+     * @return array
+     */
     public function aggregateErrorsByReason();
 }
