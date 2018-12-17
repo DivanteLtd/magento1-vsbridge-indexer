@@ -86,7 +86,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
 
         foreach ($tableAttributes as $table => $attributeIds) {
             $select = $this->getLoadAttributesSelect($storeId, $table, $attributeIds, $entityIds);
-            $selects[$attributeTypes[$table]] = $select;
+            $selects[$table] = $select;
         }
 
         $this->valuesByEntityId = [];
