@@ -48,4 +48,17 @@ interface Divante_VueStorefrontIndexer_Api_BulkRequestInterface
      * @return Divante_VueStorefrontIndexer_Api_BulkRequestInterface
      */
     public function deleteDocuments($index, $type, array $docIds);
+
+    /**
+     * Update several documents to the index.
+     *
+     * $data format have to be an array of all documents with document id as key.
+     *
+     * @param string $index Index the documents have to be added to.
+     * @param string  $type  Document type.
+     * @param array          $data  Document data.
+     *
+     * @return Divante_VueStorefrontIndexer_Api_BulkRequestInterface
+     */
+    public function updateDocuments($index, $type, array $data);
 }

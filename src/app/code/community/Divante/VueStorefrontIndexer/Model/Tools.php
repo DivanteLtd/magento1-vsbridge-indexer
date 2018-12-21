@@ -1,8 +1,10 @@
 <?php
 
 use Divante_VueStorefrontIndexer_Api_IndexerInterface as IndexerInterface;
+use Divante_VueStorefrontIndexer_Api_Indexer_UpdateInterface as IndexerUpdateInterface;
 use Divante_VueStorefrontIndexer_Model_Index_Operations as IndexOperation;
 use Divante_VueStoreFrontIndexer_Model_Event_Delete as DeleteEvent;
+use Divante_VueStorefrontIndexer_Model_Indexer_Productcategories as ProductCategories;
 
 /**
  * Class Divante_VueStorefrontIndexer_Model_Tools
@@ -51,7 +53,7 @@ class Divante_VueStorefrontIndexer_Model_Tools
         $types = array_keys($mappingConfig);
 
         foreach ($types as $type) {
-            $this->reindexByType($type, $storeId);
+            $this->runFullReindexByType($type, $storeId);
         }
     }
 
@@ -59,7 +61,7 @@ class Divante_VueStorefrontIndexer_Model_Tools
      * @param string $type
      * @param null|int $storeId
      */
-    public function reindexByType($type, $storeId = null)
+    public function runFullReindexByType($type, $storeId = null)
     {
         $mappingConfig = Mage::getConfig()->getNode(self::MAPPING_CONF_ROOT_NODE)->asArray();
 
@@ -89,7 +91,7 @@ class Divante_VueStorefrontIndexer_Model_Tools
             $class = $config['class'];
             $model = Mage::getModel($class);
 
-            if ($model instanceof IndexerInterface) {
+            if ($model instanceof IndexerInterface || $model instanceof IndexerUpdateInterface) {
                 $type = $model->getTypeName();
                 $types[$type] = $model;
             }
@@ -134,10 +136,10 @@ class Divante_VueStorefrontIndexer_Model_Tools
     }
 
     /**
-     * @param Divante_VueStorefrontIndexer_Api_IndexerInterface $indexerModel
+     * @param Divante_VueStorefrontIndexer_Api_IndexerInterface|Divante_VueStorefrontIndexer_Api_Indexer_UpdateInterface $indexerModel
      * @param int|null $storeId
      */
-    private function runPartialIndexing(IndexerInterface $indexerModel, $storeId = null)
+    private function runPartialIndexing($indexerModel, $storeId = null)
     {
         $type = $indexerModel->getTypeName();
 

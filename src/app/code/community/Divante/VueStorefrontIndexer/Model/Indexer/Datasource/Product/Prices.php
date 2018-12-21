@@ -64,7 +64,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Prices imple
      * @throws Mage_Core_Exception
      * @throws Mage_Core_Model_Store_Exception
      */
-    private function applyTierGroupPrices(array $indexData, $storeId)
+    public function applyTierGroupPrices(array $indexData, $storeId)
     {
         $productIds = array_keys($indexData);
         $websiteId = $this->getWebsiteId($storeId);

@@ -232,6 +232,9 @@
                 <taxrules>
                     <class>Divante_VueStorefrontIndexer_Model_Indexer_Taxrules</class>
                 </taxrules>
+                <product_categories>
+                    <class>Divante_VueStorefrontIndexer_Model_Indexer_Productcategories</class>
+                </product_categories>
             </indexer>
         </vsf_indexer>
         <events>
@@ -262,6 +265,7 @@
             <indices_settings>
                 <batch_indexing_size>1000</batch_indexing_size>
                 <index_name>vue_storefront_magento</index_name>
+                <category_products_update>0</category_products_update>
             </indices_settings>
             <redis_cache_settings>
                 <clear_cache>0</clear_cache>

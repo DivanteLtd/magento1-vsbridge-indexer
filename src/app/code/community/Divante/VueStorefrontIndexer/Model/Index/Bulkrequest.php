@@ -53,6 +53,18 @@ class Divante_VueStorefrontIndexer_Model_Index_Bulkrequest implements BulkReques
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function addDocuments($index, $type, array $data)
+    {
+        foreach ($data as $docId => $documentData) {
+            $this->addDocument($index, $type, $docId, $documentData);
+        }
+
+        return $this;
+    }
+
+    /**
      * @param string $index
      * @param string $type
      * @param string $docId
@@ -78,11 +90,34 @@ class Divante_VueStorefrontIndexer_Model_Index_Bulkrequest implements BulkReques
     /**
      * {@inheritdoc}
      */
-    public function addDocuments($index, $type, array $data)
+    public function updateDocuments($index, $type, array $data)
     {
         foreach ($data as $docId => $documentData) {
-            $this->addDocument($index, $type, $docId, $documentData);
+            $this->updateDocument($index, $type, $docId, $documentData);
         }
+
+        return $this;
+    }
+
+    /**
+     * @param string $index
+     * @param string $type
+     * @param string $docId
+     * @param array $data
+     *
+     * @return $this
+     */
+    private function updateDocument($index, $type, $docId, array $data)
+    {
+        $this->bulkData[] = [
+            'update' => [
+                '_index' => $index,
+                '_id' => $docId,
+                '_type' => $type
+            ]
+        ];
+
+        $this->bulkData[] = ['doc' => $data];
 
         return $this;
     }

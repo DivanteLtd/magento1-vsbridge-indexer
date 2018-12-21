@@ -1,6 +1,7 @@
 <?php
 
 use Divante_VueStorefrontIndexer_Api_DatasourceInterface as DataSourceInterface;
+use Mage_Eav_Model_Resource_Entity_Attribute_Option_Collection as OptionCollection;
 
 /**
  * Class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Attribute_Basic
@@ -13,6 +14,7 @@ use Divante_VueStorefrontIndexer_Api_DatasourceInterface as DataSourceInterface;
  */
 class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Attribute_Options implements DataSourceInterface
 {
+
     const DEFAULT_SOURCE_MODEL = 'eav/entity_attribute_source_table';
 
     /**
@@ -37,11 +39,11 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Attribute_Options im
 
     /**
      * @param array $attributeData
-     * @param int $storeId
+     * @param int   $storeId
      *
      * @return array
      */
-    private function getAttributeOptions(array $attributeData, $storeId)
+    public function getAttributeOptions(array $attributeData, $storeId)
     {
         $values = [];
         $source = (string)$attributeData['source_model'];
@@ -60,11 +62,53 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Attribute_Options im
                 $values = $sourceModel->getAllOptions(false);
             }
         } else {
+            /** @var Mage_Eav_Model_Resource_Entity_Attribute_Option_Collection $options */
             $options = Mage::getResourceModel('eav/entity_attribute_option_collection');
-            $values  = $options->setAttributeFilter($attributeId)->setStoreFilter($storeId)->toOptionArray();
+            $options->setOrder('sort_order', 'asc');
+            $options->setAttributeFilter($attributeId)->setStoreFilter($storeId);
+            $values = $this->toOptionArray($options);
         }
 
         return $values;
+    }
+
+    /**
+     * @param OptionCollection $collection
+     *
+     * @param array $additional
+     *
+     * @return array
+     */
+    public function toOptionArray(OptionCollection $collection, array $additional = [])
+    {
+        $res = [];
+        $additional['value'] = 'option_id';
+        $additional['label'] = 'value';
+        $additional['sort_order'] = 'sort_order';
+
+        foreach ($collection as $item) {
+            $data = [];
+
+            foreach ($additional as $code => $field) {
+                $value = $item->getData($field);
+
+                if ($field === 'sort_order') {
+                    $value = (int)$value;
+                }
+
+                if ($field === 'option_id') {
+                    $value = (string)$value;
+                }
+
+                $data[$code] = $value;
+            }
+
+            if ($data) {
+                $res[] = $data;
+            }
+        }
+
+        return $res;
     }
 
     /**

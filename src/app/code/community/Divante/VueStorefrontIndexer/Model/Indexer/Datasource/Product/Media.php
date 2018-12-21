@@ -20,11 +20,17 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Media implem
     private $resource;
 
     /**
+     * @var Divante_VueStorefrontIndexer_Model_Data_Gallery
+     */
+    private $galleryData;
+
+    /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Links constructor.
      */
     public function __construct()
     {
         $this->resource = Mage::getResourceModel('vsf_indexer/catalog_product_media');
+        $this->galleryData = Mage::getModel('vsf_indexer/data_gallery');
     }
 
     /**
@@ -35,42 +41,12 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Media implem
         $productIds = array_keys($indexData);
         $gallerySet = $this->resource->loadGallerySet($productIds, $storeId);
 
-        foreach ($gallerySet as $mediaImage) {
-            $productId = $mediaImage['product_id'];
-            $image['typ'] = 'image';
-            $image = [
-                'typ' => 'image',
-                'image' => $mediaImage['file'],
-                'lab' => $this->getValue('label', $mediaImage),
-                'pos' => intval($this->getValue('position', $mediaImage)),
-            ];
+        $galleryPerProduct = $this->galleryData->prepareMediaGallery($gallerySet);
 
-            if (!isset($indexData[$productId]['media_gallery']) || !is_array($indexData[$productId]['media_gallery'])) {
-                $indexData[$productId]['media_gallery'] = [];
-            }
-
-            $indexData[$productId]['media_gallery'][] = $image;
+        foreach ($galleryPerProduct as $productId => $mediaGallery) {
+            $indexData[$productId]['media_gallery'] = $mediaGallery;
         }
 
         return $indexData;
-    }
-
-    /**
-     * @param string $fieldKey
-     * @param array $image
-     *
-     * @return string
-     */
-    private function getValue($fieldKey, array $image)
-    {
-        if (isset($image[$fieldKey]) && (null !== $image[$fieldKey])) {
-            return $image[$fieldKey];
-        }
-
-        if (isset($image[$fieldKey . '_default'])) {
-            return $image[$fieldKey . '_default'];
-        }
-
-        return '';
     }
 }

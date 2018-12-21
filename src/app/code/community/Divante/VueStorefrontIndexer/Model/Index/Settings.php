@@ -31,6 +31,14 @@ class Divante_VueStorefrontIndexer_Model_Index_Settings
     }
 
     /**
+     * @return bool
+     */
+    public function runFullProductUpdateOnPositionChanged()
+    {
+        return (bool)$this->getConfigParam('category_products_update');
+    }
+
+    /**
      * @param string $configField
      *
      * @return string|null|int

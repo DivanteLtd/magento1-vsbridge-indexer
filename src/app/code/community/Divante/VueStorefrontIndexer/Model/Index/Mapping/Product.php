@@ -127,8 +127,10 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Product extends AbstractM
                     ],
                 ],
                 'category' => [
+                    'type' => 'nested',
                     'properties' => [
                         'category_id' => ['type' => FieldInterface::TYPE_LONG],
+                        'position' => ['type' => FieldInterface::TYPE_LONG],
                         'name' => ['type' => FieldInterface::TYPE_TEXT],
                     ]
                 ],

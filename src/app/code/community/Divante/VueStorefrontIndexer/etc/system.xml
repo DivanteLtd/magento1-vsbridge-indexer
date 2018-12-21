@@ -107,6 +107,15 @@
                             <validate>required-entry</validate>
                             <comment>defaut name: "vue_storefront_magento". For each store view, store id will be added to index name, e.g. "vue_storefront_magento_1"</comment>
                         </index_name>
+                        <category_products_update>
+                            <label>Full product update on position changed</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>If product position has changed in category full product update will be made to elastisearch</comment>
+                        </category_products_update>
                     </fields>
                 </indices_settings>
                 <redis_cache_settings>

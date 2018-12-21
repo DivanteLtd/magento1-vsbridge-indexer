@@ -2,6 +2,8 @@
 
 use Divante_VueStorefrontIndexer_Model_Event_Handler as EventHandler;
 use Divante_VueStorefrontIndexer_Model_Indexer_Categories as CategoryIndexer;
+use Divante_VueStorefrontIndexer_Model_Indexer_Products as ProductIndexer;
+use Divante_VueStorefrontIndexer_Model_Indexer_Productcategories as ProductCategoryIndexer;
 use Mage_Catalog_Model_Category as Category;
 
 /**
@@ -22,11 +24,17 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Category_Save
     private $eventHandler;
 
     /**
+     * @var Divante_VueStorefrontIndexer_Model_Index_Settings
+     */
+    private $configSettings;
+
+    /**
      * Divante_VueStoreFrontElasticSearch_Model_Observer_LogEventObserver constructor.
      */
     public function __construct()
     {
         $this->eventHandler = Mage::getSingleton('vsf_indexer/event_handler');
+        $this->configSettings = Mage::getSingleton('vsf_indexer/index_settings');
     }
 
     /**
@@ -47,7 +55,11 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Category_Save
 
             if ($dataObject->getData('is_changed_product_list')) {
                 $affectedProductIds = $dataObject->getData('affected_product_ids');
-                $entityType = CategoryIndexer::TYPE;
+                $entityType = ProductCategoryIndexer::ENTITY_TYPE;
+
+                if ($this->configSettings->runFullProductUpdateOnPositionChanged()) {
+                    $entityType = ProductIndexer::TYPE;
+                }
 
                 foreach ($affectedProductIds as $productId) {
                     $this->logEvent(

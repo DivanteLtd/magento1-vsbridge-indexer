@@ -19,7 +19,6 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      * @var int
      */
     private $batchSize = 500;
-
     /**
      * @var array
      */
@@ -28,7 +27,6 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
         'parent_id',
         'parent_ids',
     ];
-
     /**
      * We don't have to load all attributes, we have load data for simple products separately
      * If we have lots of configurable products with children, we have to process smaller batches
@@ -37,8 +35,6 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      */
     private $requireChildrenAttributes = [
         'name',
-        'price',
-        'special_price',
         'small_image',
         'thumbnail',
         'image',
@@ -47,27 +43,22 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
         'visibility',
         'tax_class_id',
     ];
-
     /**
      * @var Divante_VueStorefrontIndexer_Model_Data_Filter
      */
     private $dataFilter;
-
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
      */
     private $configurableResource;
-
     /**
      * @var  Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Attributes
      */
     private $resourceAttributeModel;
-
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Inventory
      */
     private $inventoryResource;
-
     /**
      * @var GeneralMapping
      */
@@ -94,14 +85,16 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
         $this->configurableResource->setProducts($indexData);
 
         $allChildren = $this->configurableResource->getSimpleProducts($storeId);
+        $notifyStockDefaultValue = $this->getNotifyForQtyBelowDefaultValue($storeId);
 
         if (null !== $allChildren) {
             $childIds = array_keys($allChildren);
             $stockRowData = $this->inventoryResource->loadChildrenData($storeId, $childIds);
+
             $configurableAttributeCodes = $this->configurableResource->getConfigurableAttributeCodes();
 
             $requiredAttributes = array_merge(
-                $this->requireChildrenAttributes,
+                $this->getRequiredChildrenAttributes(),
                 $configurableAttributeCodes
             );
 
@@ -111,10 +104,18 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
             foreach ($allChildren as $child) {
                 $childId = $child['entity_id'];
                 $child['id'] = intval($child['entity_id']);
+
                 $parentIds = $child['parent_ids'];
 
                 if (isset($stockRowData[$childId])) {
                     $productStockData = $stockRowData[$childId];
+
+                    if (isset($productStockData['use_config_notify_stock_qty'])
+                        && $productStockData['use_config_notify_stock_qty']
+                    ) {
+                        $productStockData['notify_stock_qty'] = $notifyStockDefaultValue;
+                    }
+
                     unset($productStockData['product_id']);
                     $productStockData = $this->generalMapping->prepareStockData($productStockData);
                     $child['stock'] = $productStockData;
@@ -126,7 +127,13 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
                     if (!isset($indexData[$parentId]['configurable_options'])) {
                         $indexData[$parentId]['configurable_options'] = [];
                     }
-                    
+
+                    /**
+                     * TODO adjust calculating price like in Magento1 -> super attribute configuration
+                     */
+                    $child['price'] = $indexData[$parentId]['price'];
+                    $child['special_price'] = $indexData[$parentId]['special_price'];
+
                     $indexData[$parentId]['configurable_children'][] = $child;
                 }
             }
@@ -138,6 +145,24 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
         $this->configurableResource->clear();
 
         return $indexData;
+    }
+
+    /**
+     * @param $storeId
+     *
+     * @return float
+     */
+    private function getNotifyForQtyBelowDefaultValue($storeId)
+    {
+        return (float)Mage::getStoreConfig(Mage_CatalogInventory_Model_Stock_Item::XML_PATH_NOTIFY_STOCK_QTY, $storeId);
+    }
+
+    /**
+     * @return array
+     */
+    public function getRequiredChildrenAttributes()
+    {
+        return $this->requireChildrenAttributes;
     }
 
     /**
@@ -167,10 +192,15 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
                     }
 
                     $values = [];
+                    $areChildInStock = 0;
 
                     foreach ($configurableChildren as $child) {
                         if (isset($child[$attributeCode])) {
                             $values[] = intval($child[$attributeCode]);
+                        }
+
+                        if ($child['stock']['is_in_stock']) {
+                            $areChildInStock = 1;
                         }
                     }
 
@@ -178,6 +208,12 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
 
                     foreach ($values as $value) {
                         $productAttribute['values'][] = ['value_index' => $value];
+                    }
+
+                    $productStockStatus = $indexData[$productId]['stock']['stock_status'];
+
+                    if ($productStockStatus && !$areChildInStock) {
+                        $indexData[$productId]['stock']['stock_status'] = 0;
                     }
 
                     $indexData[$productId]['configurable_options'][] = $productAttribute;
@@ -190,7 +226,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
     }
 
     /**
-     * @param int $storeId
+     * @param int   $storeId
      * @param array $allChildren
      * @param array $requiredAttributes
      *

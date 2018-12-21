@@ -129,6 +129,56 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Indexer_Handler
     }
 
     /**
+     * @param Traversable           $documents
+     * @param Mage_Core_Model_Store $store
+     * @param array                 $requireDataSources
+     *
+     * @return $this
+     * @throws Mage_Core_Exception
+     */
+    public function updateIndex(\Traversable $documents, Store $store, array $requireDataSources)
+    {
+        $index = $this->getIndex($store);
+        $type = $index->getType($this->typeName);
+        $dataSources = [];
+
+        foreach ($type->getDatasources() as $name => $datasource) {
+            if (in_array($name, $requireDataSources)) {
+                $dataSources[] = $datasource;
+            }
+        }
+
+        if (empty($dataSources)) {
+            return $this;
+        }
+
+        /** @var Divante_VueStorefrontIndexer_Model_Indexer_Batch $batch */
+        $batch = Mage::getSingleton('vsf_indexer/indexer_batch');
+
+        foreach ($batch->getItems($documents, $this->getBatchSize()) as $docs) {
+            /** @var Divante_VueStorefrontIndexer_Api_DatasourceInterface $datasource */
+            foreach ($dataSources as $datasource) {
+                if (!empty($docs)) {
+                    $docs = $datasource->addData($docs, $store->getId());
+                }
+            }
+
+            $docs = $this->convertDataTypes->castFieldsUsingMapping($type, $docs);
+
+            $bulkRequest = $this->indexOperation->createBulk()->updateDocuments(
+                $index->getName(),
+                $this->typeName,
+                $docs
+            );
+
+            $this->indexOperation->executeBulk($bulkRequest);
+            $docs = null;
+        }
+
+        $this->indexOperation->refreshIndex($index);
+    }
+
+    /**
      * @param \Traversable $documents
      * @param Store       $store
      *

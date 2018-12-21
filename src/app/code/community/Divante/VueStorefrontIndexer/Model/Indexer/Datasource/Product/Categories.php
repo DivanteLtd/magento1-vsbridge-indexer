@@ -38,10 +38,12 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Categories i
         foreach ($categoryData as $categoryDataRow) {
             $productId = (int)$categoryDataRow['product_id'];
             $categoryId = (int)$categoryDataRow['category_id'];
+            $position = (int)$categoryDataRow['position'];
 
             $categoryData = [
                 'category_id' => $categoryId,
                 'name' => (string)$categoryDataRow['name'],
+                'position' => $position,
             ];
 
             if (!isset($indexData[$productId]['category'])) {
