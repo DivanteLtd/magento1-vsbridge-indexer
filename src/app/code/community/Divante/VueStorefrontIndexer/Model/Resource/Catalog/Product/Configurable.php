@@ -165,6 +165,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
             ->from(
                 $this->resource->getTableName('catalog/product_super_attribute_pricing'),
                 [
+                    'value_id',
                     'value_index',
                     'product_super_attribute_id',
                     'is_percent',
