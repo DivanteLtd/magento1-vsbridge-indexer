@@ -67,6 +67,10 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      * @var Divante_VueStorefrontIndexer_Model_Config_Productsettings
      */
     private $configSettings;
+    /**
+     * @var Divante_VueStorefrontIndexer_Model_Validator_Product
+     */
+    private $validator;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Action_Category_Full constructor.
@@ -79,6 +83,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
         $this->generalMapping = Mage::getSingleton('vsf_indexer/index_mapping_generalmapping');
         $this->inventoryResource = Mage::getResourceModel('vsf_indexer/catalog_product_inventory');
         $this->configSettings = Mage::getSingleton('vsf_indexer/config_productsettings');
+        $this->validator = Mage::getSingleton('vsf_indexer/validator_product');
     }
 
     /**
@@ -89,64 +94,98 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
         $this->configurableResource->clear();
         $this->configurableResource->setProducts($indexData);
 
-        $allChildren = $this->configurableResource->getSimpleProducts($storeId);
-        $notifyStockDefaultValue = $this->getNotifyForQtyBelowDefaultValue($storeId);
-
-        if (null !== $allChildren) {
-            $childIds = array_keys($allChildren);
-            $stockRowData = $this->inventoryResource->loadChildrenData($storeId, $childIds);
-
-            $configurableAttributeCodes = $this->configurableResource->getConfigurableAttributeCodes();
-
-            $requiredAttributes = array_merge(
-                $this->getRequiredChildrenAttributes(),
-                $configurableAttributeCodes
-            );
-
-            $requiredAttribute = array_unique($requiredAttributes);
-            $allChildren = $this->loadChildrenRawAttributesInBatches($storeId, $allChildren, $requiredAttribute);
-
-            foreach ($allChildren as $child) {
-                $childId = $child['entity_id'];
-                $child['id'] = intval($child['entity_id']);
-
-                $parentIds = $child['parent_ids'];
-
-                if (isset($stockRowData[$childId])) {
-                    $productStockData = $stockRowData[$childId];
-
-                    if (isset($productStockData['use_config_notify_stock_qty'])
-                        && $productStockData['use_config_notify_stock_qty']
-                    ) {
-                        $productStockData['notify_stock_qty'] = $notifyStockDefaultValue;
-                    }
-
-                    unset($productStockData['product_id']);
-                    $productStockData = $this->generalMapping->prepareStockData($productStockData);
-                    $child['stock'] = $productStockData;
-                }
-
-                foreach ($parentIds as $parentId) {
-                    $child = $this->filterData($child);
-
-                    if (!isset($indexData[$parentId]['configurable_options'])) {
-                        $indexData[$parentId]['configurable_options'] = [];
-                    }
-
-                    if (!$this->configSettings->useSimplePriceForConfigurableChildren()) {
-                        $child['price'] = $indexData[$parentId]['price'];
-                        $child['special_price'] = $indexData[$parentId]['special_price'];
-                    }
-
-                    $indexData[$parentId]['configurable_children'][] = $child;
-                }
-            }
-
-            $allChildren = null;
-            $indexData = $this->addConfigurableAttributes($indexData);
-        }
+        $indexData = $this->prepareConfigurableChildrenAttributes($indexData, $storeId);
+        $indexData = $this->addConfigurableAttributes($indexData);
 
         $this->configurableResource->clear();
+
+        return $indexData;
+    }
+
+    /**
+     * @param array $indexData
+     * @param int $storeId
+     *
+     * @return array
+     * @throws Mage_Core_Exception
+     * @throws Mage_Core_Model_Store_Exception
+     */
+    private function prepareConfigurableChildrenAttributes(array $indexData, $storeId)
+    {
+        $allChildren = $this->configurableResource->getSimpleProducts($storeId);
+
+        if (null === $allChildren) {
+            return $indexData;
+        }
+
+        $notifyStockDefaultValue = $this->getNotifyForQtyBelowDefaultValue($storeId);
+        $childIds = array_keys($allChildren);
+
+        $stockRowData = $this->inventoryResource->loadChildrenData($storeId, $childIds);
+        $configurableAttributeCodes = $this->configurableResource->getConfigurableAttributeCodes();
+
+        $requiredAttributes = array_merge(
+            $this->getRequiredChildrenAttributes(),
+            $configurableAttributeCodes
+        );
+
+        $requiredAttribute = array_unique($requiredAttributes);
+        $allChildren = $this->loadChildrenRawAttributesInBatches($storeId, $allChildren, $requiredAttribute);
+
+        foreach ($allChildren as $child) {
+            $childId = $child['entity_id'];
+            $child['id'] = intval($child['entity_id']);
+
+            $parentIds = $child['parent_ids'];
+
+            if (isset($stockRowData[$childId])) {
+                $productStockData = $stockRowData[$childId];
+
+                if (isset($productStockData['use_config_notify_stock_qty'])
+                    && $productStockData['use_config_notify_stock_qty']
+                ) {
+                    $productStockData['notify_stock_qty'] = $notifyStockDefaultValue;
+                }
+
+                unset($productStockData['product_id']);
+                $productStockData = $this->generalMapping->prepareStockData($productStockData);
+                $child['stock'] = $productStockData;
+            }
+
+            foreach ($parentIds as $parentId) {
+                $child = $this->filterData($child);
+
+                if (!isset($indexData[$parentId]['configurable_options'])) {
+                    $indexData[$parentId]['configurable_options'] = [];
+                }
+
+                if ($this->configSettings->useSimplePriceForConfigurableChildren()) {
+                    if (!$this->validator->isSpecialPriceValid($storeId, $child)) {
+                        $child['special_price'] = null;
+                    }
+                } else {
+                    $child['price'] = $indexData[$parentId]['price'];
+                    $child['special_price'] = null;
+
+                    if ($this->validator->isSpecialPriceValid($storeId, $indexData[$parentId])) {
+                        $child['special_price'] = $indexData[$parentId]['special_price'];
+                    }
+                }
+
+                if (!$this->configSettings->useSimplePriceForConfigurableChildren()) {
+                    $child['price'] = $indexData[$parentId]['price'];
+                    $child['special_price'] = null;
+
+                    if ($this->validator->isSpecialPriceValid($storeId, $indexData[$parentId])) {
+                        $child['special_price'] = $indexData[$parentId]['special_price'];
+                    }
+                }
+
+                $indexData[$parentId]['configurable_children'][] = $child;
+            }
+        }
+
+        $allChildren = null;
 
         return $indexData;
     }
@@ -174,6 +213,8 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
                 [
                     'price',
                     'special_price',
+                    'special_to_date',
+                    'special_from_date',
                 ]
             );
         }
@@ -185,82 +226,76 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      * @param array $indexData
      *
      * @return array
-     * @throws Mage_Core_Exception
      */
     private function addConfigurableAttributes(array $indexData)
     {
         foreach ($indexData as $productId => $productDTO) {
             if (!isset($productDTO['configurable_children'])) {
                 $indexData[$productId]['configurable_children'] = [];
+                continue;
             }
 
             $configurableChildren = $indexData[$productId]['configurable_children'];
+            $productAttributeOptions =
+                $this->configurableResource->getProductConfigurableAttributes($productDTO);
 
-            if (count($configurableChildren)) {
-                $productAttributeOptions =
-                    $this->configurableResource->getProductConfigurableAttributes($productDTO);
+            foreach ($productAttributeOptions as $productAttribute) {
+                $attributeCode = $productAttribute['attribute_code'];
 
-                foreach ($productAttributeOptions as $productAttribute) {
-                    $attributeCode = $productAttribute['attribute_code'];
-
-                    if (!isset($indexData[$productId][$attributeCode . '_options'])) {
-                        $indexData[$productId][$attributeCode . '_options'] = [];
-                    }
-
-                    $values = [];
-                    $areChildInStock = 0;
-
-                    foreach ($configurableChildren as $index => $child) {
-                        $specialPrice = 0;
-                        $value = $child[$attributeCode];
-
-                        if (isset($value)) {
-                            $values[] = intval($value);
-                        }
-
-                        if ($child['stock']['is_in_stock']) {
-                            $areChildInStock = 1;
-                        }
-
-                        if (!$this->configSettings->useSimplePriceForConfigurableChildren()) {
-                            //
-                            if (isset($productAttribute['pricing'][$value])) {
-                                $childPrice = floatval($child['price']);
-
-                                if (isset($child['special_price']) && $child['special_price'] !== null) {
-                                    $specialPrice = floatval($child['special_price']);
-                                }
-
-                                $priceInfo = $productAttribute['pricing'][$value];
-                                $configurablePrice = $this->calcSelectionPrice($priceInfo, $childPrice);
-                                $configurableChildren[$index]['price'] = $childPrice + $configurablePrice;
-
-                                if ($specialPrice) {
-                                    $confSpecialPrice = $this->calcSelectionPrice($priceInfo, $specialPrice);
-                                    $configurableChildren[$index]['special_price'] = $specialPrice + $confSpecialPrice;
-                                }
-                            }
-                        }
-                    }
-
-                    $indexData[$productId]['configurable_children'] = $configurableChildren;
-
-                    $values = array_values(array_unique($values));
-
-                    foreach ($values as $value) {
-                        $productAttribute['values'][] = ['value_index' => $value];
-                    }
-
-                    unset($productAttribute['pricing']);
-                    $productStockStatus = $indexData[$productId]['stock']['stock_status'];
-
-                    if ($productStockStatus && !$areChildInStock) {
-                        $indexData[$productId]['stock']['stock_status'] = 0;
-                    }
-
-                    $indexData[$productId]['configurable_options'][] = $productAttribute;
-                    $indexData[$productId][$productAttribute['attribute_code'] . '_options'] = $values;
+                if (!isset($indexData[$productId][$attributeCode . '_options'])) {
+                    $indexData[$productId][$attributeCode . '_options'] = [];
                 }
+
+                $values = [];
+                $areChildInStock = 0;
+
+                foreach ($configurableChildren as $index => $child) {
+                    $specialPrice = 0;
+                    $value = $child[$attributeCode];
+
+                    if (isset($value)) {
+                        $values[] = intval($value);
+                    }
+
+                    if ($child['stock']['is_in_stock']) {
+                        $areChildInStock = 1;
+                    }
+
+                    if (!$this->configSettings->useSimplePriceForConfigurableChildren()
+                        && isset($productAttribute['pricing'][$value])) {
+                        $childPrice = floatval($child['price']);
+
+                        if (isset($child['special_price']) && $child['special_price'] !== null) {
+                            $specialPrice = floatval($child['special_price']);
+                        }
+
+                        $priceInfo = $productAttribute['pricing'][$value];
+                        $configurablePrice = $this->calcSelectionPrice($priceInfo, $childPrice);
+                        $configurableChildren[$index]['price'] = $childPrice + $configurablePrice;
+
+                        if ($specialPrice) {
+                            $confSpecialPrice = $this->calcSelectionPrice($priceInfo, $specialPrice);
+                            $configurableChildren[$index]['special_price'] = $specialPrice + $confSpecialPrice;
+                        }
+                    }
+                }
+
+                $indexData[$productId]['configurable_children'] = $configurableChildren;
+                $values = array_values(array_unique($values));
+
+                foreach ($values as $value) {
+                    $productAttribute['values'][] = ['value_index' => $value];
+                }
+
+                unset($productAttribute['pricing']);
+                $productStockStatus = $indexData[$productId]['stock']['stock_status'];
+
+                if ($productStockStatus && !$areChildInStock) {
+                    $indexData[$productId]['stock']['stock_status'] = 0;
+                }
+
+                $indexData[$productId]['configurable_options'][] = $productAttribute;
+                $indexData[$productId][$productAttribute['attribute_code'] . '_options'] = $values;
             }
         }
 

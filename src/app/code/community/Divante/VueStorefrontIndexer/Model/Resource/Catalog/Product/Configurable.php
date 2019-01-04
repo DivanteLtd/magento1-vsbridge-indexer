@@ -121,6 +121,10 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
         $productId = $product['id'];
         $data = [];
 
+        if (!isset($this->productSuperAttributeIds[$productId])) {
+            return $data;
+        }
+
         $superAttributeIds = $this->productSuperAttributeIds[$productId];
 
         foreach ($superAttributeIds as $superAttributeId) {
