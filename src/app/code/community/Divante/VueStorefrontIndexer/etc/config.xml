@@ -269,10 +269,13 @@
             </indices_settings>
             <redis_cache_settings>
                 <clear_cache>0</clear_cache>
-                <vsf_base_url>http://10.0.2.2:3000/</vsf_base_url>
+                <vsf_base_url>http://localhost:3000/</vsf_base_url>
                 <invalidate_cache_key>aeSu7aip</invalidate_cache_key>
                 <connection_timeout>10</connection_timeout>
             </redis_cache_settings>
+            <product_settings>
+                <configurable_children_use_simple_price>1</configurable_children_use_simple_price>
+            </product_settings>
         </vuestorefront>
     </default>
 </config>

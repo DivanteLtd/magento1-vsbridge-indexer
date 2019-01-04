@@ -54,6 +54,14 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
      * @var array
      */
     private $productsData;
+    /**
+     * @var
+     */
+    private $superAttributeOptions;
+    /**
+     * @var
+     */
+    private $productSuperAttributeIds;
 
     /**
      * @var Mage_Core_Model_Resource
@@ -85,6 +93,8 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
         $this->configurableProductAttributes = null;
         $this->simpleProducts = null;
         $this->configurableProductIds = null;
+        $this->superAttributeOptions = null;
+        $this->productSuperAttributeIds = null;
     }
 
     /**
@@ -101,7 +111,6 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
      * @param array $product Configurable product.
      *
      * @return array
-     * @throws Mage_Core_Exception
      */
     public function getProductConfigurableAttributes(array $product)
     {
@@ -109,45 +118,30 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
             return [];
         }
 
-        $attributeIds = $this->getProductConfigurableAttributeIds($product);
-        $attributes = $this->getConfigurableAttributeFullInfo();
+        $productId = $product['id'];
         $data = [];
 
-        foreach ($attributeIds as $attributeId) {
-            $code = $attributes[$attributeId]['attribute_code'];
-            $data[$code] = $this->configurableAttributesInfo[$attributeId];
+        $superAttributeIds = $this->productSuperAttributeIds[$productId];
+
+        foreach ($superAttributeIds as $superAttributeId) {
+            $superAttribute = $this->superAttributeOptions[$superAttributeId];
+            $attributeId = $superAttribute['attribute_id'];
+            $attributeData = $this->configurableAttributesInfo[$attributeId];
+            $code = $attributeData['attribute_code'];
+            $superAttributeData = $this->superAttributeOptions[$superAttributeId];
+            unset($superAttributeData['attribute_id']);
+            $attributeData = array_merge_recursive($attributeData, $superAttributeData);
+            $data[$code] = $attributeData;
         }
 
         return $data;
     }
 
-    /**
-     * Return array of configurable attribute ids of the given configurable product.
-     *
-     * @param array $product
-     *
-     * @return array
-     * @throws Mage_Core_Exception
-     */
-    private function getProductConfigurableAttributeIds(array $product)
-    {
-        $attributes = $this->getConfigurableProductAttributes();
-        $productId = $product['id'];
-
-        if (!isset($attributes[$productId])) {
-            Mage::throwException(
-                sprintf('Product %d is not part of the current product collection', $productId)
-            );
-        }
-
-        return explode(',', $attributes[$productId]['attribute_ids']);
-    }
 
     /**
      * Load all configurable attributes used in the current product collection.
      *
      * @return array
-     * @throws Mage_Core_Exception
      */
     private function getConfigurableProductAttributes()
     {
@@ -161,6 +155,30 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
     }
 
     /**
+     * @param array $superAttributeId
+     *
+     * @return array
+     */
+    private function getSuperAttributePricing(array $superAttributeId)
+    {
+        $select = $this->connection->select()
+            ->from(
+                $this->resource->getTableName('catalog/product_super_attribute_pricing'),
+                [
+                    'value_index',
+                    'product_super_attribute_id',
+                    'is_percent',
+                    'pricing_value',
+                ]
+            )
+            ->where('product_super_attribute_id IN (?)', $superAttributeId);
+
+        $attributes = $this->connection->fetchAssoc($select);
+
+        return $attributes;
+    }
+
+    /**
      * This method actually would belong into a resource model, but for easier
      * reference I dropped it into the helper here.
      *
@@ -170,21 +188,17 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
      */
     private function getConfigurableAttributesForProductsFromResource(array $productIds)
     {
-        /** @var Mage_Core_Model_Resource_Helper_Mysql4 $resourceHelper */
-        $resourceHelper = Mage::getResourceHelper('core');
-
         $select = $this->connection->select()
             ->from(
                 $this->resource->getTableName('catalog/product_super_attribute'),
                 [
-                    'product_id',
                     'product_super_attribute_id',
+                    'product_id',
+                    'attribute_id',
                     'position',
                 ]
             )
-            ->group('product_id')
             ->where('product_id IN (?)', $productIds);
-        $resourceHelper->addGroupConcatColumn($select, 'attribute_ids', 'attribute_id');
 
         $attributes = $this->connection->fetchAssoc($select);
 
@@ -197,7 +211,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
      */
     public function getConfigurableAttributeCodes()
     {
-        $attributes = $this->getConfigurableAttributeFullInfo();
+        $attributes = $this->prepareConfigurableAttributesFullInfo();
 
         return array_column($attributes, 'attribute_code');
     }
@@ -207,31 +221,47 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
      * Array indexes are the attribute ids, array values the attribute code
      *
      * @return array
-     * @throws Mage_Core_Exception
      */
-    private function getConfigurableAttributeFullInfo()
+    private function prepareConfigurableAttributesFullInfo()
     {
         if (null === $this->configurableAttributesInfo) {
             // build list of all configurable attribute codes for the current collection
             $this->configurableAttributesInfo = [];
+            $this->superAttributeOptions = [];
+            $this->productSuperAttributeIds = [];
+
             foreach ($this->getConfigurableProductAttributes() as $configurableAttribute) {
-                $attributeIds = explode(',', $configurableAttribute['attribute_ids']);
+                $id = intval($configurableAttribute['product_super_attribute_id']);
+                $attributeId = intval($configurableAttribute['attribute_id']);
 
-                foreach ($attributeIds as $attributeId) {
-                    if ($attributeId && !isset($this->configurableAttributesInfo[$attributeId])) {
-                        /** @var Mage_Catalog_Model_Resource_Eav_Attribute $attributeModel */
-                        $attributeModel = Mage::getSingleton('eav/config')
-                            ->getAttribute('catalog_product', $attributeId);
+                if ($attributeId && !isset($this->configurableAttributesInfo[$attributeId])) {
+                    /** @var Mage_Catalog_Model_Resource_Eav_Attribute $attributeModel */
+                    $attributeModel = Mage::getSingleton('eav/config')
+                        ->getAttribute('catalog_product', $attributeId);
 
-                        $this->configurableAttributesInfo[$attributeId] = [
-                            'attribute_id' => intval($attributeId),
-                            'attribute_code' => $attributeModel->getAttributeCode(),
-                            'position' => intval($configurableAttribute['position']),
-                            'id' => intval($configurableAttribute['product_super_attribute_id']),
-                            'label' => $attributeModel->getStoreLabel(),
-                        ];
-                    }
+                    $this->configurableAttributesInfo[$attributeId] = [
+                        'attribute_id' => intval($attributeId),
+                        'attribute_code' => $attributeModel->getAttributeCode(),
+                        'label' => $attributeModel->getStoreLabel(),
+                    ];
                 }
+
+                $this->superAttributeOptions[$id] = [
+                    'attribute_id' => $attributeId,
+                    'position' => intval($configurableAttribute['position']),
+                    'id' => intval($configurableAttribute['product_super_attribute_id']),
+                ];
+
+                $this->productSuperAttributeIds[$configurableAttribute['product_id']][] = $id;
+            }
+
+            $superAttributeIds = array_keys($this->superAttributeOptions);
+            $pricing = $this->getSuperAttributePricing($superAttributeIds);
+
+            foreach ($pricing as $valuePrice) {
+                $superAttributeId = $valuePrice['product_super_attribute_id'];
+                $this->superAttributeOptions[$superAttributeId]['pricing'][$valuePrice['value_index']]
+                    = $valuePrice;
             }
         }
 

@@ -45,7 +45,7 @@ class Divante_VueStorefrontIndexer_Tools extends Mage_Shell_Abstract
                 }
 
                 if ($type) {
-                    $tools->reindexByType($type, $storeId);
+                    $tools->runFullReindexByType($type, $storeId);
                 } else {
                     $tools->fullReindex($storeId);
                     echo "Full reindex - done \n";

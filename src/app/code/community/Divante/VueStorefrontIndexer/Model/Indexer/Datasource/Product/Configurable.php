@@ -63,6 +63,10 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      * @var GeneralMapping
      */
     private $generalMapping;
+    /**
+     * @var Divante_VueStorefrontIndexer_Model_Config_Productsettings
+     */
+    private $configSettings;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Action_Category_Full constructor.
@@ -74,6 +78,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
         $this->dataFilter = Mage::getSingleton('vsf_indexer/data_filter');
         $this->generalMapping = Mage::getSingleton('vsf_indexer/index_mapping_generalmapping');
         $this->inventoryResource = Mage::getResourceModel('vsf_indexer/catalog_product_inventory');
+        $this->configSettings = Mage::getSingleton('vsf_indexer/config_productsettings');
     }
 
     /**
@@ -128,11 +133,10 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
                         $indexData[$parentId]['configurable_options'] = [];
                     }
 
-                    /**
-                     * TODO adjust calculating price like in Magento1 -> super attribute configuration
-                     */
-                    $child['price'] = $indexData[$parentId]['price'];
-                    $child['special_price'] = $indexData[$parentId]['special_price'];
+                    if (!$this->configSettings->useSimplePriceForConfigurableChildren()) {
+                        $child['price'] = $indexData[$parentId]['price'];
+                        $child['special_price'] = $indexData[$parentId]['special_price'];
+                    }
 
                     $indexData[$parentId]['configurable_children'][] = $child;
                 }
@@ -162,7 +166,19 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      */
     public function getRequiredChildrenAttributes()
     {
-        return $this->requireChildrenAttributes;
+        $attributes = $this->requireChildrenAttributes;
+
+        if ($this->configSettings->useSimplePriceForConfigurableChildren()) {
+            $attributes = array_merge(
+                $attributes,
+                [
+                    'price',
+                    'special_price',
+                ]
+            );
+        }
+
+        return $attributes;
     }
 
     /**
@@ -194,15 +210,40 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
                     $values = [];
                     $areChildInStock = 0;
 
-                    foreach ($configurableChildren as $child) {
-                        if (isset($child[$attributeCode])) {
-                            $values[] = intval($child[$attributeCode]);
+                    foreach ($configurableChildren as $index => $child) {
+                        $specialPrice = 0;
+                        $value = $child[$attributeCode];
+
+                        if (isset($value)) {
+                            $values[] = intval($value);
                         }
 
                         if ($child['stock']['is_in_stock']) {
                             $areChildInStock = 1;
                         }
+
+                        if (!$this->configSettings->useSimplePriceForConfigurableChildren()) {
+                            //
+                            if (isset($productAttribute['pricing'][$value])) {
+                                $childPrice = floatval($child['price']);
+
+                                if (isset($child['special_price']) && $child['special_price'] !== null) {
+                                    $specialPrice = floatval($child['special_price']);
+                                }
+
+                                $priceInfo = $productAttribute['pricing'][$value];
+                                $configurablePrice = $this->calcSelectionPrice($priceInfo, $childPrice);
+                                $configurableChildren[$index]['price'] = $childPrice + $configurablePrice;
+
+                                if ($specialPrice) {
+                                    $confSpecialPrice = $this->calcSelectionPrice($priceInfo, $specialPrice);
+                                    $configurableChildren[$index]['special_price'] = $specialPrice + $confSpecialPrice;
+                                }
+                            }
+                        }
                     }
+
+                    $indexData[$productId]['configurable_children'] = $configurableChildren;
 
                     $values = array_values(array_unique($values));
 
@@ -210,6 +251,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
                         $productAttribute['values'][] = ['value_index' => $value];
                     }
 
+                    unset($productAttribute['pricing']);
                     $productStockStatus = $indexData[$productId]['stock']['stock_status'];
 
                     if ($productStockStatus && !$areChildInStock) {
@@ -223,6 +265,24 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
         }
 
         return $indexData;
+    }
+
+    /**
+     * @param array $priceInfo
+     * @param float $productPrice
+     *
+     * @return float|int
+     */
+    private function calcSelectionPrice(array $priceInfo, $productPrice)
+    {
+        if ($priceInfo['is_percent']) {
+            $ratio = floatval($priceInfo['pricing_value']) / 100;
+            $price = $productPrice * $ratio;
+        } else {
+            $price = floatval($priceInfo['pricing_value']);
+        }
+
+        return $price;
     }
 
     /**
