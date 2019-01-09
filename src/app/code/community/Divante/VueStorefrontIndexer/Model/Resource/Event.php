@@ -59,10 +59,6 @@ class Divante_VueStorefrontIndexer_Model_Resource_Event extends Mage_Core_Model_
      */
     public function deleteByTypeIds($type, array $ids = null)
     {
-        if (empty($ids)) {
-            return $this;
-        }
-
         $where = ['entity = ?' => $type];
 
         if ($ids) {

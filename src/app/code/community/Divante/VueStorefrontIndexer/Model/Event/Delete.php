@@ -28,7 +28,8 @@ class Divante_VueStoreFrontIndexer_Model_Event_Delete
     }
 
     /**
-     * @param BulkResponseInterface $bulkResponse
+     * @param string $type
+     * @param array|null $ids
      */
     public function execute($type, array $ids = null)
     {
