@@ -67,10 +67,6 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      * @var Divante_VueStorefrontIndexer_Model_Config_Productsettings
      */
     private $configSettings;
-    /**
-     * @var Divante_VueStorefrontIndexer_Model_Validator_Product
-     */
-    private $validator;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Action_Category_Full constructor.
@@ -83,7 +79,6 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
         $this->generalMapping = Mage::getSingleton('vsf_indexer/index_mapping_generalmapping');
         $this->inventoryResource = Mage::getResourceModel('vsf_indexer/catalog_product_inventory');
         $this->configSettings = Mage::getSingleton('vsf_indexer/config_productsettings');
-        $this->validator = Mage::getSingleton('vsf_indexer/validator_product');
     }
 
     /**
@@ -159,25 +154,18 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
                     $indexData[$parentId]['configurable_options'] = [];
                 }
 
-                if ($this->configSettings->useSimplePriceForConfigurableChildren()) {
-                    if (!$this->validator->isSpecialPriceValid($storeId, $child)) {
-                        $child['special_price'] = null;
-                    }
-                } else {
-                    $child['price'] = $indexData[$parentId]['price'];
-                    $child['special_price'] = null;
-
-                    if ($this->validator->isSpecialPriceValid($storeId, $indexData[$parentId])) {
-                        $child['special_price'] = $indexData[$parentId]['special_price'];
-                    }
-                }
-
                 if (!$this->configSettings->useSimplePriceForConfigurableChildren()) {
                     $child['price'] = $indexData[$parentId]['price'];
-                    $child['special_price'] = null;
+                    $child['special_price'] = $indexData[$parentId]['special_price'];
+                    $child['special_to_date'] = null;
+                    $child['special_from_date'] = null;
 
-                    if ($this->validator->isSpecialPriceValid($storeId, $indexData[$parentId])) {
-                        $child['special_price'] = $indexData[$parentId]['special_price'];
+                    if (isset($indexData[$parentId]['special_to_date'])) {
+                        $child['special_to_date'] = $indexData[$parentId]['special_to_date'];
+                    }
+
+                    if (isset($indexData[$parentId]['special_from_date'])) {
+                        $child['special_from_date'] = $indexData[$parentId]['special_from_date'];
                     }
                 }
 
