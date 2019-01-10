@@ -175,12 +175,25 @@
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
+                        <allowed_product_types>
+                            <label>Types of products to indexp</label>
+                            <comment>by default all product types will be sent to elastic.
+                                If you changed configuration after running full reindex it might be required to re-create index.
+                                Simple type should always be selected, if not VSF will not work properly.
+                            </comment>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>vsf_indexer/system_config_source_product_type</source_model>
+                            <sort_order>100</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>1</show_in_store>
+                        </allowed_product_types>
                         <configurable_children_use_simple_price>
                             <label>Configurable children - use price from simple products</label>
                             <comment>Select yes if you calculate price base on simple products. By default Magento 1 does not support this.</comment>
                             <frontend_type>select</frontend_type>
                             <source_model>adminhtml/system_config_source_yesno</source_model>
-                            <sort_order>100</sort_order>
+                            <sort_order>200</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>

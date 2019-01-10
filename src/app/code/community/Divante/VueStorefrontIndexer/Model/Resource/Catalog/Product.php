@@ -23,6 +23,11 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product
     private $connection;
 
     /**
+     * @var Divante_VueStorefrontIndexer_Model_Config_Productsettings
+     */
+    private $productSettings;
+
+    /**
      * @var int
      */
     private $isActiveAttributeId;
@@ -34,6 +39,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product
     {
         $this->coreResource = Mage::getSingleton('core/resource');
         $this->connection = $this->coreResource->getConnection('catalog_read');
+        $this->productSettings = Mage::getSingleton('vsf_indexer/config_productsettings');
     }
 
     /**
@@ -57,6 +63,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product
         $select->order('e.entity_id ASC');
         $select = $this->addStatusFilter($select, $storeId);
         $select = $this->addWebsiteFilter($select, $storeId);
+        $select = $this->addProductTypeFilter($select, $storeId);
 
         return $this->connection->fetchAll($select);
     }
@@ -72,7 +79,10 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product
     {
         $select = $this->connection->select()->from(
             ['e' => $this->coreResource->getTableName('catalog/product')],
-            ['entity_id', 'sku']
+            [
+                'entity_id',
+                'sku',
+            ]
         );
 
         $select->join(
@@ -89,7 +99,6 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product
         /** @var Mage_Core_Model_Resource_Helper_Mysql4 $resourceHelper */
         $resourceHelper = Mage::getResourceHelper('core');
         $resourceHelper->addGroupConcatColumn($select, 'parent_ids', 'parent_id');
-
         $select = $this->addWebsiteFilter($select, $storeId);
 
         return $this->connection->fetchAll($select);
@@ -113,6 +122,23 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product
         );
 
         $select->useStraightJoin(true)->join(['websites' => $indexTable], $visibilityJoinCond, []);
+
+        return $select;
+    }
+
+    /**
+     * @param Varien_Db_Select $select
+     * @param int $storeId
+     *
+     * @return Varien_Db_Select
+     */
+    private function addProductTypeFilter(Varien_Db_Select $select, $storeId)
+    {
+        $types = $this->productSettings->getAllowedProductTypes($storeId);
+
+        if (!empty($types)) {
+            $select->where('type_id IN (?)', $types);
+        }
 
         return $select;
     }
