@@ -33,11 +33,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Bulkrequest implements BulkReques
     }
 
     /**
-     * @param string $index
-     * @param string $type
-     * @param string $docId
-     *
-     * @return $this
+     * @inheritdoc
      */
     private function deleteDocument($index, $type, $docId)
     {
@@ -53,7 +49,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Bulkrequest implements BulkReques
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function addDocuments($index, $type, array $data)
     {
@@ -65,12 +61,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Bulkrequest implements BulkReques
     }
 
     /**
-     * @param string $index
-     * @param string $type
-     * @param string $docId
-     * @param array $data
-     *
-     * @return $this
+     * @inheritdoc
      */
     private function addDocument($index, $type, $docId, array $data)
     {
@@ -88,7 +79,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Bulkrequest implements BulkReques
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function updateDocuments($index, $type, array $data)
     {
@@ -100,12 +91,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Bulkrequest implements BulkReques
     }
 
     /**
-     * @param string $index
-     * @param string $type
-     * @param string $docId
-     * @param array $data
-     *
-     * @return $this
+     * @inheritdoc
      */
     private function updateDocument($index, $type, $docId, array $data)
     {
@@ -123,7 +109,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Bulkrequest implements BulkReques
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function isEmpty()
     {

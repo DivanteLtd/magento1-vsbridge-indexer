@@ -64,6 +64,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Productcategories implements In
         /** @var Store $store */
         foreach ($stores as $store) {
             $this->indexHandler->updateIndex($this->action->rebuild($store->getId(), $ids), $store, ['category_data']);
+            $this->indexHandler->invalidateCache($store->getId(), $ids);
         }
     }
 

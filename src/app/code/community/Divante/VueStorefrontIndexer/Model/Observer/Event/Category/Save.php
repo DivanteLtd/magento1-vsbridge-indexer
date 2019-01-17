@@ -24,7 +24,7 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Category_Save
     private $eventHandler;
 
     /**
-     * @var Divante_VueStorefrontIndexer_Model_Index_Settings
+     * @var Divante_VueStorefrontIndexer_Model_Config_Generalsettings
      */
     private $configSettings;
 
@@ -34,7 +34,7 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Category_Save
     public function __construct()
     {
         $this->eventHandler = Mage::getSingleton('vsf_indexer/event_handler');
-        $this->configSettings = Mage::getSingleton('vsf_indexer/index_settings');
+        $this->configSettings = Mage::getSingleton('vsf_indexer/config_generalsettings');
     }
 
     /**

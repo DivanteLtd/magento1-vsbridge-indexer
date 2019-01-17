@@ -62,7 +62,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Event extends Mage_Core_Model_
         $where = ['entity = ?' => $type];
 
         if ($ids) {
-            $where[] = $this->_getWriteAdapter()->quoteInto('entity_pk IN (?)', $ids);
+            $where[] = $this->_getWriteAdapter()->quoteInto('event_id IN (?)', $ids);
         }
 
         try {

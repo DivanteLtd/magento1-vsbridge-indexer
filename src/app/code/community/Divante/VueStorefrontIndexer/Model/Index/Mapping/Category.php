@@ -70,9 +70,8 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Category extends Abstract
             $properties = array_merge($properties, $generalMapping->getCommonProperties());
 
             $properties['children_count'] = ['type' => FieldInterface::TYPE_LONG];
-            $properties['children_data'] = [
-                'properties' => $properties
-            ];
+            $properties['children_data'] = ['properties' => $properties];
+            $properties['grid_per_page'] = ['type' => FieldInterface::TYPE_LONG];
 
             $mapping = ['properties' => $properties];
 

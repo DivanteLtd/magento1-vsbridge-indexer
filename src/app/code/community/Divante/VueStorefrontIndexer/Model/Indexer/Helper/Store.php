@@ -13,6 +13,19 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Helper_Store
 {
 
     /**
+     * @var Divante_VueStorefrontIndexer_Model_Config_Generalsettings
+     */
+    private $configSettings;
+
+    /**
+     * Divante_VueStoreFrontElasticSearch_Model_Observer_LogEventObserver constructor.
+     */
+    public function __construct()
+    {
+        $this->configSettings = Mage::getSingleton('vsf_indexer/config_generalsettings');
+    }
+
+    /**
      * @param null|int $storeId
      *
      * @return array
@@ -20,11 +33,20 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Helper_Store
      */
     public function getStores($storeId = null)
     {
-        if (null !== $storeId) {
+        $allowStores = $this->configSettings->getStoresToIndex();
+        $stores = [];
+
+        if (null === $storeId) {
+            $allStores = Mage::app()->getStores();
+
+            foreach ($allStores as $store) {
+                if (in_array($store->getId(), $allowStores)) {
+                    $stores[] = $store;
+                }
+            }
+        } elseif (in_array($storeId, $allowStores)) {
             $store = Mage::app()->getStore($storeId);
             $stores = [$store];
-        } else {
-            $stores = Mage::app()->getStores();
         }
 
         return $stores;

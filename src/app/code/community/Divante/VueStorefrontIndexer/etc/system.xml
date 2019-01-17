@@ -10,10 +10,40 @@
             <show_in_website>1</show_in_website>
             <show_in_store>1</show_in_store>
             <groups>
+                <general_settings>
+                    <label>General Settings</label>
+                    <frontend_type>text</frontend_type>
+                    <sort_order>10</sort_order>
+                    <show_in_default>1</show_in_default>
+                    <show_in_website>1</show_in_website>
+                    <show_in_store>1</show_in_store>
+                    <fields>
+                        <allowed_stores>
+                            <label>List of stores to reindex</label>
+                            <comment>For every store view separated index is created in Elastic</comment>
+                            <frontend_type>multiselect</frontend_type>
+                            <source_model>adminhtml/system_config_source_store</source_model>
+                            <sort_order>1</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </allowed_stores>
+                        <category_products_update>
+                            <label>Full product update on position changed</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>1000</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                            <comment>If product position has changed in category full product update will be made to elastisearch</comment>
+                        </category_products_update>
+                    </fields>
+                </general_settings>
                 <es_client>
                     <label>Elasticsearch Client</label>
                     <frontend_type>text</frontend_type>
-                    <sort_order>1</sort_order>
+                    <sort_order>10</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
@@ -95,7 +125,7 @@
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <validate>required-entry</validate>
+                            <validate>required-entry validate-digits</validate>
                         </batch_indexing_size>
                         <index_name>
                             <label>Index name prefix</label>
@@ -107,21 +137,22 @@
                             <validate>required-entry</validate>
                             <comment>defaut name: "vue_storefront_magento". For each store view, store id will be added to index name, e.g. "vue_storefront_magento_1"</comment>
                         </index_name>
-                        <category_products_update>
-                            <label>Full product update on position changed</label>
-                            <frontend_type>select</frontend_type>
-                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                        <fields_limit>
+                            <label>The maximum number of fields in an index</label>
+                            <frontend_type>text</frontend_type>
+                            <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
                             <show_in_store>0</show_in_store>
-                            <comment>If product position has changed in category full product update will be made to elastisearch</comment>
-                        </category_products_update>
+                            <comment>min value: 1000</comment>
+                            <validate>required-entry validate-digits validate-digits-range digits-range-1000-</validate>
+                        </fields_limit>
                     </fields>
                 </indices_settings>
                 <redis_cache_settings>
                     <label>Redis Cache Settings</label>
                     <frontend_type>text</frontend_type>
-                    <sort_order>20</sort_order>
+                    <sort_order>200</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
@@ -133,7 +164,7 @@
                             <sort_order>10</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
+                            <show_in_store>1</show_in_store>
                         </clear_cache>
                         <vsf_base_url>
                             <label>Vsf base Url</label>
@@ -141,7 +172,7 @@
                             <sort_order>100</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
+                            <show_in_store>1</show_in_store>
                             <validate>required-entry</validate>
                             <comment>with "/" in the end</comment>
                         </vsf_base_url>
@@ -151,7 +182,7 @@
                             <show_in_default>1</show_in_default>
                             <sort_order>200</sort_order>
                             <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
+                            <show_in_store>1</show_in_store>
                             <validate>required-entry</validate>
                             <comment>Please note that Key should be equal vue-storefront/config/local.json value of server.invalidateCacheKey</comment>
                         </invalidate_cache_key>
@@ -161,7 +192,7 @@
                             <sort_order>300</sort_order>
                             <show_in_default>1</show_in_default>
                             <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
+                            <show_in_store>1</show_in_store>
                             <validate>required-entry</validate>
                             <comment>in seconds</comment>
                         </connection_timeout>
@@ -170,13 +201,13 @@
                 <product_settings>
                     <label>Product Settings</label>
                     <frontend_type>text</frontend_type>
-                    <sort_order>1</sort_order>
+                    <sort_order>1000</sort_order>
                     <show_in_default>1</show_in_default>
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
                         <allowed_product_types>
-                            <label>Types of products to indexp</label>
+                            <label>Types of products to index</label>
                             <comment>by default all product types will be sent to elastic.
                                 If you changed configuration after running full reindex it might be required to re-create index.
                                 Simple type should always be selected, if not VSF will not work properly.
@@ -202,5 +233,16 @@
                 </product_settings>
             </groups>
         </vuestorefront>
+        <catalog>
+            <groups>
+                <frontend>
+                    <fields>
+                        <grid_per_page>
+                            <backend_model>vsf_indexer/system_config_backend_gridperpage</backend_model>
+                        </grid_per_page>
+                    </fields>
+                </frontend>
+            </groups>
+        </catalog>
     </sections>
 </config>

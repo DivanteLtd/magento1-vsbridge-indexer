@@ -28,6 +28,11 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Indexer_Handler
     private $client;
 
     /**
+     * @var Divante_VueStorefrontIndexer_Model_Cache_Processor
+     */
+    private $cacheProcessor;
+
+    /**
      * @var string
      */
     private $typeName;
@@ -62,6 +67,7 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Indexer_Handler
             $this->indexIdentifier = $params['index_identifier'];
         }
 
+        $this->cacheProcessor = Mage::getSingleton('vsf_indexer/cache_processor');
         $this->client = Mage::getSingleton('vsf_indexer/elasticsearch_client');
         $this->indexOperation = Mage::getSingleton('vsf_indexer/index_operations');
         /** @var Divante_VueStorefrontIndexer_Model_Transactionkey $transactionKeyModel */
@@ -171,8 +177,16 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Indexer_Handler
                 $docs
             );
 
-            $this->indexOperation->executeBulk($bulkRequest);
+            $response = $this->indexOperation->executeBulk($bulkRequest);
             $docs = null;
+
+            Mage::dispatchEvent(
+                'search_engine_update_documents_after',
+                [
+                    'data_type' => $this->typeName,
+                    'bulk_response' => $response
+                ]
+            );
         }
 
         $this->indexOperation->refreshIndex($index);
@@ -245,5 +259,14 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Indexer_Handler
     private function getBatchSize()
     {
         return $this->indexOperation->getBatchIndexingSize();
+    }
+
+    /**
+     * @param int $storeId
+     * @param array $ids
+     */
+    public function invalidateCache($storeId, array $ids)
+    {
+        $this->cacheProcessor->cleanCacheByDocIds($storeId, $this->typeName, $ids);
     }
 }

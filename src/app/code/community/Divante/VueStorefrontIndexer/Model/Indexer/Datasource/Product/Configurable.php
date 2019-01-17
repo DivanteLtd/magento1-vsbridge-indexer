@@ -277,8 +277,9 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
 
                 unset($productAttribute['pricing']);
                 $productStockStatus = $indexData[$productId]['stock']['stock_status'];
+                $isInStock = $indexData[$productId]['stock']['is_in_stock'];
 
-                if ($productStockStatus && !$areChildInStock) {
+                if (!$isInStock || ($productStockStatus && !$areChildInStock)) {
                     $indexData[$productId]['stock']['stock_status'] = 0;
                 }
 

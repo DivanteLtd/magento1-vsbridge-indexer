@@ -1,8 +1,9 @@
 <?php
+
 use Divante_VueStorefrontIndexer_Api_DatasourceInterface as DataSourceInterface;
 
 /**
- * Class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
+ * Class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Attributes
  *
  * @package     Divante
  * @category    VueStoreFrontIndexer

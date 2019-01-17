@@ -69,6 +69,8 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Attributes implements IndexerIn
             if (empty($ids)) {
                 $this->indexHandler->cleanUpByTransactionKey($store);
             }
+
+            $this->indexHandler->invalidateCache($store->getId(), $ids);
         }
     }
 
@@ -83,6 +85,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Attributes implements IndexerIn
             /** @var Store $store */
             foreach ($stores as $store) {
                 $this->indexHandler->deleteDocuments($ids, $store);
+                $this->indexHandler->invalidateCache($store->getId(), $ids);
             }
         }
     }

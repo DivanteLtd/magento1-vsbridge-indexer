@@ -31,11 +31,11 @@ class Divante_VueStorefrontIndexer_Model_Index_Settings
     }
 
     /**
-     * @return bool
+     * @return int
      */
-    public function runFullProductUpdateOnPositionChanged()
+    public function getFieldsLimit()
     {
-        return (bool)$this->getConfigParam('category_products_update');
+        return (int)$this->getConfigParam('fields_limit');
     }
 
     /**

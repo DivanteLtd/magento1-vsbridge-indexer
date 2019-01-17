@@ -14,44 +14,49 @@ class Divante_VueStorefrontIndexer_Model_Cache_Settings
     const INDICES_SETTINGS_CONFIG_XML_PREFIX = 'vuestorefront/redis_cache_settings';
 
     /**
+     * @param int $storeId
      * @return bool
      */
-    public function clearCache()
+    public function clearCache($storeId)
     {
-        return (bool)$this->getConfigParam('clear_cache');
+        return (bool)$this->getConfigParam('clear_cache', $storeId);
     }
 
     /**
+     * @param int $storeId
      * @return string
      */
-    public function getVsfBaseUrl()
+    public function getVsfBaseUrl($storeId)
     {
-        return (string)$this->getConfigParam('vsf_base_url');
+        return (string)$this->getConfigParam('vsf_base_url', $storeId);
     }
 
     /**
+     * @param int $storeId
      * @return string
      */
-    public function getInvalidateCacheKey()
+    public function getInvalidateCacheKey($storeId)
     {
-        return (string)$this->getConfigParam('invalidate_cache_key');
+        return (string)$this->getConfigParam('invalidate_cache_key', $storeId);
     }
 
     /**
+     * @param int $storeId
      * @return int
      */
-    public function getTimeout()
+    public function getTimeout($storeId)
     {
-        return (int)$this->getConfigParam('connection_timeout');
+        return (int)$this->getConfigParam('connection_timeout', $storeId);
     }
 
     /**
+     * @param int $storeId
      * @return array
      */
-    public function getConnectionOptions()
+    public function getConnectionOptions($storeId)
     {
         $options = [
-            'timeout' => $this->getTimeout()
+            'timeout' => $this->getTimeout($storeId)
         ];
 
         return $options;
@@ -59,13 +64,14 @@ class Divante_VueStorefrontIndexer_Model_Cache_Settings
 
     /**
      * @param string $configField
+     * @param int $storeId
      *
      * @return string|null|int
      */
-    public function getConfigParam($configField)
+    public function getConfigParam($configField, $storeId = null)
     {
         $path = self::INDICES_SETTINGS_CONFIG_XML_PREFIX . '/' . $configField;
 
-        return Mage::getStoreConfig($path);
+        return Mage::getStoreConfig($path, $storeId);
     }
 }

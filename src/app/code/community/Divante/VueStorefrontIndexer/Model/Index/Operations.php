@@ -176,7 +176,10 @@ class Divante_VueStorefrontIndexer_Model_Index_Operations
     public function createIndex($indexIdentifier, Store $store)
     {
         $index = $this->initIndex($indexIdentifier, $store);
-        $this->client->createIndex($index->getName(), []);
+        $this->client->createIndex(
+            $index->getName(),
+            ['index.mapping.total_fields.limit' => $this->indexSettings->getFieldsLimit()]
+        );
 
         /** @var Divante_VueStorefrontIndexer_Model_Index_Type $type */
         foreach ($index->getTypes() as $type) {

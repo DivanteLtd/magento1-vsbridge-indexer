@@ -63,6 +63,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Categories implements IndexerIn
         foreach ($stores as $store) {
             $this->indexHandler->saveIndex($this->action->rebuild($store->getId(), $ids), $store);
             $this->indexHandler->cleanUpByTransactionKey($store, $ids);
+            $this->indexHandler->invalidateCache($store->getId(), $ids);
         }
     }
 
@@ -76,6 +77,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Categories implements IndexerIn
         if (!empty($ids)) {
             foreach ($stores as $store) {
                 $this->indexHandler->deleteDocuments($ids, $store);
+                $this->indexHandler->invalidateCache($store->getId(), $ids);
             }
         }
     }

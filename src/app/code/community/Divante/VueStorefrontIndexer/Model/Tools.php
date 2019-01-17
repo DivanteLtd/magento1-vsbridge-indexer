@@ -147,8 +147,8 @@ class Divante_VueStorefrontIndexer_Model_Tools
             $ids = $this->getUpdateEventLists($type, 'delete');
 
             if (!empty($ids)) {
-                $indexerModel->deleteDocuments($storeId, $ids);
-                $this->deleteEvent->execute($type, $ids);
+                $indexerModel->deleteDocuments($storeId, array_values($ids));
+                $this->deleteEvent->execute($type, array_keys($ids));
             }
         } while (!empty($ids));
 
@@ -156,8 +156,8 @@ class Divante_VueStorefrontIndexer_Model_Tools
             $ids = $this->getUpdateEventLists($type);
 
             if (!empty($ids)) {
-                $indexerModel->updateDocuments($storeId, $ids);
-                $this->deleteEvent->execute($type, $ids);
+                $indexerModel->updateDocuments($storeId, array_values($ids));
+                $this->deleteEvent->execute($type, array_keys($ids));
             }
         } while (!empty($ids));
     }
@@ -177,7 +177,13 @@ class Divante_VueStorefrontIndexer_Model_Tools
         $collection->setPageSize($limit);
         $collection->addFieldToFilter('type', $eventType);
         $collection->setOrder('created_at', 'ASC');
+        $events = [];
 
-        return $collection->getColumnValues('entity_pk');
+        /** @var Divante_VueStorefrontIndexer_Model_Event $item */
+        foreach ($collection->getItems() as $item) {
+            $events[$item->getId()]  = $item->getData('entity_pk');
+        }
+
+        return $events;
     }
 }
