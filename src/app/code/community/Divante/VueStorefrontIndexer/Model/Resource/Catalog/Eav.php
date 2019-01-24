@@ -130,6 +130,11 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
         foreach ($values as $value) {
             $entityId = $value['entity_id'];
             $attribute = $this->attributesById[$value['attribute_id']];
+
+            if ($attribute->getFrontendInput() === 'multiselect') {
+                $value['value'] = explode(',', $value['value']);
+            }
+
             $attributeCode = $attribute->getAttributeCode();
             $this->valuesByEntityId[$entityId][$attributeCode] = $value['value'];
         }
