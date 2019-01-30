@@ -76,25 +76,23 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
 
         foreach ($this->attributesById as $attributeId => $attribute) {
             if ($this->canReindex($attribute, $requiredAttributes)) {
-                $tableAttributes[$attribute->getBackendTable()][] = $attributeId;
-
+                if($attribute->getAttributeCode() == "visibility" || $attribute->getAttributeCode() == "status" || $attribute->getSourceModel() == "eav/entity_attribute_source_boolean") {
+                    $tableAttributes["system"][$attribute->getBackendTable()][] = $attributeId;
+                } else {
+                    $tableAttributes[$attribute->getFrontendInput()][$attribute->getBackendTable()][] = $attributeId;
+                }    
                 if (!isset($attributeTypes[$attribute->getBackendTable()])) {
                     $attributeTypes[$attribute->getBackendTable()] = $attribute->getBackendType();
                 }
             }
         }
-
-        foreach ($tableAttributes as $table => $attributeIds) {
-            $select = $this->getLoadAttributesSelect($storeId, $table, $attributeIds, $entityIds);
-            $selects[$table] = $select;
-        }
-
         $this->valuesByEntityId = [];
-
-        if (!empty($selects)) {
-            foreach ($selects as $select) {
+        foreach ($tableAttributes as $frontendInput => $data) {
+            foreach ($data as $table => $attributeIds) {
+                $select = $this->getLoadAttributesSelect($storeId, $table, $tableAttributes[$frontendInput][$table], $entityIds, $frontendInput);
                 $values = $this->connection->fetchAll($select);
                 $this->prepareValues($values);
+                $selects[$attributeTypes[$table]] = $select;
             }
         }
 
@@ -130,15 +128,9 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
         foreach ($values as $value) {
             $entityId = $value['entity_id'];
             $attribute = $this->attributesById[$value['attribute_id']];
-
-            if ($attribute->getFrontendInput() === 'multiselect') {
-                $value['value'] = explode(',', $value['value']);
-            }
-
             $attributeCode = $attribute->getAttributeCode();
             $this->valuesByEntityId[$entityId][$attributeCode] = $value['value'];
         }
-
         return $this->valuesByEntityId;
     }
 
@@ -163,7 +155,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
      *
      * @return Varien_Db_Select
      */
-    private function getLoadAttributesSelect($storeId, $table, array $attributeIds, array $entityIds)
+    private function getLoadAttributesSelect($storeId, $table, array $attributeIds, array $entityIds, $frontendInput)
     {
         $joinStoreCondition = [
             't_default.entity_id=t_store.entity_id',
@@ -183,14 +175,25 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
                     'attribute_id',
                 ]
             )
-            ->joinLeft(
-                ['t_store' => $table],
-                $joinCondition,
-                ['value' => new Zend_Db_Expr('COALESCE(t_store.value, t_default.value)')]
-            )
             ->where('t_default.store_id = ?', 0)
             ->where('t_default.entity_id IN (?)', $entityIds)
             ->where('t_default.attribute_id IN (?)', $attributeIds);
+
+         if(($table == "catalog_product_entity_int" && $frontendInput != "system") ||
+           (($frontendInput == "multiselect" || ($frontendInput == "select") && $frontendInput != "system"))
+         ) {
+             $select->joinLeft(
+                ['v_store' => "eav_attribute_option_value"],
+                't_default.value=v_store.option_id',
+                ['value' =>  new Zend_Db_Expr('COALESCE(v_store.value, t_default.value)')]
+             );
+         } else {
+            $select->joinLeft(
+                ['t_store' => $table],
+                $joinCondition,
+                ['value' => new Zend_Db_Expr('COALESCE(t_store.value, t_default.value)')]
+            );
+         }
 
         return $select;
     }

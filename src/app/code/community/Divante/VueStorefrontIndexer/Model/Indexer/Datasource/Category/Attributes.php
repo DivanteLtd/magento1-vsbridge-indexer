@@ -159,6 +159,23 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Attributes 
             'created_at',
             'updated_at',
             'request_path',
+            'description',
+            'meta_description',
+            'custom_layout_update',
+            'meta_title',
+            'filter_price_range',
+            'include_in_menu',
+            'custom_use_parent_settings',
+            'custom_apply_to_products',
+            'top_category',
+            'show_products_from_category',
+            'used_in_product_search',
+            'custom_design',
+            'page_layout',
+            'landing_page',
+            'custom_design_from',
+            'custom_design_to',
+            'meta_keywords'
         ];
 
         $categoryDTO = array_diff_key($categoryDTO, array_flip($removeFields));

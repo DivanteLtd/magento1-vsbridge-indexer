@@ -51,10 +51,13 @@ abstract class Divante_VueStorefrontIndexer_Model_Index_Mapping_Eav_Abstract
 
         $type = $this->getAttributeType($attribute);
 
-        if ($type === 'text' && !$attribute->getBackendModel() && $attribute->getFrontendInput() != 'media_image') {
+        if ($type === 'text' && !$attribute->getBackendModel() && $attribute->getFrontendInput() != 'media_image' && $attribute->getAttributeCode() != 'description') {
             $fieldName = $attributeCode;
             $mapping[$fieldName] = [
                 'type' => $type,
+                'fielddata' => true,
+                'analyzer' => "autocomplete",
+                'search_analyzer'=> "autocomplete_search",
                 'fields' => [
                     'keyword' => [
                         'type' => FieldInterface::TYPE_KEYWORD,
@@ -62,7 +65,15 @@ abstract class Divante_VueStorefrontIndexer_Model_Index_Mapping_Eav_Abstract
                     ]
                 ]
             ];
-        } else if ($type === 'date') {
+        } 
+        else if ($type === 'text' && $attribute->getAttributeCode() != 'image' && $attribute->getAttributeCode() != 'description') {
+            $fieldName = $attributeCode;
+            $mapping[$fieldName] = [
+                'type' => $type,
+                'fielddata' => true
+            ];
+        }
+        else if ($type === 'date') {
             $mapping[$attributeCode] = [
                 'type' => $type,
                 'format' => implode(
@@ -76,7 +87,6 @@ abstract class Divante_VueStorefrontIndexer_Model_Index_Mapping_Eav_Abstract
         } else {
             $mapping[$attributeCode] = ['type' => $type];
         }
-
         return $mapping;
     }
 
@@ -90,6 +100,18 @@ abstract class Divante_VueStorefrontIndexer_Model_Index_Mapping_Eav_Abstract
     public function getAttributeType(Attribute $attribute)
     {
         $attributeCode = $attribute->getAttributeCode();
+
+        if ('visibility' === $attributeCode) {
+            return FieldInterface::TYPE_INT;
+        }
+
+        if ('status' === $attributeCode) {
+            return FieldInterface::TYPE_INT;
+        }
+
+        if (('select' === $attribute->getFrontendInput() || 'multiselect' === $attribute->getFrontendInput()) && 'eav/entity_attribute_source_boolean' !== $attribute->getSourceModel()) {
+            return FieldInterface::TYPE_TEXT;
+        }
 
         if ('category_ids' === $attributeCode) {
             return FieldInterface::TYPE_LONG;

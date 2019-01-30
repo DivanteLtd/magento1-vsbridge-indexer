@@ -48,14 +48,25 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Category
         $rootCategoryId = Mage::app()->getStore($storeId)->getRootCategoryId();
         $rootCategory = Mage::getModel('catalog/category')->load($rootCategoryId);
 
-        $select = $this->connection->select()->from(['e' => $this->coreResource->getTableName('catalog/category')]);
+        $isFlatEnabled = Mage::helper('catalog/category_flat')->isEnabled();
+
+        if($isFlatEnabled) {
+            $tableName = sprintf('catalog_category_flat_store_%d', $storeId);
+            $select = $this->connection->select()->from(['e' => $tableName ]);
+            $select->where('e.include_in_menu = ?', 1);
+        } else {
+            $select = $this->connection->select()->from(['e' => $this->coreResource->getTableName('catalog/category')]);
+        }
 
         if (!empty($categoryIds)) {
             $select->where('e.entity_id IN (?)', $categoryIds);
         }
 
-        $path = "1/{$rootCategory->getId()}%";
-        $select->where('path LIKE ?', $path);
+        /**
+         *  Doesnt work is certain circumstances
+         *  $path = "1/{$rootCategory->getId()}%";
+         *  $select->where('path LIKE ?', $path);
+         */
         $select->where('e.entity_id > ?', $fromId);
         $select->limit($limit);
         $select->order('e.entity_id ASC');
