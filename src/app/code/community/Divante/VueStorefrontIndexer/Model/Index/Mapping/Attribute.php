@@ -25,7 +25,6 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Attribute implements Mapp
         'is_visible',
         'is_searchable',
         'is_comparable',
-        'is_visible_on_front',
         'is_html_allowed_on_front',
         'is_used_for_price_rules',
         'is_filterable_in_search',
@@ -35,6 +34,13 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Attribute implements Mapp
         'is_visible_in_advanced_search',
         'is_wysiwyg_enabled',
         'is_used_for_promo_rules',
+    ];
+
+    /**
+     * @var array
+     */
+    private $intProperties = [
+        'is_visible_on_front'
     ];
 
     /**
@@ -106,6 +112,10 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Attribute implements Mapp
 
         foreach ($this->stringProperties as $property) {
             $properties[$property] = ['type' => FieldInterface::TYPE_TEXT];
+        }
+
+        foreach ($this->intProperties as $property) {
+            $properties[$property] = ['type' => FieldInterface::TYPE_INT];
         }
 
         $properties['options'] = [
