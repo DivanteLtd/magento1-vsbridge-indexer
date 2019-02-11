@@ -1,6 +1,6 @@
 
 
-# Divante VueStorefrontIndexer Extension for Vue Storefront
+# Divante VueStorefrontIndexer Extension for Magento1
 ![Branch stable](https://img.shields.io/badge/stable%20branch-master-blue.svg)
 ![Branch Develop](https://img.shields.io/badge/dev%20branch-develop-blue.svg)
 <a href="https://join.slack.com/t/vuestorefront/shared_invite/enQtMzA4MTM2NTE5NjM2LTI1M2RmOWIyOTk0MzFlMDU3YzJlYzcyYzNiNjUyZWJiMTZjZjc3MjRlYmE5ZWQ1YWRhNTQyM2ZjN2ZkMzZlNTg">![Branch Develop](https://img.shields.io/badge/community%20chat-slack-FF1493.svg)</a>
