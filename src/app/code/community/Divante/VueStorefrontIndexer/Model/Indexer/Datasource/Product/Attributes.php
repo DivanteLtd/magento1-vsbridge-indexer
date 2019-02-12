@@ -1,6 +1,7 @@
 <?php
 
 use Divante_VueStorefrontIndexer_Api_DatasourceInterface as DataSourceInterface;
+use Divante_VueStorefrontIndexer_Model_Sluggenerator as SlugGenerator;
 
 /**
  * Class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
@@ -20,9 +21,14 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Attributes i
     private $resourceModel;
 
     /**
-     * @var Divante_VueStorefrontIndexer_Model_Data_Filter
+     * @var Divante_VueStorefrontIndexer_Model_Config_Catalogsettings
      */
-    private $dataFilter;
+    private $settings;
+
+    /**
+     * @var SlugGenerator
+     */
+    private $slugGenerator;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Attributes constructor.
@@ -30,7 +36,8 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Attributes i
     public function __construct()
     {
         $this->resourceModel = Mage::getResourceModel('vsf_indexer/catalog_product_attributes');
-        $this->dataFilter = Mage::getSingleton('vsf_indexer/data_filter');
+        $this->settings = Mage::getSingleton('vsf_indexer/config_catalogsettings');
+        $this->slugGenerator = Mage::getSingleton('vsf_indexer/sluggenerator');
     }
 
     /**
@@ -45,7 +52,15 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Attributes i
 
         foreach ($attributes as $entityId => $attributesData) {
             $productData = array_merge($indexData[$entityId], $attributesData);
-            $indexData[$entityId] = $this->dataFilter->execute($productData);
+
+            if ($this->settings->useMagentoUrlKeys()) {
+                $productData['slug'] = $productData['url_key'];
+            } else {
+                $slug = $this->slugGenerator->generate($productData['name'], $entityId);
+                $productData['slug'] = $slug;
+            }
+
+            $indexData[$entityId] = $productData;
         }
 
         $attributes = null;

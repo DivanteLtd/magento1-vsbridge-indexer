@@ -16,6 +16,7 @@ interface Divante_VueStorefrontIndexer_Api_Mapping_FieldInterface
     const TYPE_KEYWORD = 'keyword';
     const TYPE_BOOLEAN = 'boolean';
     const TYPE_DOUBLE = 'double';
+    const TYPE_INTEGER = 'integer';
     const TYPE_LONG = 'long';
     const TYPE_TEXT = 'text';
     const TYPE_DATE = 'date';

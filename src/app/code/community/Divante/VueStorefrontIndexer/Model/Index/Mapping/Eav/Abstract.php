@@ -52,8 +52,7 @@ abstract class Divante_VueStorefrontIndexer_Model_Index_Mapping_Eav_Abstract
         $type = $this->getAttributeType($attribute);
 
         if ($type === 'text' && !$attribute->getBackendModel() && $attribute->getFrontendInput() != 'media_image') {
-            $fieldName = $attributeCode;
-            $mapping[$fieldName] = [
+            $mapping[$attributeCode] = [
                 'type' => $type,
                 'fields' => [
                     'keyword' => [

@@ -1,6 +1,7 @@
 <?php
 
 use Divante_VueStorefrontIndexer_Api_DatasourceInterface as DataSourceInterface;
+use Divante_VueStorefrontIndexer_Model_Sluggenerator as SlugGenerator;
 
 /**
  * Class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Attributes
@@ -13,6 +14,19 @@ use Divante_VueStorefrontIndexer_Api_DatasourceInterface as DataSourceInterface;
  */
 class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Attributes implements DataSourceInterface
 {
+
+    /**
+     * @var array
+     */
+    private $fieldsToDelete = [
+        'entity_id',
+        'entity_type_id',
+        'attribute_set_id',
+        'created_at',
+        'updated_at',
+        'request_path',
+    ];
+
     /**
      * @var array
      */
@@ -40,6 +54,16 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Attributes 
     private $dataFilter;
 
     /**
+     * @var Divante_VueStorefrontIndexer_Model_Config_Catalogsettings
+     */
+    private $settings;
+
+    /**
+     * @var SlugGenerator
+     */
+    private $slugGenerator;
+
+    /**
      * @var array
      */
     private $childrenRowAttributes = [];
@@ -49,6 +73,8 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Attributes 
      */
     public function __construct()
     {
+        $this->slugGenerator = Mage::getSingleton('vsf_indexer/sluggenerator');
+        $this->settings = Mage::getSingleton('vsf_indexer/config_catalogsettings');
         $this->attributeResourceModel = Mage::getResourceModel('vsf_indexer/catalog_category_attributes');
         $this->childrenResourceModel = Mage::getResourceModel('vsf_indexer/catalog_category_children');
         $this->dataFilter = Mage::getModel(
@@ -147,22 +173,38 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Attributes 
      */
     private function prepareCategory(array $categoryDTO)
     {
+        $categoryDTO = $this->addSlug($categoryDTO);
         $categoryDTO['id'] = intval($categoryDTO['entity_id']);
         unset($categoryDTO['entity_id']);
         unset($categoryDTO['entity_type_id']);
         unset($categoryDTO['attribute_set_id']);
 
-        $removeFields = [
-            'entity_id',
-            'entity_type_id',
-            'attribute_set_id',
-            'created_at',
-            'updated_at',
-            'request_path',
-        ];
-
-        $categoryDTO = array_diff_key($categoryDTO, array_flip($removeFields));
         $categoryDTO = $this->filterData($categoryDTO);
+
+        return $categoryDTO;
+    }
+
+    /**
+     * @param array $categoryDTO
+     *
+     * @return array
+     */
+    private function addSlug(array $categoryDTO)
+    {
+        if ($this->settings->useMagentoUrlKeys()) {
+            if (!isset($categoryDTO['url_key'])) {
+                $slug = $this->slugGenerator->generate(
+                    $categoryDTO['name'],
+                    $categoryDTO['entity_id']
+                );
+                $categoryDTO['url_key'] = $slug;
+            }
+
+            $categoryDTO['slug'] = $categoryDTO['url_key'];
+        } else {
+            $slug = $this->slugGenerator->generate($categoryDTO['name'], $categoryDTO['entity_id']);
+            $categoryDTO['slug'] = $slug;
+        }
 
         return $categoryDTO;
     }
@@ -174,6 +216,6 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Attributes 
      */
     private function filterData(array $categoryData)
     {
-        return $this->dataFilter->execute($categoryData);
+        return $this->dataFilter->execute($categoryData, $this->fieldsToDelete);
     }
 }

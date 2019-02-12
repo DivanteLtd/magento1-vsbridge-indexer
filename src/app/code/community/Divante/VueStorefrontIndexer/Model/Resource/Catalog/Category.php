@@ -1,6 +1,6 @@
 <?php
 
-use Mage_Catalog_Model_Resource_Category_Collection as CategoryCollection;
+use Mage_Catalog_Model_Category as Category;
 
 /**
  * Class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Category
@@ -45,20 +45,66 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Category
      */
     public function getCategories($storeId = 1, array $categoryIds = [], $fromId = 0, $limit = 1000)
     {
-        $rootCategoryId = Mage::app()->getStore($storeId)->getRootCategoryId();
-        $rootCategory = Mage::getModel('catalog/category')->load($rootCategoryId);
-
-        $select = $this->connection->select()->from(['e' => $this->coreResource->getTableName('catalog/category')]);
+        $select = $this->filterByStore($storeId);
 
         if (!empty($categoryIds)) {
             $select->where('e.entity_id IN (?)', $categoryIds);
         }
 
-        $path = "1/{$rootCategory->getId()}%";
-        $select->where('path LIKE ?', $path);
         $select->where('e.entity_id > ?', $fromId);
         $select->limit($limit);
         $select->order('e.entity_id ASC');
+
+        return $this->connection->fetchAll($select);
+    }
+
+    /**
+     * @param $storeId
+     *
+     * @return Varien_Db_Select
+     * @throws Mage_Core_Model_Store_Exception
+     */
+    public function filterByStore($storeId)
+    {
+        $rootCategoryId = Mage::app()->getStore($storeId)->getRootCategoryId();
+
+        $rootId = Category::TREE_ROOT_ID;
+        $rootCatIdExpr = $this->connection->quote("{$rootId}/{$rootCategoryId}");
+        $catIdExpr = $this->connection->quote("{$rootId}/{$rootCategoryId}/%");
+
+        $select = $this->connection->select()->from(
+            ['e' => $this->coreResource->getTableName('catalog/category')]
+        );
+
+        $select->where(
+            "path = {$rootCatIdExpr} OR path like {$catIdExpr}"
+        );
+
+        return $select;
+    }
+
+    /**
+     * @param int $storeId
+     * @param array $productIds
+     *
+     * @return array
+     * @throws Mage_Core_Model_Store_Exception
+     */
+    public function getCategoryProducts($storeId, array $productIds)
+    {
+        $select = $this->filterByStore($storeId);
+        $table = $this->coreResource->getTableName('catalog_category_product');
+
+        $select->reset(Varien_Db_Select::COLUMNS);
+        $select->joinInner(
+            ['cpi' => $table],
+            "e.entity_id = cpi.category_id",
+            [
+                'category_id',
+                'product_id',
+                'position',
+            ]
+        )->where('cpi.product_id IN (?)', $productIds);
 
         return $this->connection->fetchAll($select);
     }

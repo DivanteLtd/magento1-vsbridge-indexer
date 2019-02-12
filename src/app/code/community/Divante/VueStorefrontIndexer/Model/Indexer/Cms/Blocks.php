@@ -62,7 +62,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Cms_Blocks implements IndexerIn
         /** @var Store $store */
         foreach ($stores as $store) {
             $this->indexHandler->saveIndex($this->action->rebuild($store->getId(), $ids), $store);
-            $this->indexHandler->cleanUpByTransactionKey($store);
+            $this->indexHandler->cleanUpByTransactionKey($store, $ids);
         }
     }
 

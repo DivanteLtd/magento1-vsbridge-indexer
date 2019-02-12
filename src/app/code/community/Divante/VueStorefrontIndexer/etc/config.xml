@@ -264,9 +264,10 @@
                 <invalidate_cache_key>aeSu7aip</invalidate_cache_key>
                 <connection_timeout>10</connection_timeout>
             </redis_cache_settings>
-            <product_settings>
+            <catalog_settings>
+                <use_magento_url_keys>0</use_magento_url_keys>
                 <configurable_children_use_simple_price>1</configurable_children_use_simple_price>
-            </product_settings>
+            </catalog_settings>
         </vuestorefront>
     </default>
 </config>

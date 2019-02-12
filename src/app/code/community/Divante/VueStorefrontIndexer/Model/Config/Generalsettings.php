@@ -11,7 +11,7 @@
  */
 class Divante_VueStorefrontIndexer_Model_Config_Generalsettings
 {
-    const PRODUCT_SETTINGS_CONFIG_XML_PREFIX = 'vuestorefront/general_settings';
+    const GENERAL_SETTINGS_CONFIG_XML_PREFIX = 'vuestorefront/general_settings';
 
     /**
      * @return bool
@@ -61,7 +61,7 @@ class Divante_VueStorefrontIndexer_Model_Config_Generalsettings
      */
     public function getConfigParam($configField, $storeId = null)
     {
-        $path = self::PRODUCT_SETTINGS_CONFIG_XML_PREFIX . '/' . $configField;
+        $path = self::GENERAL_SETTINGS_CONFIG_XML_PREFIX . '/' . $configField;
 
         return Mage::getStoreConfig($path, $storeId);
     }
