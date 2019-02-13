@@ -254,7 +254,6 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
                 $this->superAttributeOptions[$id] = [
                     'attribute_id' => $attributeId,
                     'position' => intval($configurableAttribute['position']),
-                    'id' => intval($configurableAttribute['product_super_attribute_id']),
                 ];
 
                 $this->productSuperAttributeIds[$configurableAttribute['product_id']][] = $id;

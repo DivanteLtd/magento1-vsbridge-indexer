@@ -45,19 +45,66 @@ Module listen on following Magento1 events:
 - Magento >= 1.9
 - Vue Storefront >= 1.7
 
-## Installation Instructions
+## Installation Instructions/Getting Stared
 
-### Setup ElasticSearch Connection
+### Install Magento Module
+- Install Magento module Divante_VueStorefrontIndexer using modman or by coping code from src/
+- Configure the module in Magento admin panel and run full indexation
 
-System --> Configuration -> VueStorefront -> Elasticsearch Client
+### Configuration
+Go to the new ‘Indexer’ section (Stores → Configuration → Vuestorefront → Indexer), available now in the in the Magento Panel, and configure it in the listed areas: 
+ 
+1. General settings → List of stores to reindex
+ 
+   Select stores for which data must be exported to ElasticSearch. By default stores 0 to 1 are selected. For each store view, a new, separate ElasticSearch index is created.
 
-![](docs/images/elastic-search-config.png)
+    ![](docs/images/config-general.png)
 
-### Change Indices Settings
-System --> Configuration -> VueStorefront -> Indices Settings
+1. Elasticsearch Client
 
-- adjust indexing batch size to your data
-- setup index name prefix. 
+   Configure connection with ElasticSearch. Provide a host, port, and set up login and password (optionally).
+
+   ![](docs/images/config-es.png)
+
+1. Indices settings
+ 
+   Batch Indexing Size → select size of packages by which you intend to send data to ElasticSrearch. Depending on the project you might need to adjust package size to the number of products, attributes, configurable products variation, etc). By default Batch, Indexing Size is set up for 1000.
+   Indicies settings. Adjust indexing batch size to your data.
+    
+   Index Name Prefix → define prefixes for ElasticSearch indexes. The panel allows adding prefix only to the catalog name e.g.: "vue_storefront_catalog". For each store (store view) index name is generated on the base of defined prefix and ID. Aliases cannot be created. 
+ 
+   Example: When we define following indexes: "vue_storefront_catalog_1", "vue_storefront_catalog_2", "vue_storefront_catalog_3", their name will remain unchanged, and only product and category names will be updated. 
+   Important: It is crucial to update this configuration in the VSF and VSF-API (one change at the beginning of the whole configuration process).   
+   ![](docs/images/config-indices.png)
+   
+   The maximum number of fields in an index -> allow to setup value for option `index.mapping.total_fields.limit` 
+   
+1. Redis Cache Settings
+
+    Clear cache → No/Yes (by default this option is disabled)
+    
+    VSF base Url → URL for VSF
+ 
+    Invalidate Secret cache key → provide the same value as in the VSF configuration
+ 
+    Connection timeout → by default set up for 10 seconds
+    
+    ![](docs/images/config-cache.png) 
+
+1. Catalog Settings
+    
+    Use Short Catalog Urls → by default this option is disabled. The short Catalog Urls must be aligned with the VSF configuration. After any changes in the VSF configuration, the configuration in the Magento Panel must be updated and all products and categories indexed anew.
+        
+    Types of products to index → by default all product will be exported to ElasticSearch. This option allows for selecting certain product types that should be exported. 
+    
+    ![](docs/images/config-catalog.png)
+
+
+After updating the configuration, you can run the indexation. It is also worth query ElasticSearch using CURL, to be sure that the communication works.
+
+### Indexation
+
+You can run full synchronization (for products, categories, attributes, cms blocks) or for specific type.
 
 ### Run full synchronization for chosen store views:
 
@@ -65,6 +112,18 @@ System --> Configuration -> VueStorefront -> Indices Settings
 cd [magento root dir]/shell
 php -f vsf_tools.php --action full_reindex --store STORE_ID
 ```
+
+### Run full synchronization for specific type
+
+```
+cd [magento root dir]/shell
+php -f vsf_tools.php --action full_reindex --store STORE_ID --type [taxrules|products|categories|attributes|cms_blocks]
+
+php -f vsf_tools.php --action full_reindex --store STORE_ID --type attributes
+```
+
+It is worth, to begin with taxrules as it is the fastest.
+
 
 ### Setup Cron job to update data in ElasticSearch in real time (for products, categories, attributes, cms blocks)
 

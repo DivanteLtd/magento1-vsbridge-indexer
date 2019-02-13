@@ -64,7 +64,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      */
     private $generalMapping;
     /**
-     * @var Divante_VueStorefrontIndexer_Model_Config_Productsettings
+     * @var Divante_VueStorefrontIndexer_Model_Config_Catalogsettings
      */
     private $configSettings;
 
@@ -78,7 +78,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
         $this->dataFilter = Mage::getSingleton('vsf_indexer/data_filter');
         $this->generalMapping = Mage::getSingleton('vsf_indexer/index_mapping_generalmapping');
         $this->inventoryResource = Mage::getResourceModel('vsf_indexer/catalog_product_inventory');
-        $this->configSettings = Mage::getSingleton('vsf_indexer/config_productsettings');
+        $this->configSettings = Mage::getSingleton('vsf_indexer/config_catalogsettings');
     }
 
     /**

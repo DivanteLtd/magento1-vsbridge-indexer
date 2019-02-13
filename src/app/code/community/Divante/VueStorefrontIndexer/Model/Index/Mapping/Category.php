@@ -60,7 +60,9 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Category extends Abstract
             $attributes = $this->getAttributes();
 
             foreach ($attributes as $attribute) {
-                $properties = array_merge($properties, $this->getAttributeMapping($attribute));
+                $attributeCode = $attribute->getAttributeCode();
+                $mapping = $this->getAttributeMapping($attribute);
+                $properties[$attributeCode] = $mapping[$attributeCode];
             }
 
             /**
@@ -69,6 +71,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Category extends Abstract
             $generalMapping = Mage::getSingleton('vsf_indexer/index_mapping_generalmapping');
             $properties = array_merge($properties, $generalMapping->getCommonProperties());
 
+            $properties['slug'] = ['type' => FieldInterface::TYPE_KEYWORD];
             $properties['children_count'] = ['type' => FieldInterface::TYPE_LONG];
             $properties['children_data'] = ['properties' => $properties];
             $properties['grid_per_page'] = ['type' => FieldInterface::TYPE_LONG];

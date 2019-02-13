@@ -23,9 +23,9 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product
     private $connection;
 
     /**
-     * @var Divante_VueStorefrontIndexer_Model_Config_Productsettings
+     * @var Divante_VueStorefrontIndexer_Model_Config_Catalogsettings
      */
-    private $productSettings;
+    private $catalogSettings;
 
     /**
      * @var int
@@ -39,7 +39,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product
     {
         $this->coreResource = Mage::getSingleton('core/resource');
         $this->connection = $this->coreResource->getConnection('catalog_read');
-        $this->productSettings = Mage::getSingleton('vsf_indexer/config_productsettings');
+        $this->catalogSettings = Mage::getSingleton('vsf_indexer/config_catalogsettings');
     }
 
     /**
@@ -134,7 +134,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product
      */
     private function addProductTypeFilter(Varien_Db_Select $select, $storeId)
     {
-        $types = $this->productSettings->getAllowedProductTypes($storeId);
+        $types = $this->catalogSettings->getAllowedProductTypes($storeId);
 
         if (!empty($types)) {
             $select->where('type_id IN (?)', $types);

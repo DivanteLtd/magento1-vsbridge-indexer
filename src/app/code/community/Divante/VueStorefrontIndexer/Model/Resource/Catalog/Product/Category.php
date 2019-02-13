@@ -23,6 +23,11 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Category
     private $connection;
 
     /**
+     * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Category
+     */
+    private $categoryResource;
+
+    /**
      * @var array Local cache for category names
      */
     private $categoryNameCache = [];
@@ -34,6 +39,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Category
     {
         $this->coreResource = Mage::getSingleton('core/resource');
         $this->connection = $this->coreResource->getConnection('catalog_read');
+        $this->categoryResource = Mage::getResourceModel('vsf_indexer/catalog_category');
     }
 
     /**
@@ -45,9 +51,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Category
      */
     public function loadCategoryData($storeId, array $productIds)
     {
-        $select       = $this->getCategoryProductSelect($productIds);
-        $categoryData = $this->connection->fetchAll($select);
-
+        $categoryData = $this->categoryResource->getCategoryProducts($storeId, $productIds);
         $categoryIds = [];
 
         foreach ($categoryData as $categoryDataRow) {
@@ -113,22 +117,6 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Category
         $categoryCollection->joinAttribute('name', 'catalog_category/name', 'entity_id');
 
         $select = $categoryCollection->getSelect();
-
-        return $select;
-    }
-
-    /**
-     * @param array $productIds
-     *
-     * @return Varien_Db_Select
-     */
-    private function getCategoryProductSelect($productIds)
-    {
-        $table = $this->coreResource->getTableName('catalog/category_product');
-
-        $select = $this->connection->select()
-            ->from(['cpi' => $table])
-            ->where('cpi.product_id IN(?)', $productIds);
 
         return $select;
     }

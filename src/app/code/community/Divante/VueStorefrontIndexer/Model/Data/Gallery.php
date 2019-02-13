@@ -30,7 +30,6 @@ class Divante_VueStorefrontIndexer_Model_Data_Gallery
                 'lab' => $this->getValue('label', $mediaImage),
                 'pos' => intval($this->getValue('position', $mediaImage)),
             ];
-
             $galleryPerProduct[$productId][] = $image;
         }
 

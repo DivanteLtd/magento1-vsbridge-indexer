@@ -69,41 +69,39 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Prices imple
         $productIds = array_keys($indexData);
         $websiteId = $this->getWebsiteId($storeId);
 
-        if ($websiteId) {
-            $tierPrices = $this->tiersResource->loadTierPrices($websiteId, $productIds);
-            $groupPrices = $this->groupPriceResource->loadGroupPrices($websiteId, $productIds);
-            /** @var Mage_Catalog_Model_Product_Attribute_Backend_Tierprice $backend */
-            $backend = $this->getTierPriceAttribute()->getBackend();
+        $tierPrices = $this->tiersResource->loadTierPrices($websiteId, $productIds);
+        $groupPrices = $this->groupPriceResource->loadGroupPrices($websiteId, $productIds);
+        /** @var Mage_Catalog_Model_Product_Attribute_Backend_Tierprice $backend */
+        $backend = $this->getTierPriceAttribute()->getBackend();
 
-            foreach ($groupPrices as $productId => $groupRowData) {
-                $groupRowData = $backend->preparePriceData(
-                    $groupRowData,
-                    $indexData['product_id'],
-                    $websiteId
-                );
+        foreach ($groupPrices as $productId => $groupRowData) {
+            $groupRowData = $backend->preparePriceData(
+                $groupRowData,
+                $indexData[$productId]['type_id'],
+                $websiteId
+            );
 
-                foreach ($groupRowData as $groupPriceData) {
-                    if (Mage_Customer_Model_Group::NOT_LOGGED_IN_ID === $groupPriceData['cust_group']) {
-                        /*vsf does not group prices so we are setting it in */
-                        $price = (float)$indexData[$productId]['price'];
-                        $price = min((float)$groupPriceData['price'], $price);
-                        $indexData[$productId]['price'] = $price;
-                    }
-
-                    $indexData[$productId]['tier_prices'][] = $this->prepareTierPrices($groupPriceData);
+            foreach ($groupRowData as $groupPriceData) {
+                if (Mage_Customer_Model_Group::NOT_LOGGED_IN_ID === $groupPriceData['cust_group']) {
+                    /*vsf does not group prices so we are setting it in */
+                    $price = (float)$indexData[$productId]['price'];
+                    $price = min((float)$groupPriceData['price'], $price);
+                    $indexData[$productId]['price'] = $price;
                 }
+
+                $indexData[$productId]['tier_prices'][] = $this->prepareTierPrices($groupPriceData);
             }
+        }
 
-            foreach ($tierPrices as $productId => $tierRowData) {
-                $productTierPrices = $backend->preparePriceData(
-                    $tierRowData,
-                    $indexData['product_id'],
-                    $websiteId
-                );
+        foreach ($tierPrices as $productId => $tierRowData) {
+            $productTierPrices = $backend->preparePriceData(
+                $tierRowData,
+                $indexData[$productId]['type_id'],
+                $websiteId
+            );
 
-                foreach ($productTierPrices as $productTierPrice) {
-                    $indexData[$productId]['tier_prices'][] = $this->prepareTierPrices($productTierPrice);
-                }
+            foreach ($productTierPrices as $productTierPrice) {
+                $indexData[$productId]['tier_prices'][] = $this->prepareTierPrices($productTierPrice);
             }
         }
 

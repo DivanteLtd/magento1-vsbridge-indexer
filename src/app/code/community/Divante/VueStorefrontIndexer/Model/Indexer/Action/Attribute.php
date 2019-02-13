@@ -38,6 +38,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Action_Attribute
 
             foreach ($attributes as $attributeData) {
                 $lastAttributeId = $attributeData['attribute_id'];
+                $attributeData['default_frontend_label'] = $attributeData['frontend_label'];
                 $attributeData['id'] = $attributeData['attribute_id'];
                 $attributeData = $this->filterData($attributeData);
 

@@ -198,8 +198,8 @@
                         </connection_timeout>
                     </fields>
                 </redis_cache_settings>
-                <product_settings>
-                    <label>Product Settings</label>
+                <catalog_settings>
+                    <label>Catalog Settings</label>
                     <frontend_type>text</frontend_type>
                     <sort_order>1000</sort_order>
                     <show_in_default>1</show_in_default>
@@ -219,6 +219,19 @@
                             <show_in_website>0</show_in_website>
                             <show_in_store>1</show_in_store>
                         </allowed_product_types>
+                        <use_magento_url_keys>
+                            <label>Use Short Catalog Urls</label>
+                            <comment>Set base on your setting products.useShortCatalogUrls from vsf.
+                                If you change this setting on vsf you have to reindex all product and categories for vsf.
+                                NOTE: If you don't have unique values on url_key (for all products and categories) this options should be set to "No"
+                            </comment>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>110</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>0</show_in_website>
+                            <show_in_store>0</show_in_store>
+                        </use_magento_url_keys>
                         <configurable_children_use_simple_price>
                             <label>Configurable children - use price from simple products</label>
                             <comment>Select yes if you calculate price base on simple products. By default Magento 1 does not support this.</comment>
@@ -230,7 +243,7 @@
                             <show_in_store>0</show_in_store>
                         </configurable_children_use_simple_price>
                     </fields>
-                </product_settings>
+                </catalog_settings>
             </groups>
         </vuestorefront>
         <catalog>
