@@ -9,6 +9,8 @@ This projects is a native, Magento1 data indexer for [Vue Storefront - first Pro
 
 Vue Storefront is a standalone PWA storefront for your eCommerce, possible to connect with any eCommerce backend (eg. Magento, Pimcore, Prestashop or Shopware) through the API.
 
+**Please note:** This indexer is a part of [magento1-vsbridge](https://github.com/DivanteLtd/magento1-vsbridge) connector for Magento1.
+
  ## Video demo
  [![See how it works!](https://github.com/DivanteLtd/vue-storefront/raw/master/docs/.vuepress/public/Fil-Rakowski-VS-Demo-Youtube.png)](https://www.youtube.com/watch?v=L4K-mq9JoaQ)
 Sign up for a demo at https://vuestorefront.io/ (Vue Storefront integrated with Pimcore OR Magento2).
