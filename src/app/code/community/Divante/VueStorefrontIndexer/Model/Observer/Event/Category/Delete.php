@@ -4,7 +4,7 @@ use Divante_VueStorefrontIndexer_Model_Event_Handler as EventHandler;
 use Mage_Catalog_Model_Category as Category;
 
 /**
- * Class Divante_VueStorefrontIndexer_Model_Observer_Event_Category_Save
+ * Class Divante_VueStorefrontIndexer_Model_Observer_Event_Category_Delete
  *
  * @package     Divante
  * @category    VueStoreFrontIndexer
@@ -12,7 +12,7 @@ use Mage_Catalog_Model_Category as Category;
  * @copyright   Copyright (C) 2018 Divante Sp. z o.o.
  * @license     See LICENSE_DIVANTE.txt for license details.
  */
-class Divante_VueStorefrontIndexer_Model_Observer_Event_Category_Save
+class Divante_VueStorefrontIndexer_Model_Observer_Event_Category_Delete
 {
 
     /**
