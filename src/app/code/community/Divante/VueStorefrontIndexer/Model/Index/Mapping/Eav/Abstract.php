@@ -18,7 +18,8 @@ abstract class Divante_VueStorefrontIndexer_Model_Index_Mapping_Eav_Abstract
      * @var array
      */
     protected $longProperties = [
-        'category_ids'
+        'category_ids',
+        'level'
     ];
 
     /**
