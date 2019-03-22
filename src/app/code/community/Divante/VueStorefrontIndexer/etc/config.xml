@@ -164,6 +164,22 @@
                     </vsf_indexer_product>
                 </observers>
             </core_abstract_save_delete>
+            <cms_page_prepare_save>
+                <observers>
+                    <vsf_indexer_product>
+                        <class>vsf_indexer/observer_event_cms_page_save</class>
+                        <method>execute</method>
+                    </vsf_indexer_product>
+                </observers>
+            </cms_page_prepare_save>
+            <adminhtml_cmspage_on_delete>
+                <observers>
+                    <vsf_indexer_product>
+                        <class>vsf_indexer/observer_event_cms_page_delete</class>
+                        <method>execute</method>
+                    </vsf_indexer_product>
+                </observers>
+            </adminhtml_cmspage_on_delete>
         </events>
     </adminhtml>
     <global>
@@ -213,6 +229,12 @@
                                 <transaction_key>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Transactionkey</transaction_key>
                             </datasources>
                         </cms_block>
+                        <cms_page>
+                            <mapping>Divante_VueStorefrontIndexer_Model_Index_Mapping_Cms_Page</mapping>
+                            <datasources>
+                                <transaction_key>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Transactionkey</transaction_key>
+                            </datasources>
+                        </cms_page>
                     </types>
                 </vue_storefront_catalog>
             </indices_config>
@@ -230,6 +252,9 @@
                 <cms_blocks>
                     <class>Divante_VueStorefrontIndexer_Model_Indexer_Cms_Blocks</class>
                 </cms_blocks>
+                <cms_pages>
+                    <class>Divante_VueStorefrontIndexer_Model_Indexer_Cms_Pages</class>
+                </cms_pages>
                 <taxrules>
                     <class>Divante_VueStorefrontIndexer_Model_Indexer_Taxrules</class>
                 </taxrules>
