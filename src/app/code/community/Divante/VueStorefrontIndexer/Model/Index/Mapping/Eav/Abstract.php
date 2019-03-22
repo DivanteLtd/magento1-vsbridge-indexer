@@ -14,6 +14,21 @@ use Divante_VueStorefrontIndexer_Api_Mapping_FieldInterface as FieldInterface;
  */
 abstract class Divante_VueStorefrontIndexer_Model_Index_Mapping_Eav_Abstract
 {
+    /**
+     * @var array
+     */
+    protected $longProperties = [
+        'category_ids',
+        'level'
+    ];
+
+    /**
+     * @var array
+     */
+    protected $keywordProperties = [
+        'sku',
+        'url_key'
+    ];
 
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
@@ -90,15 +105,11 @@ abstract class Divante_VueStorefrontIndexer_Model_Index_Mapping_Eav_Abstract
     {
         $attributeCode = $attribute->getAttributeCode();
 
-        if ('category_ids' === $attributeCode) {
-            return FieldInterface::TYPE_LONG;
-        }
-
-        if ('sku' === $attributeCode) {
+        if (in_array($attributeCode, $this->keywordProperties)) {
             return FieldInterface::TYPE_KEYWORD;
         }
 
-        if ('level' === $attributeCode) {
+        if (in_array($attributeCode, $this->longProperties)) {
             return FieldInterface::TYPE_LONG;
         }
 
