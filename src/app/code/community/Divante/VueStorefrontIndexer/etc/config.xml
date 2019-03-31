@@ -266,7 +266,7 @@
             </redis_cache_settings>
             <catalog_settings>
                 <use_magento_url_keys>0</use_magento_url_keys>
-                <configurable_children_use_simple_price>1</configurable_children_use_simple_price>
+                <configurable_children_use_simple_price>0</configurable_children_use_simple_price>
             </catalog_settings>
         </vuestorefront>
     </default>
