@@ -132,7 +132,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Settings
                         ]
                     ]
                 ]
-            ]];
-        )
+            ]]
+        );
     }
 }

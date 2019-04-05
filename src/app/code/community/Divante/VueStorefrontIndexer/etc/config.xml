@@ -239,6 +239,9 @@
                 <taxrules>
                     <class>Divante_VueStorefrontIndexer_Model_Indexer_Taxrules</class>
                 </taxrules>
+                <reviews>
+                    <class>Divante_VueStorefrontIndexer_Model_Indexer_Reviews</class>
+                </reviews>
                 <!--indexers used for partial data update-->
                 <product_categories><!--only update product categories-->
                     <class>Divante_VueStorefrontIndexer_Model_Indexer_Productcategories</class>
