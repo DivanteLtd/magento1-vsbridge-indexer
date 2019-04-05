@@ -109,7 +109,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Settings
     public function getEsConfig() 
     {
         return array_merge(
-            ["index.mapping.total_fields.limit" => $this->indexSettings->getFieldsLimit()],
+            ["index.mapping.total_fields.limit" => $this->getFieldsLimit()],
             ["analysis" => [
                 "analyzer" => [
                     "autocomplete" => [
