@@ -51,10 +51,10 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Review
             $select->where('e.review_id IN (?)', $reviewIds);
         }
 
-        $select->limit($limit);
-            ->columns(['e.status_id AS review_status', 'e.entity_pk_value AS product_id']);
+        $select->limit($limit)
+            ->columns(['e.status_id AS review_status', 'e.entity_pk_value AS product_id'])
             ->joinLeft(
-                ['store' => $this->resource->getTableName('review_store')],
+                ['store' => $this->coreResource->getTableName('review_store')],
                 'e.review_id = store.review_id'
             )
             ->where('e.review_id > ?', $fromId)

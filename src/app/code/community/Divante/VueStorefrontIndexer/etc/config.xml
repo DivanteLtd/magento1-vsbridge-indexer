@@ -164,6 +164,22 @@
                     </vsf_indexer_product>
                 </observers>
             </core_abstract_save_delete>
+            <cms_page_prepare_save>
+                <observers>
+                    <vsf_indexer_product>
+                        <class>vsf_indexer/observer_event_cms_page_save</class>
+                        <method>execute</method>
+                    </vsf_indexer_product>
+                </observers>
+            </cms_page_prepare_save>
+            <adminhtml_cmspage_on_delete>
+                <observers>
+                    <vsf_indexer_product>
+                        <class>vsf_indexer/observer_event_cms_page_delete</class>
+                        <method>execute</method>
+                    </vsf_indexer_product>
+                </observers>
+            </adminhtml_cmspage_on_delete>
         </events>
     </adminhtml>
     <global>
@@ -236,6 +252,9 @@
                 <cms_blocks>
                     <class>Divante_VueStorefrontIndexer_Model_Indexer_Cms_Blocks</class>
                 </cms_blocks>
+                <cms_pages>
+                    <class>Divante_VueStorefrontIndexer_Model_Indexer_Cms_Pages</class>
+                </cms_pages>
                 <taxrules>
                     <class>Divante_VueStorefrontIndexer_Model_Indexer_Taxrules</class>
                 </taxrules>
@@ -275,7 +294,7 @@
             </redis_cache_settings>
             <catalog_settings>
                 <use_magento_url_keys>0</use_magento_url_keys>
-                <configurable_children_use_simple_price>1</configurable_children_use_simple_price>
+                <configurable_children_use_simple_price>0</configurable_children_use_simple_price>
             </catalog_settings>
         </vuestorefront>
     </default>
