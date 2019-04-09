@@ -11,7 +11,6 @@
  */
 class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Review
 {
-
     /**
      * @var Mage_Core_Model_Resource
      */
@@ -53,10 +52,15 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Review
         }
 
         $select->limit($limit);
-        $select->columns(['e.status_id AS review_status', 'e.entity_pk_value AS product_id']);
-        $select->where('e.review_id > ?', $fromId)
-               ->where('d.store_id = ?', $storeId);
-        $select->order('e.review_id ASC');
+            ->columns(['e.status_id AS review_status', 'e.entity_pk_value AS product_id']);
+            ->joinLeft(
+                ['store' => $this->resource->getTableName('review_store')],
+                'e.review_id = store.review_id'
+            )
+            ->where('e.review_id > ?', $fromId)
+            ->where('store.store_id = ?', $storeId)
+            ->order('e.review_id ASC');
+            
         $select = $this->addStatusFilter($select);
 
         return $this->connection->fetchAll($select);
@@ -77,10 +81,8 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Review
             ['d' => $backendTable],
             $defaultJoinCond,
             ['d.title', 'd.nickname', 'd.customer_id', 'd.detail']
-        )->where('e.status_id' . ' = ?', 1);
+        )->where('e.status_id' . ' = ?', Mage_Review_Model_Review::STATUS_APPROVED);
 
         return $select;
     }
-
-
 }
