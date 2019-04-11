@@ -44,6 +44,15 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
         'tax_class_id',
     ];
     /**
+     * Images
+     * @var array
+     */
+    private $imageAttributes = [
+        'image',
+        'small_image',
+        'thumbnail'
+    ];
+    /**
      * @var Divante_VueStorefrontIndexer_Model_Data_Filter
      */
     private $dataFilter;
@@ -152,6 +161,18 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
 
                 if (!isset($indexData[$parentId]['configurable_options'])) {
                     $indexData[$parentId]['configurable_options'] = [];
+                }
+
+                if ($this->configSettings->useImageInheritanceForConfigurableChildren()) {
+                    foreach ($this->imageAttributes as $code) {
+                        if ((!array_key_exists($code, $child)
+                            || !$child[$code]
+                            || $child[$code] == 'no_selection')
+                            && array_key_exists($code, $indexData[$parentId])
+                        ) {
+                            $child[$code] = $indexData[$parentId][$code];
+                        }
+                    }
                 }
 
                 if (!$this->configSettings->useSimplePriceForConfigurableChildren()) {
