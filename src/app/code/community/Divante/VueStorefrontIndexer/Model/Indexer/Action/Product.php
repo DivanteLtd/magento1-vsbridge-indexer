@@ -50,7 +50,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Action_Product
                 $product['id'] = intval($product['entity_id']);
                 unset($product['entity_id']);
                 unset($product['required_options']);
-                unset($product['has_options']);
+//                unset($product['has_options']);
                 yield $lastProductId => $this->filterData($product);
             }
         } while (!empty($products));

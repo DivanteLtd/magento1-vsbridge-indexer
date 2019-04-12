@@ -15,85 +15,70 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Customoption
 {
 
     /**
-     * @var Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Customoptions
+     * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Links
      */
-    private $resourceModel;
 
     /**
-     * Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Customoptions constructor.
+     * Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Links constructor.
      */
     public function __construct()
     {
-//        $this->linkedProductResource = Mage::getResourceModel('vsf_indexer/catalog_product_customoptions');
-//        {
-            $this->resourceModel = Mage::getResourceModel('vsf_indexer/catalog_product_customoptions');
+//        $this->linkedProductResource = Mage::getResourceModel('vsf_indexer/catalog_product_links');
     }
 
     /**
      * @inheritdoc
      */
-    public function addData(array $indexData, $storeId)
-    {
-        $this->resourceModel->clear();
-        $this->resourceModel->setProducts($indexData);
-        foreach ($indexData as $productId => $indexData){
+    public function addData(array $indexData, $storeId) {
 
 
-
-//        $productId = $indexData['id'];
-
-//        $productCustomOptions = $this->resourceModel->loadCustomOptions($storeId);
-//print_r($indexData);die();
-
-//
-            $product = Mage::getModel('catalog/product')->load($productId);
-        if($product->getData('has_options')) {
-
-            foreach ($product->getOptions() as $option) {
-                #TODO add sorting
-                $indexData[$productId][$option->getOptionId()] = [
-                    'option_id' => $option->getOptionId(),
-                    'type' => $option->getType(),
-                    'title' => $option->getTitle()
-
-                ];
-                if(empty((array) $option->getValues())){
-                    $indexData[$productId]['custom_options'][$option->getOptionId()]['values'] = [];
-                } else {
+        $productInstance = Mage::getModel('catalog/product');
+        foreach ($indexData as $productId => $productDTO) {
 
 
-                    foreach ($option->getValues() as $value) {
-                        #TODO add sorting
-                        $indexData[$productId]['custom_options'][$option->getOptionId()]['values'][$value->getOptionTypeId()] = [
-                            'title' => $value->getTitle(),
-                            'price' => $value->getPrice(),
-                            'option_type_id' => $value->getOptionTypeId(),
-                            'price_type' => $value->getPriceType()
+            if ($productDTO['has_options'] == 1) {
 
-                        ];
+                mage::log($productId, null, 'hd-co.log', true);
+                $product = $productInstance->load($productId);
+//                mage::log('options', null, 'hd-co.log', true);
+//                mage::log($indexData[$productId], null, 'hd-co.log', true);
+                foreach ($product->getOptions() as $option) {
+//                    mage::log('custom_options - '.$productId, null, 'hd-co.log', true);
+//                    mage::log($option->getTitle(), null, 'hd-co.log', true);
+                    #TODO add sorting
+                    $indexData[$productId]['custom_options'][$option->getOptionId()] = [
+                        'option_id' => $option->getOptionId(),
+                        'type' => $option->getType(),
+                        'title' => $option->getTitle()
+
+                    ];
+                    if (empty((array)$option->getValues())) {
+                        $indexData[$productId]['custom_options'][$option->getOptionId()]['values'] = [];
+                    } else {
+
+
+                        foreach ($option->getValues() as $value) {
+                            #TODO add sorting
+                            $indexData[$productId]['custom_options'][$option->getOptionId()]['values'][$value->getOptionTypeId()] = [
+                                'title' => $value->getTitle(),
+                                'price' => $value->getPrice(),
+                                'option_type_id' => $value->getOptionTypeId(),
+                                'price_type' => $value->getPriceType()
+
+                            ];
+                        }
+
                     }
-
                 }
+//                mage::log($indexData[$productId]['custom_options'], null, 'hd-co.log', true);
+
+            } else {
+
+                $indexData[$productId]['custom_options'] = [];
+
             }
-    }
+            $productInstance->clearInstance();
         }
-
-
-
-//        $productBundleOptions = $this->resourceModel->loadBundleOptions($storeId);
-//
-//        foreach ($productBundleOptions as $productId => $bundleOptions) {
-//            $indexData[$productId]['bundle_options'] = [];
-//
-//            foreach ($bundleOptions as $option) {
-//                $indexData[$productId]['bundle_options'][] = $option;
-//            }
-//        }
-
-        $this->resourceModel->clear();
-//        $productBundleOptions = null;
-
-
-      //  return $indexData;
+        return $indexData;
     }
 }
