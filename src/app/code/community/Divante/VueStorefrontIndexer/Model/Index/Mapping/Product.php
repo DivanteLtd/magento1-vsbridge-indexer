@@ -98,6 +98,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Product extends AbstractM
             Mage::dispatchEvent('elasticsearch_product_mapping_properties', ['mapping' => $mappingObject]);
 
             $this->properties = $mappingObject->getData();
+
         }
 
         return $this->properties;
@@ -133,7 +134,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Product extends AbstractM
                 'properties' => [
                     'option_id' => ['type' => FieldInterface::TYPE_LONG],
                     'position' => ['type' => FieldInterface::TYPE_LONG],
-                    'type' => ['type' => FieldInterface::TYPE_LONG],
+                    'type' => ['type' => FieldInterface::TYPE_TEXT],
                     'is_required' => ['type' => FieldInterface::TYPE_LONG],
                     'sort_order' => ['type' => FieldInterface::TYPE_LONG],
                     'max_characters' => ['type' => FieldInterface::TYPE_LONG],
