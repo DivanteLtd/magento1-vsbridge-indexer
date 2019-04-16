@@ -221,6 +221,7 @@
                                 <category_data>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Categories</category_data>
                                 <price_data>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Prices</price_data>
                                 <media_gallery>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Media</media_gallery>
+                                <custom_options>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Customoptions</custom_options>
                             </datasources>
                         </product>
                         <cms_block>
