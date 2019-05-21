@@ -45,10 +45,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Cms_Block implements Mapp
             'content' => ['type' => FieldInterface::TYPE_TEXT],
             'is_active' => ['type' => FieldInterface::TYPE_BOOLEAN],
             'title' => ['type' => FieldInterface::TYPE_TEXT],
-            'identifier' => [
-                'type' => FieldInterface::TYPE_TEXT,
-                'fields' => ['keyword' => ['type' => FieldInterface::TYPE_KEYWORD]]
-            ]
+            'identifier' => ['type' => FieldInterface::TYPE_KEYWORD]
         ];
 
         $mapping = ['properties' => $properties];
