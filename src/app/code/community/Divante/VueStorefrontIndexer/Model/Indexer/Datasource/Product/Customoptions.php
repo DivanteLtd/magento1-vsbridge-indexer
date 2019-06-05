@@ -55,7 +55,6 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Customoption
                             'price' => $option->getPrice(),
                             'price_type' => $option->getPriceType(),
                             'values' => []
-
                         ];
                         if (!empty((array)$option->getValues())) {
 
@@ -73,8 +72,6 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Customoption
                                     'sort_order' => $value->getSortOrder(),
                                     'default_title' => $value->getDefaultTitle(),
                                     'store_title' => $value->getStoreTitle()
-
-
                                 ];
                             }
                         }
