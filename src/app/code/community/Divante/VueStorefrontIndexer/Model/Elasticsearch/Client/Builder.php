@@ -51,7 +51,7 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Client_Builder
     {
         $scheme = 'http';
 
-        if (isset($options['enable_https_mode'])) {
+        if (isset($options['enable_https_mode']) && $options['enable_https_mode'] !== false) {
             $scheme = 'https';
         } elseif (isset($options['schema'])) {
             $scheme = $options['schema'];
