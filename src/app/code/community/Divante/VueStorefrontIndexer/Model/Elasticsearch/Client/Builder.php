@@ -17,7 +17,6 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Client_Builder
      */
     private $defaultOptions = [
         'host' => 'localhost',
-        'port' => '9200',
         'enable_http_auth' => false,
         'auth_user' => null,
         'auth_pwd' => null,
