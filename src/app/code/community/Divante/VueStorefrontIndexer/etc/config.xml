@@ -229,6 +229,12 @@
                                 <transaction_key>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Transactionkey</transaction_key>
                             </datasources>
                         </cms_block>
+                        <cms_page>
+                            <mapping>Divante_VueStorefrontIndexer_Model_Index_Mapping_Cms_Page</mapping>
+                            <datasources>
+                                <transaction_key>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Transactionkey</transaction_key>
+                            </datasources>
+                        </cms_page>
                         <review>
                             <mapping>Divante_VueStorefrontIndexer_Model_Index_Mapping_Review</mapping>
                             <datasources>
