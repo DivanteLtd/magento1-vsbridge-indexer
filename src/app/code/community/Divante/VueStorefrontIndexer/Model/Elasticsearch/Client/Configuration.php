@@ -84,7 +84,6 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Client_Configuration
         $options = [
             'host' => $this->getHost(),
             'scheme' => $this->getScheme(),
-            'enable_https_mode' => (bool) $this->getConfigParam('enable_https_mode'),
             'enable_http_auth' => $this->isHttpAuthEnabled(),
             'auth_user' => $this->getHttpAuthUser(),
             'auth_pwd' => $this->getHttpAuthPassword(),
