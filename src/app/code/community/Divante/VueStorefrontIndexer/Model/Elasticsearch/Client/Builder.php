@@ -17,7 +17,6 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Client_Builder
      */
     private $defaultOptions = [
         'host' => 'localhost',
-        'port' => '9200',
         'enable_http_auth' => false,
         'auth_user' => null,
         'auth_pwd' => null,
@@ -52,10 +51,10 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Client_Builder
     {
         $scheme = 'http';
 
-        if (isset($options['enable_https_mode'])) {
+        if (isset($options['enable_https_mode']) && $options['enable_https_mode'] !== false) {
             $scheme = 'https';
-        } elseif (isset($options['schema'])) {
-            $scheme = $options['schema'];
+        } elseif (isset($options['scheme'])) {
+            $scheme = $options['scheme'];
         }
 
         $currentHostConfig = [
