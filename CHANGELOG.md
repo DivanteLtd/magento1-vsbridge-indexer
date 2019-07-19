@@ -2,6 +2,9 @@
 
 ### Added
 - Allow to use Elasticsearch host without specific port - @cewald (#25)
+- Update `vsf_tools.php` - @cewald (#26)
+  - Add `store` option to `reindex` action
+  - Make `store` optional for `full_reindex` action to fully reindex all store views
 
 ### Fixed
 - Fixed CMS Block and Page identifier to avoid `-` tokenization - @mtarld (#22)

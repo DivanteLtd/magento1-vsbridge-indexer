@@ -29,31 +29,35 @@ class Divante_VueStorefrontIndexer_Tools extends Mage_Shell_Abstract
             $action = '';
         }
 
-        /**
-         * TODO add option to have full reindex per store
-         */
+        $storeId = empty($this->getArg('store')) ? null : (int) $this->getArg('store');
+
         switch ($action) {
             case 'full_reindex':
                 $type = $this->getArg('type');
-                $storeId = (int)$this->getArg('store');
+                
+                /** @var Divante_VueStorefrontIndexer_Model_Config_Generalsettings $settings */
+                $settings = Mage::getSingleton('vsf_indexer/config_generalsettings');
 
-                if (0 === $storeId) {
-                    echo "Please provide store to reindex \n\n";
-                    echo $this->usageHelp();
-
-                    return;
-                }
-
-                if ($type) {
-                    $tools->runFullReindexByType($type, $storeId);
+                if ($storeId === null) {
+                    $storeIds = $settings->getStoresToIndex();
                 } else {
-                    $tools->fullReindex($storeId);
-                    echo "Full reindex - done \n";
+                    $storeIds = ($settings->canReindexStore($storeId)) ? array($storeId) : array();
                 }
+
+                foreach ($storeIds as $storeId) {
+                    echo "Full reindex for store #$storeId - start \n";
+
+                    if ($type) {
+                        $tools->runFullReindexByType($type, $storeId);
+                    } else {
+                        $tools->fullReindex($storeId);
+                        echo "Full reindex for store #$storeId - done \n";
+                    }
+                }
+
                 break;
             case 'reindex':
-                /*TODO reindex per store*/
-                $tools->reindex();
+                $tools->reindex($storeId);
                 break;
             case 'delete_indices':
                 /** @var Divante_VueStorefrontIndexer_Model_Tools_Index $indexTools */
@@ -75,8 +79,8 @@ class Divante_VueStorefrontIndexer_Tools extends Mage_Shell_Abstract
 Usage:  php -f vsf_tools.php -- [options]
 
         --action <action_name>
-                full_reindex --store STORE_ID [--type categories|products|taxrules|attributes|cms_blocks|reviews]
-                reindex
+                full_reindex --store STORE_ID|OPTIONAL [--type categories|products|taxrules|attributes|cms_blocks|reviews]
+                reindex --store STORE_ID|OPTIONAL
                 delete_indices
 
 USAGE;
