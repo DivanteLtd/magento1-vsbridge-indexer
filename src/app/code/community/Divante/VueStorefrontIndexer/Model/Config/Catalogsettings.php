@@ -30,6 +30,14 @@ class Divante_VueStorefrontIndexer_Model_Config_Catalogsettings
     }
 
     /**
+     * @return bool
+     */
+    public function useImageInheritanceForConfigurableChildren()
+    {
+        return (bool)$this->getConfigParam('configurable_children_use_image_inheritance');
+    }
+
+    /**
      * @param int $storeId
      * @return array
      */

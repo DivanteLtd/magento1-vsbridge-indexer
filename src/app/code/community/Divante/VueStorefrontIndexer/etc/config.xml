@@ -236,6 +236,12 @@
                                 <transaction_key>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Transactionkey</transaction_key>
                             </datasources>
                         </cms_page>
+                        <review>
+                            <mapping>Divante_VueStorefrontIndexer_Model_Index_Mapping_Review</mapping>
+                            <datasources>
+                                <transaction_key>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Transactionkey</transaction_key>
+                            </datasources>
+                        </review>
                     </types>
                 </vue_storefront_catalog>
             </indices_config>
@@ -259,6 +265,9 @@
                 <taxrules>
                     <class>Divante_VueStorefrontIndexer_Model_Indexer_Taxrules</class>
                 </taxrules>
+                <reviews>
+                    <class>Divante_VueStorefrontIndexer_Model_Indexer_Reviews</class>
+                </reviews>
                 <!--indexers used for partial data update-->
                 <product_categories><!--only update product categories-->
                     <class>Divante_VueStorefrontIndexer_Model_Indexer_Productcategories</class>

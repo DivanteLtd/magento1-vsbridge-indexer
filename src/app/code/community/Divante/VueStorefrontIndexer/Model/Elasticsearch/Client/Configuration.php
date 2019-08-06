@@ -83,12 +83,15 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Client_Configuration
     {
         $options = [
             'host' => $this->getHost(),
-            'port' => $this->getPort(),
             'scheme' => $this->getScheme(),
             'enable_http_auth' => $this->isHttpAuthEnabled(),
             'auth_user' => $this->getHttpAuthUser(),
             'auth_pwd' => $this->getHttpAuthPassword(),
         ];
+
+        if (!empty($this->getPort())) {
+            $options['port'] = $this->getPort();
+        }
 
         return $options;
     }

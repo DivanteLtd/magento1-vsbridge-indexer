@@ -101,4 +101,38 @@ class Divante_VueStorefrontIndexer_Model_Index_Settings
 
         return ['types' => $types];
     }
+    /**
+     * Get Language analysis index settings
+     *
+     * @return array
+     */
+    public function getEsConfig() 
+    {
+        return array_merge(
+            ["index.mapping.total_fields.limit" => $this->getFieldsLimit()],
+            ["analysis" => [
+                "analyzer" => [
+                    "autocomplete" => [
+                        "tokenizer" => "autocomplete",
+                        "filter" => [
+                            "lowercase"
+                        ]
+                    ],
+                    "autocomplete_search" => [
+                        "tokenizer" => "lowercase"
+                    ]
+                ],
+                "tokenizer"=> [
+                    "autocomplete" => [
+                        "type"=> "edge_ngram",
+                        "min_gram"=> 2,
+                        "max_gram"=> 10,
+                        "token_chars"=> [
+                            "letter"
+                        ]
+                    ]
+                ]
+            ]]
+        );
+    }
 }
