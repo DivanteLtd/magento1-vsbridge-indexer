@@ -308,6 +308,8 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
                 $indexData[$productId]['configurable_options'][] = $productAttribute;
                 $indexData[$productId][$productAttribute['attribute_code'] . '_options'] = $values;
             }
+
+            $indexData[$productId] = $this->prepareConfigurableProduct($indexData[$productId]);
         }
 
         return $indexData;
@@ -384,6 +386,30 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
         }
 
         return $allChildren;
+    }
+
+    /**
+     * @param array $productDTO
+     *
+     * @return array
+     */
+    public function prepareConfigurableProduct(array $productDTO)
+    {
+        $configurableChildren = $productDTO['configurable_children'];
+        $childPrice = [];
+
+        foreach ($configurableChildren as $child) {
+            $childPrice[] = $child['price'];
+        }
+
+        if (!empty($childPrice)) {
+            $minPrice = min($childPrice);
+            $productDTO['price'] = $minPrice;
+            $productDTO['final_price'] = $minPrice;
+            $productDTO['regular_price'] = $minPrice;
+        }
+
+        return $productDTO;
     }
 
     /**
