@@ -112,16 +112,16 @@ You can run full synchronization (for products, categories, attributes, cms bloc
 
 ```
 cd [magento root dir]/shell
-php -f vsf_tools.php -- --action full_reindex --store STORE_ID
+php vsf_tools.php --action full_reindex --store STORE_ID
 ```
 
 ### Run full synchronization for specific type
 
 ```
 cd [magento root dir]/shell
-php -f vsf_tools.php -- --action full_reindex --store STORE_ID --type [taxrules|products|categories|attributes|cms_blocks]
+php vsf_tools.php --action full_reindex --store STORE_ID --type [taxrules|products|categories|attributes|cms_blocks]
 
-php -f vsf_tools.php -- --action full_reindex --store STORE_ID --type attributes
+php vsf_tools.php --action full_reindex --store STORE_ID --type attributes
 ```
 
 It is worth, to begin with taxrules as it is the fastest.
