@@ -28,7 +28,6 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Customoption
      */
     public function addData(array $indexData, $storeId)
     {
-
         foreach ($indexData as $productId => $productDTO) {
 
             if ($productDTO['has_options'] == 1) {
@@ -43,6 +42,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Customoption
                             'option_id' => $option->getOptionId(),
                             'type' => $option->getType(),
                             'title' => $option->getTitle(),
+                            'sort_order' => $option->getSortOrder(),
                             'store_title' => $option->getStoreTitle(),
                             'is_require' => $option->getIsRequire(),
                             'sku' => $option->getSku(),

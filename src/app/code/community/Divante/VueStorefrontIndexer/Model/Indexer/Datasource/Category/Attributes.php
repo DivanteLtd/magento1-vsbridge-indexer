@@ -36,6 +36,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Attributes 
         'parent_id',
         'position',
         'children_count',
+        'product_count',
     ];
 
     /**
@@ -96,6 +97,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Attributes 
         foreach ($attributes as $entityId => $attributesData) {
             $categoryData = array_merge($indexData[$entityId], $attributesData);
             $indexData[$entityId] = $this->prepareCategory($categoryData);
+            $indexData[$entityId]['product_count'] = $this->getProductCount($entityId);
         }
 
         foreach ($indexData as $categoryId => $categoryData) {
@@ -217,5 +219,31 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Attributes 
     private function filterData(array $categoryData)
     {
         return $this->dataFilter->execute($categoryData, $this->fieldsToDelete);
+    }
+
+
+    /**
+     * @param $categoryId
+     *
+     * @return int
+     */
+    public function getProductCount($categoryId)
+    {
+
+        $resource = Mage::getSingleton('core/resource');
+        $readConnection = $resource->getConnection('core_read');
+        $productTable = Mage::getSingleton('core/resource')->getTableName('catalog/category_product');
+
+        $select = $readConnection->select()
+            ->from(
+                array('main_table' => $productTable),
+                array(new Zend_Db_Expr('COUNT(main_table.product_id)'))
+            )
+            ->where('main_table.category_id = :category_id');
+
+        $bind = array('category_id' => (int)$categoryId);
+        $counts = $readConnection->fetchOne($select, $bind);
+
+        return intval($counts);
     }
 }
