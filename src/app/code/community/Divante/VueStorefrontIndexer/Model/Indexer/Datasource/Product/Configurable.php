@@ -297,12 +297,11 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
                 }
 
                 unset($productAttribute['pricing']);
-                $productStockStatus = $indexData[$productId]['stock']['stock_status'];
                 $isInStock = $indexData[$productId]['stock']['is_in_stock'];
 
-                if (!$isInStock || !$productStockStatus || ($productStockStatus && !$areChildInStock)) {
+                if (!$isInStock || !$areChildInStock) {
                     $indexData[$productId]['stock']['stock_status'] = 0;
-                    $indexData[$productId]['stock']['is_in_stock'] = 0;
+                    $indexData[$productId]['stock']['is_in_stock'] = false;
                 }
 
                 $indexData[$productId]['configurable_options'][] = $productAttribute;
