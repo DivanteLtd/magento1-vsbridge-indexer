@@ -4,20 +4,20 @@ use Divante_VueStorefrontIndexer_Api_MappingInterface as MappingInterface;
 use Divante_VueStorefrontIndexer_Api_Mapping_FieldInterface as FieldInterface;
 
 /**
- * Class Divante_VueStorefrontIndexer_Model_Index_Mapping_Attribute
+ * Class Divante_VueStorefrontIndexer_Model_Index_Mapping_Cms_Page
  *
  * @package     Divante
  * @category    VueStoreFrontIndexer
- * @author      Agata Firlejczyk <afirlejczyk@divante.pl
+ * @author      Sven Ehmer <sven.ehmer@gastro-hero.de>
  * @copyright   Copyright (C) 2018 Divante Sp. z o.o.
  * @license     See LICENSE_DIVANTE.txt for license details.
  */
-class Divante_VueStorefrontIndexer_Model_Index_Mapping_Cms_Block implements MappingInterface
+class Divante_VueStorefrontIndexer_Model_Index_Mapping_Cms_Page implements MappingInterface
 {
     /**
      * @var string
      */
-    private $type;
+    protected $type;
 
     /**
      * @inheritdoc
@@ -51,7 +51,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Cms_Block implements Mapp
         $mapping = ['properties' => $properties];
 
         $mappingObject = new Varien_Object($mapping);
-        Mage::dispatchEvent('elasticsearch_cms_block_mapping_properties', ['mapping' => $mappingObject]);
+        Mage::dispatchEvent('elasticsearch_cms_page_mapping_properties', ['mapping' => $mappingObject]);
 
         return $mappingObject->getData();
     }

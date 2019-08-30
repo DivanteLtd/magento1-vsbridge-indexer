@@ -27,7 +27,8 @@ abstract class Divante_VueStorefrontIndexer_Model_Index_Mapping_Eav_Abstract
      */
     protected $keywordProperties = [
         'sku',
-        'url_key'
+        'url_key',
+        'url_path'
     ];
 
     /**

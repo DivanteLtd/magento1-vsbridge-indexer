@@ -181,6 +181,11 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Links
     {
         $alias = 'link_position';
         $attributePosition = $this->fetchPositionAttributeData();
+        
+        if (empty($attributePosition)) {
+            return $select;
+        }
+        
         $table = $this->resource->getTableName($this->getAttributeTypeTable($attributePosition['type']));
 
         $joinCondition = [
