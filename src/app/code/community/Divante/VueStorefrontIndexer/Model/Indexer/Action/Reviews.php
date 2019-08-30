@@ -13,7 +13,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Action_Reviews
 {
 
     /**
-     * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product
+     * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Review
      */
     private $resourceModel;
 
@@ -33,7 +33,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Action_Reviews
 
     /**
      * @param int $storeId
-     * @param array $productIds
+     * @param array $reviewIds
      *
      * @return \Traversable
      */
@@ -46,21 +46,25 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Action_Reviews
 
             /** @var array $product */
             foreach ($reviews as $review) {
-                $lastReviewId = $review['review_id'];
-                $review['id'] = intval($review['review_id']);
-                unset($review['review_id']);
+                $review['id'] = (int)($review['review_id']);
+                $review['product_id'] = (int)$review['entity_pk_value'];
+                $review['review_status'] = $review['status_id'];
+
+                unset($review['review_id'], $review['entity_pk_value'], $review['status_id']);
+                $lastReviewId = $review['id'];
+
                 yield $lastReviewId => $this->filterData($review);
             }
         } while (!empty($reviews));
     }
 
     /**
-     * @param array $productData
+     * @param array $reviewData
      *
      * @return mixed
      */
-    private function filterData(array $productData)
+    private function filterData(array $reviewData)
     {
-        return $this->dataFilter->execute($productData);
+        return $this->dataFilter->execute($reviewData);
     }
 }

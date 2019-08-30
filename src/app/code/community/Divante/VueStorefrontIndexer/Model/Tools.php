@@ -59,6 +59,18 @@ class Divante_VueStorefrontIndexer_Model_Tools
 
     /**
      * @param string $type
+     *
+     * @return bool
+     */
+    public function checkIfTypeAvailable($type)
+    {
+        $mappingConfig = Mage::getConfig()->getNode(self::MAPPING_CONF_ROOT_NODE)->asArray();
+
+        return isset($mappingConfig[$type]);
+    }
+
+    /**
+     * @param string $type
      * @param null|int $storeId
      */
     public function runFullReindexByType($type, $storeId = null)

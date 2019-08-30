@@ -20,7 +20,6 @@ interface Divante_VueStorefrontIndexer_Api_Mapping_FieldInterface
     const TYPE_LONG = 'long';
     const TYPE_TEXT = 'text';
     const TYPE_DATE = 'date';
-    const TYPE_INT = 'integer';
 
     const DATE_FORMAT = 'yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis';
 }

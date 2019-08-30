@@ -34,7 +34,13 @@ class Divante_VueStorefrontIndexer_Tools extends Mage_Shell_Abstract
         switch ($action) {
             case 'full_reindex':
                 $type = $this->getArg('type');
-                
+
+                if ($type && !$tools->checkIfTypeAvailable($type)) {
+                    echo "Indexer type #$type is not available \n";
+                    echo $this->usageHelp();
+                    return;
+                }
+
                 /** @var Divante_VueStorefrontIndexer_Model_Config_Generalsettings $settings */
                 $settings = Mage::getSingleton('vsf_indexer/config_generalsettings');
 
@@ -45,13 +51,14 @@ class Divante_VueStorefrontIndexer_Tools extends Mage_Shell_Abstract
                 }
 
                 foreach ($storeIds as $storeId) {
-                    echo "Full reindex for store #$storeId - start \n";
-
                     if ($type) {
+                        echo "Full reindexing: store #$storeId, type #$type ... \n";
                         $tools->runFullReindexByType($type, $storeId);
+                        echo "Full reindexing: store #$storeId, type #$type has completed! \n";
                     } else {
+                        echo "Full reindexing: store #$storeId ... \n";
                         $tools->fullReindex($storeId);
-                        echo "Full reindex for store #$storeId - done \n";
+                        echo "Full reindexing: store #$storeId has completed! \n";
                     }
                 }
 
@@ -63,6 +70,7 @@ class Divante_VueStorefrontIndexer_Tools extends Mage_Shell_Abstract
                 /** @var Divante_VueStorefrontIndexer_Model_Tools_Index $indexTools */
                 $indexTools = Mage::getSingleton('vsf_indexer/tools_index');
                 $indexTools->deleteIndices();
+                echo "Indices has been deleted from ES. \n";
                 break;
             default:
                 echo $this->usageHelp();
@@ -79,7 +87,7 @@ class Divante_VueStorefrontIndexer_Tools extends Mage_Shell_Abstract
 Usage:  php -f vsf_tools.php -- [options]
 
         --action <action_name>
-                full_reindex --store STORE_ID|OPTIONAL [--type categories|products|taxrules|attributes|cms_blocks|reviews]
+                full_reindex --store STORE_ID|OPTIONAL [--type categories|products|taxrules|attributes|cms_blocks|cms_pages|reviews]
                 reindex --store STORE_ID|OPTIONAL
                 delete_indices
 
