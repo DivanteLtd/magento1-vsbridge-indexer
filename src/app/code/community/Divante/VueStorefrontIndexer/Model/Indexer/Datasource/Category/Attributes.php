@@ -204,6 +204,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Attributes 
         } else {
             $slug = $this->slugGenerator->generate($categoryDTO['name'], $categoryDTO['entity_id']);
             $categoryDTO['slug'] = $slug;
+            $categoryDTO['url_key'] = $slug;
         }
 
         return $categoryDTO;
