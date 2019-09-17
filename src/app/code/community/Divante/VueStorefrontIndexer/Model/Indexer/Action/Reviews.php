@@ -44,11 +44,17 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Action_Reviews
         do {
             $reviews = $this->resourceModel->getReviews($storeId, $reviewIds, $lastReviewId);
 
+            /** @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Rating $ratingModel */
+            $ratingsModel = Mage::getResourceModel('icmaa_vuestorefrontindexer/catalog_rating');
+            $reviewResultIds = array_column($reviews, 'review_id');
+            $ratingsModel->getRatings($storeId, $reviewResultIds);
+
             /** @var array $product */
             foreach ($reviews as $review) {
                 $review['id'] = (int)($review['review_id']);
                 $review['product_id'] = (int)$review['entity_pk_value'];
                 $review['review_status'] = $review['status_id'];
+                $review['ratings'] = $ratingsModel->getRatingsByReviewId($review['review_id']);
 
                 unset($review['review_id'], $review['entity_pk_value'], $review['status_id']);
                 $lastReviewId = $review['id'];
