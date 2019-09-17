@@ -45,7 +45,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Action_Reviews
             $reviews = $this->resourceModel->getReviews($storeId, $reviewIds, $lastReviewId);
 
             /** @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Rating $ratingModel */
-            $ratingsModel = Mage::getResourceModel('icmaa_vuestorefrontindexer/catalog_rating');
+            $ratingsModel = Mage::getResourceModel('vsf_indexer/catalog_rating');
             $reviewResultIds = array_column($reviews, 'review_id');
             $ratingsModel->getRatings($storeId, $reviewResultIds);
 
