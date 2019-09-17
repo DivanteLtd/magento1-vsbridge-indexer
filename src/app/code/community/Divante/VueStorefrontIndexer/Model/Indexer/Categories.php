@@ -22,17 +22,17 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Categories implements IndexerIn
     /**
      * @var IndexerHandler
      */
-    private $indexHandler;
+    protected $indexHandler;
 
     /**
      * @var CategoryAction
      */
-    private $action;
+    protected $action;
 
     /**
      * @var StoreHelper
      */
-    private $storeHelper;
+    protected $storeHelper;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Category constructor.

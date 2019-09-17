@@ -17,17 +17,17 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Prices imple
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Prices
      */
-    private $resource;
+    protected $resource;
 
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Tiers
      */
-    private $tiersResource;
+    protected $tiersResource;
 
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Groupprices
      */
-    private $groupPriceResource;
+    protected $groupPriceResource;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Tiers constructor.
@@ -113,7 +113,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Prices imple
      *
      * @return array
      */
-    private function prepareTierPrices(array $productTierPrice)
+    protected function prepareTierPrices(array $productTierPrice)
     {
         return [
             'customer_group_id' => (int)$productTierPrice['cust_group'],
@@ -131,7 +131,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Prices imple
      * @return int
      * @throws Mage_Core_Model_Store_Exception
      */
-    private function getWebsiteId($storeId)
+    protected function getWebsiteId($storeId)
     {
         $attribute = $this->getTierPriceAttribute();
         $websiteId = 0;
@@ -148,7 +148,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Prices imple
     /**
      * @return Mage_Catalog_Model_Resource_Eav_Attribute
      */
-    private function getTierPriceAttribute()
+    protected function getTierPriceAttribute()
     {
         /** @var Mage_Catalog_Model_Resource_Eav_Attribute $attributeModel */
         $attributeModel = Mage::getSingleton('eav/config')->getAttribute('catalog_product', 'tier_price');

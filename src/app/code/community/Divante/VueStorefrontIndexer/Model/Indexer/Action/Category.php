@@ -15,7 +15,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Action_Category
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Category
      */
-    private $resourceModel;
+    protected $resourceModel;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Action_Category constructor.

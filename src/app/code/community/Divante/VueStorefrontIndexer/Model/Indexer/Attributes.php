@@ -22,17 +22,17 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Attributes implements IndexerIn
     /**
      * @var IndexerHandler
      */
-    private $indexHandler;
+    protected $indexHandler;
 
     /**
      * @var AttributeAction
      */
-    private $action;
+    protected $action;
 
     /**
      * @var StoreHelper
      */
-    private $storeHelper;
+    protected $storeHelper;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Attribute constructor.

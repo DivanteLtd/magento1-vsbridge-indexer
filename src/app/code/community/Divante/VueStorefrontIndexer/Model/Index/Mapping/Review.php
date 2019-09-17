@@ -20,12 +20,12 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Review implements Mapping
     /**
      * @var string
      */
-    private $type;
+    protected $type;
 
     /**
      * @var array
      */
-    private $properties;
+    protected $properties;
 
     /**
      * @inheritdoc

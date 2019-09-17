@@ -16,7 +16,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Bundle imple
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Bundle
      */
-    private $resourceModel;
+    protected $resourceModel;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Bundle constructor.

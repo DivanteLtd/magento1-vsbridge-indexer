@@ -17,7 +17,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Generalmapping
     /**
      * @var array
      */
-    private $commonProperties = [
+    protected $commonProperties = [
         'position' => ['type' => FieldInterface::TYPE_LONG],
         'level' => ['type' => FieldInterface::TYPE_LONG],
         'created_at' => [

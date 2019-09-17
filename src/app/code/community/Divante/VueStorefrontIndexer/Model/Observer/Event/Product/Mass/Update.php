@@ -18,12 +18,12 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Product_Mass_Update
     /**
      * @var EventHandler
      */
-    private $eventHandler;
+    protected $eventHandler;
 
     /**
      * @var ParentResourceModel
      */
-    private $parentResourceModel;
+    protected $parentResourceModel;
 
     /**
      * Divante_VueStoreFrontElasticSearch_Model_Observer_LogEventObserver constructor.
@@ -59,7 +59,7 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Product_Mass_Update
     /**
      * @param array $productIds
      */
-    private function updateParents(array $productIds)
+    protected function updateParents(array $productIds)
     {
         if (!empty($productIds)) {
             $parentIds = $this->parentResourceModel->execute($productIds);
@@ -77,7 +77,7 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Product_Mass_Update
     /**
      * @param array $productIds
      */
-    private function saveLogs(array $productIds)
+    protected function saveLogs(array $productIds)
     {
         foreach ($productIds as $productId) {
             $this->logEvent(

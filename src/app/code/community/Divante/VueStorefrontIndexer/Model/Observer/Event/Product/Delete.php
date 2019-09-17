@@ -19,27 +19,27 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Product_Delete
     /**
      * @var EventHandler
      */
-    private $eventHandler;
+    protected $eventHandler;
 
     /**
      * @var ParentResourceModel
      */
-    private $parentResourceModel;
+    protected $parentResourceModel;
 
     /**
      * @var Mage_Core_Model_Resource
      */
-    private $resource;
+    protected $resource;
 
     /**
      * @var Varien_Db_Adapter_Interface
      */
-    private $connection;
+    protected $connection;
 
     /**
      * @var array
      */
-    private $logEvents = [];
+    protected $logEvents = [];
 
     /**
      * Divante_VueStoreFrontElasticSearch_Model_Observer_LogEventObserver constructor.
@@ -92,7 +92,7 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Product_Delete
     /**
      * @param Mage_Catalog_Model_Product $product
      */
-    private function updateParents(Product $product)
+    protected function updateParents(Product $product)
     {
         /**
          * Update parent product data

@@ -69,7 +69,7 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Client_Configuration
      *
      * @return string|null
      */
-    private function getConfigParam($configField)
+    protected function getConfigParam($configField)
     {
         $path = self::ES_CLIENT_CONFIG_XML_PREFIX . '/' . $configField;
 

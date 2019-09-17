@@ -42,7 +42,7 @@ class Divante_VueStorefrontIndexer_Model_Data_Gallery
      *
      * @return string
      */
-    private function getValue($fieldKey, array $image)
+    protected function getValue($fieldKey, array $image)
     {
         if (isset($image[$fieldKey]) && (null !== $image[$fieldKey])) {
             return $image[$fieldKey];

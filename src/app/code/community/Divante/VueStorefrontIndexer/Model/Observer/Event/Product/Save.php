@@ -20,12 +20,12 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Product_Save
     /**
      * @var EventHandler
      */
-    private $eventHandler;
+    protected $eventHandler;
 
     /**
      * @var ParentResourceModel
      */
-    private $parentResourceModel;
+    protected $parentResourceModel;
 
     /**
      * Divante_VueStoreFrontElasticSearch_Model_Observer_LogEventObserver constructor.
@@ -82,7 +82,7 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Product_Save
     /**
      * @param Mage_Catalog_Model_Product $product
      */
-    private function updateParents(Product $product)
+    protected function updateParents(Product $product)
     {
         if (Mage_Catalog_Model_Product_Type::TYPE_SIMPLE === $product->getTypeId()) {
             $productId = $product->getId();

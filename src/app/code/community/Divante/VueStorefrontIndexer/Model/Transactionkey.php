@@ -15,7 +15,7 @@ class Divante_VueStorefrontIndexer_Model_Transactionkey
     /**
      * @var int|string
      */
-    private $key;
+    protected $key;
 
     /**
      * @return int|string

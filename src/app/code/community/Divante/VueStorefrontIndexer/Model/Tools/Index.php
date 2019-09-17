@@ -16,7 +16,7 @@ class Divante_VueStorefrontIndexer_Model_Tools_Index
     /**
      * @var IndexOperation
      */
-    private $indexOperation;
+    protected $indexOperation;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Tools constructor.

@@ -21,17 +21,17 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Reviews implements IndexerInter
     /**
      * @var IndexerHandler
      */
-    private $indexHandler;
+    protected $indexHandler;
 
     /**
      * @var Divante_VueStorefrontIndexer_Model_Indexer_Action_Reviews
      */
-    private $action;
+    protected $action;
 
     /**
      * @var StoreHelper
      */
-    private $storeHelper;
+    protected $storeHelper;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Reviews constructor.

@@ -17,7 +17,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Attribute implements Mapp
     /**
      * @var array
      */
-    private $booleanProperties = [
+    protected $booleanProperties = [
         'is_required',
         'is_user_defined',
         'is_unique',
@@ -40,7 +40,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Attribute implements Mapp
     /**
      * @var array
      */
-    private $longProperties = [
+    protected $longProperties = [
         'attribute_id',
         'id',
         'is_filterable',
@@ -52,7 +52,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Attribute implements Mapp
     /**
      * @var array
      */
-    private $stringProperties  = [
+    protected $stringProperties  = [
         'attribute_code',
         'attribute_model',
         'backend_model',
@@ -71,7 +71,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Attribute implements Mapp
     /**
      * @var string
      */
-    private $type;
+    protected $type;
 
     /**
      * @inheritdoc

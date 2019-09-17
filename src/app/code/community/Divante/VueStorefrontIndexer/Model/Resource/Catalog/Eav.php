@@ -15,32 +15,32 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
     /**
      * @var Mage_Core_Model_Resource
      */
-    private $coreResource;
+    protected $coreResource;
 
     /**
      * @var Varien_Db_Adapter_Interface
      */
-    private $connection;
+    protected $connection;
 
     /**
      * @var
      */
-    private $attributeCollectionModel;
+    protected $attributeCollectionModel;
 
     /**
      * @var array
      */
-    private $attributesById;
+    protected $attributesById;
 
     /**
      * @var
      */
-    private $entityType;
+    protected $entityType;
 
     /**
      * @var
      */
-    private $valuesByEntityId;
+    protected $valuesByEntityId;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav constructor.
@@ -107,7 +107,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
      *
      * @return bool
      */
-    private function canReindex($attribute, $allowedAttributes)
+    protected function canReindex($attribute, $allowedAttributes)
     {
         if ($attribute->isStatic()) {
             return false;
@@ -125,7 +125,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
      *
      * @return array
      */
-    private function prepareValues(array $values)
+    protected function prepareValues(array $values)
     {
         foreach ($values as $value) {
             $entityId = $value['entity_id'];
@@ -145,7 +145,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
     /**
      * @return Mage_Eav_Model_Entity_Type
      */
-    private function getEntityType()
+    protected function getEntityType()
     {
         /** @var Mage_Eav_Model_Entity_Type $entityType */
         $entityType = Mage::getModel('eav/entity_type')->loadByCode($this->entityType);
@@ -163,7 +163,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
      *
      * @return Varien_Db_Select
      */
-    private function getLoadAttributesSelect($storeId, $table, array $attributeIds, array $entityIds)
+    protected function getLoadAttributesSelect($storeId, $table, array $attributeIds, array $entityIds)
     {
         $joinStoreCondition = [
             't_default.entity_id=t_store.entity_id',

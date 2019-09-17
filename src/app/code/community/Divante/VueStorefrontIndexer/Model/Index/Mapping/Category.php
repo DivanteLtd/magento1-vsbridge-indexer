@@ -19,12 +19,12 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Category extends Abstract
     /**
      * @var string
      */
-    private $type;
+    protected $type;
 
     /**
      * @var array
      */
-    private $properties;
+    protected $properties;
 
     /**
      * @inheritdoc

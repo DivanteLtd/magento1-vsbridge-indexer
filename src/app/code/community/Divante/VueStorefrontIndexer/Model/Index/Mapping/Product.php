@@ -21,12 +21,12 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Product extends AbstractM
     /**
      * @var string
      */
-    private $type;
+    protected $type;
 
     /**
      * @var array
      */
-    private $properties;
+    protected $properties;
 
     /**
      * @inheritdoc
@@ -106,7 +106,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Product extends AbstractM
     /**
      * @return array
      */
-    private function getCustomProperties()
+    protected function getCustomProperties()
     {
         return [
             'attribute_set_id' => ['type' => FieldInterface::TYPE_LONG],

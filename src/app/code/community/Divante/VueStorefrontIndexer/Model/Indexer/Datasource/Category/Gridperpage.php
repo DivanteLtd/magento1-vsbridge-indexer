@@ -34,7 +34,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Gridperpage
      *
      * @return int
      */
-    private function getDefaultGridPerPageValue($storeId)
+    protected function getDefaultGridPerPageValue($storeId)
     {
         return (int)Mage::getStoreConfig('catalog/frontend/grid_per_page', $storeId);
     }

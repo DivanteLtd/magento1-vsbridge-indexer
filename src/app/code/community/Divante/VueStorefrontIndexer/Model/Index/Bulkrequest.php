@@ -18,7 +18,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Bulkrequest implements BulkReques
      *
      * @var array
      */
-    private $bulkData = [];
+    protected $bulkData = [];
 
     /**
      * @inheritdoc
@@ -35,7 +35,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Bulkrequest implements BulkReques
     /**
      * @inheritdoc
      */
-    private function deleteDocument($index, $type, $docId)
+    protected function deleteDocument($index, $type, $docId)
     {
         $this->bulkData[] = [
             'delete' => [
@@ -63,7 +63,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Bulkrequest implements BulkReques
     /**
      * @inheritdoc
      */
-    private function addDocument($index, $type, $docId, array $data)
+    protected function addDocument($index, $type, $docId, array $data)
     {
         $this->bulkData[] = [
             'index' => [
@@ -93,7 +93,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Bulkrequest implements BulkReques
     /**
      * @inheritdoc
      */
-    private function updateDocument($index, $type, $docId, array $data)
+    protected function updateDocument($index, $type, $docId, array $data)
     {
         $this->bulkData[] = [
             'update' => [

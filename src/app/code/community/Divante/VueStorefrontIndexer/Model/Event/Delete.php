@@ -17,7 +17,7 @@ class Divante_VueStoreFrontIndexer_Model_Event_Delete
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Event
      */
-    private $resource;
+    protected $resource;
 
     /**
      * Divante_VueStoreFrontIndexer_Model_Event_Delete constructor.

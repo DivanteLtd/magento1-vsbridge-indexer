@@ -14,12 +14,12 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Action_Cms_Block
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Cms_Block
      */
-    private $resourceModel;
+    protected $resourceModel;
 
     /**
      * @var Varien_Filter_Template
      */
-    private $blockTemplateProcessor;
+    protected $blockTemplateProcessor;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Action_Cms_Block constructor.

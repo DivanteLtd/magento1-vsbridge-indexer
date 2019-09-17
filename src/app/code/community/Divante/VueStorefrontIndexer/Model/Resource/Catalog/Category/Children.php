@@ -15,17 +15,17 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Category_Children
     /**
      * @var Mage_Core_Model_Resource
      */
-    private $coreResource;
+    protected $coreResource;
 
     /**
      * @var Varien_Db_Adapter_Interface
      */
-    private $connection;
+    protected $connection;
 
     /**
      * @var int
      */
-    private $isActiveAttributeId;
+    protected $isActiveAttributeId;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav constructor.
@@ -65,7 +65,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Category_Children
      *
      * @return array
      */
-    private function getChildrenIds(array $category, $storeId, $recursive = true)
+    protected function getChildrenIds(array $category, $storeId, $recursive = true)
     {
         $attributeId = (int)$this->getIsActiveAttributeId();
         $backendTable = $this->coreResource->getTableName(
@@ -103,7 +103,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Category_Children
      *
      * @return Varien_Db_Select
      */
-    private function getChildrenIdSelect(array $category, $recursive = true)
+    protected function getChildrenIdSelect(array $category, $recursive = true)
     {
         $path = $category['path'];
         $level = $category['level'];
@@ -124,7 +124,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Category_Children
      *
      * @return int
      */
-    private function getIsActiveAttributeId()
+    protected function getIsActiveAttributeId()
     {
         if ($this->isActiveAttributeId === null) {
             $bind = array(

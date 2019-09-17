@@ -14,7 +14,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Action_Taxrule
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Tax_Rules
      */
-    private $resourceModel;
+    protected $resourceModel;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Action_Taxrule constructor.

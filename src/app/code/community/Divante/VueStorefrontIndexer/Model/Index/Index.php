@@ -17,14 +17,14 @@ class Divante_VueStorefrontIndexer_Model_Index_Index
      *
      * @var string
      */
-    private $name;
+    protected $name;
 
     /**
      * Index types.
      *
      * @var
      */
-    private $types;
+    protected $types;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Index_Index constructor.
@@ -47,7 +47,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Index
      *
      * @return array
      */
-    private function prepareTypes(array $types)
+    protected function prepareTypes(array $types)
     {
         $preparedTypes = [];
 

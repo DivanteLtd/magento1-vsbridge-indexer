@@ -18,21 +18,21 @@ class Divante_VueStorefrontIndexer_Model_Index_Type implements TypeInterface
      *
      * @var string
      */
-    private $name;
+    protected $name;
 
     /**
      * Type mapping.
      *
      * @var \Divante_VueStorefrontIndexer_Api_MappingInterface|null
      */
-    private $mapping;
+    protected $mapping;
 
     /**
      * Type datasources.
      *
      * @var \Divante_VueStorefrontIndexer_Api_DatasourceInterface[]
      */
-    private $dataSources;
+    protected $dataSources;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Index_Type constructor.

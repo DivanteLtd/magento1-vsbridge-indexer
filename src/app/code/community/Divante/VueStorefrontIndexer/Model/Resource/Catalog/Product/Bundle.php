@@ -15,27 +15,27 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Bundle
     /**
      * @var Mage_Core_Model_Resource
      */
-    private $resource;
+    protected $resource;
 
     /**
      * @var Varien_Db_Adapter_Interface
      */
-    private $connection;
+    protected $connection;
 
     /**
      * @var array
      */
-    private $products;
+    protected $products;
 
     /**
      * @var array
      */
-    private $bundleProductIds;
+    protected $bundleProductIds;
 
     /**
      * @var array
      */
-    private $bundleOptionsByProduct = [];
+    protected $bundleOptionsByProduct = [];
 
     /**
      * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Links constructor.
@@ -89,7 +89,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Bundle
      *
      * @param int $storeId
      */
-    private function initOptions($storeId)
+    protected function initOptions($storeId)
     {
         $bundleOptions = $this->getBundleOptionsFromResource($storeId);
 
@@ -111,7 +111,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Bundle
     /**
      * Append Selection
      */
-    private function initSelection()
+    protected function initSelection()
     {
         $bundleSelections = $this->getBundleSelections();
         $simpleIds = array_column($bundleSelections, 'product_id');
@@ -142,7 +142,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Bundle
     /**
      * @return array
      */
-    private function getBundleSelections()
+    protected function getBundleSelections()
     {
         $productIds = $this->getBundleProductIds();
 
@@ -160,7 +160,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Bundle
      *
      * @return array
      */
-    private function getProductSku(array $productIds)
+    protected function getProductSku(array $productIds)
     {
         $select = $this->connection->select();
         $select->from($this->resource->getTableName('catalog/product'), ['entity_id', 'sku']);
@@ -174,7 +174,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Bundle
      *
      * @return array
      */
-    private function getBundleOptionsFromResource($storeId)
+    protected function getBundleOptionsFromResource($storeId)
     {
         $productIds = $this->getBundleProductIds();
 
@@ -197,7 +197,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Bundle
      *
      * @return Varien_Db_Select
      */
-    private function joinOptionValues(Varien_Db_Select $select, $storeId)
+    protected function joinOptionValues(Varien_Db_Select $select, $storeId)
     {
         $select
             ->joinLeft(
@@ -229,7 +229,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Bundle
     /**
      * @return array
      */
-    private function getBundleProductIds()
+    protected function getBundleProductIds()
     {
         if (null === $this->bundleProductIds) {
             $this->bundleProductIds = [];

@@ -18,7 +18,7 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Attribute_Delete
     /**
      * @var EventHandler
      */
-    private $eventHandler;
+    protected $eventHandler;
 
     /**
      * Divante_VueStoreFrontElasticSearch_Model_Observer_LogEventObserver constructor.

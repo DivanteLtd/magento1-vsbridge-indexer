@@ -15,12 +15,12 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Action_Product
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product
      */
-    private $resourceModel;
+    protected $resourceModel;
 
     /**
      * @var Divante_VueStorefrontIndexer_Model_Data_Filter
      */
-    private $dataFilter;
+    protected $dataFilter;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Action_Category_Full constructor.
@@ -75,7 +75,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Action_Product
      *
      * @return mixed
      */
-    private function filterData(array $productData)
+    protected function filterData(array $productData)
     {
         return $this->dataFilter->execute($productData);
     }

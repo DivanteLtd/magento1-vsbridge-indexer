@@ -15,7 +15,7 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Client_Builder
     /**
      * @var array
      */
-    private $defaultOptions = [
+    protected $defaultOptions = [
         'host' => 'localhost',
         'enable_http_auth' => false,
         'auth_user' => null,
@@ -47,7 +47,7 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Client_Builder
      *
      * @return array
      */
-    private function getHost(array $options)
+    protected function getHost(array $options)
     {
         $scheme = 'http';
 

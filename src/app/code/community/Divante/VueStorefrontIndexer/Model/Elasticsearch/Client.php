@@ -21,7 +21,7 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Client
     /**
      * @var \Elasticsearch\Client|null
      */
-    private $esClient = null;
+    protected $esClient = null;
 
     /**
      * Divante_VueStorefrontIndexer_Model_ElasticSearch_Client constructor.

@@ -20,37 +20,37 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Indexer_Handler
     /**
      * @var IndexOperation
      */
-    private $indexOperation;
+    protected $indexOperation;
 
     /**
      * @var Client
      */
-    private $client;
+    protected $client;
 
     /**
      * @var Divante_VueStorefrontIndexer_Model_Cache_Processor
      */
-    private $cacheProcessor;
+    protected $cacheProcessor;
 
     /**
      * @var string
      */
-    private $typeName;
+    protected $typeName;
 
     /**
      * @var string
      */
-    private $indexIdentifier;
+    protected $indexIdentifier;
 
     /**
      * @var int|string
      */
-    private $transactionKey;
+    protected $transactionKey;
 
     /**
      * @var ConvertDataTypes
      */
-    private $convertDataTypes;
+    protected $convertDataTypes;
 
     /**
      * constructor.
@@ -242,7 +242,7 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Indexer_Handler
      *
      * @return Divante_VueStorefrontIndexer_Model_Index_Index
      */
-    private function getIndex(Store $store)
+    protected function getIndex(Store $store)
     {
         try {
             $index = $this->indexOperation->getIndexByName($this->indexIdentifier, $store);
@@ -256,7 +256,7 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Indexer_Handler
     /**
      * @return int
      */
-    private function getBatchSize()
+    protected function getBatchSize()
     {
         return $this->indexOperation->getBatchIndexingSize();
     }

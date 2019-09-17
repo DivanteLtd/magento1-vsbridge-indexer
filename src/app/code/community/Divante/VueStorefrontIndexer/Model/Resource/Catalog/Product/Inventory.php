@@ -15,7 +15,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Inventory
     /**
      * @var array
      */
-    private $fields = [
+    protected $fields = [
         'product_id',
         'item_id',
         'stock_id',
@@ -46,12 +46,12 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Inventory
     /**
      * @var Mage_Core_Model_Resource
      */
-    private $resource;
+    protected $resource;
 
     /**
      * @var Varien_Db_Adapter_Interface
      */
-    private $connection;
+    protected $connection;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Stock constructor.
@@ -104,7 +104,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Inventory
      * @return array
      * @throws Mage_Core_Model_Store_Exception
      */
-    private function getInventoryData($storeId, array $productIds, array $fields)
+    protected function getInventoryData($storeId, array $productIds, array $fields)
     {
         $websiteId = Mage::app()->getStore($storeId)->getWebsiteId();
 

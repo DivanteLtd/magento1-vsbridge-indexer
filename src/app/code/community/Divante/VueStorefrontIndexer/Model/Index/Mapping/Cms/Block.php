@@ -17,7 +17,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Cms_Block implements Mapp
     /**
      * @var string
      */
-    private $type;
+    protected $type;
 
     /**
      * @inheritdoc

@@ -30,7 +30,7 @@ class Divante_VueStorefrontIndexer_Model_Sluggenerator
      *
      * @return string
      */
-    private function slugify($text)
+    protected function slugify($text)
     {
         $text = mb_strtolower($text);
         $text = preg_replace("/\s+/", '-', $text);// Replace spaces with -

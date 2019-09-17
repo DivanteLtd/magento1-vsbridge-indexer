@@ -17,7 +17,7 @@ class Divante_VueStorefrontIndexer_Model_System_Config_Backend_Gridperpage exten
     /**
      * @var EventHandler
      */
-    private $eventHandler;
+    protected $eventHandler;
 
     /**
      * Divante_VueStoreFrontElasticSearch_Model_Observer_LogEventObserver constructor.

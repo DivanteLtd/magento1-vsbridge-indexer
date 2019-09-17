@@ -70,7 +70,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Settings
      *
      * @return array
      */
-    private function initIndicesConfig(array $indexConfigData)
+    protected function initIndicesConfig(array $indexConfigData)
     {
         $types = [];
 

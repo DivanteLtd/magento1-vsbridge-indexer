@@ -15,12 +15,12 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Prices
     /**
      * @var Mage_Core_Model_Resource
      */
-    private $resource;
+    protected $resource;
 
     /**
      * @var Varien_Db_Adapter_Interface
      */
-    private $connection;
+    protected $connection;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Stock constructor.
@@ -65,7 +65,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Prices
      * @return Mage_Core_Model_Store
      * @throws Mage_Core_Model_Store_Exception
      */
-    private function getStore($storeId)
+    protected function getStore($storeId)
     {
         return Mage::app()->getStore($storeId);
     }

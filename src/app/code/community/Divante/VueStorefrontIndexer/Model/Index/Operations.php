@@ -22,22 +22,22 @@ class Divante_VueStorefrontIndexer_Model_Index_Operations
     /**
      * @var Client
      */
-    private $client;
+    protected $client;
 
     /**
      * @var IndexSettings
      */
-    private $indexSettings;
+    protected $indexSettings;
 
     /**
      * @var array
      */
-    private $indicesConfiguration;
+    protected $indicesConfiguration;
 
     /**
      * @var array
      */
-    private $indicesByName;
+    protected $indicesByName;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Index_Operations constructor.
@@ -230,7 +230,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Operations
      *
      * @return Index
      */
-    private function initIndex($indexIdentifier, Store $store)
+    protected function initIndex($indexIdentifier, Store $store)
     {
         if (!isset($this->indicesConfiguration[$indexIdentifier])) {
             throw new \LogicException("No configuration found");

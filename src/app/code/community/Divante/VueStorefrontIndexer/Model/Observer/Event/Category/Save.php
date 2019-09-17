@@ -21,12 +21,12 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Category_Save
     /**
      * @var EventHandler
      */
-    private $eventHandler;
+    protected $eventHandler;
 
     /**
      * @var Divante_VueStorefrontIndexer_Model_Config_Generalsettings
      */
-    private $configSettings;
+    protected $configSettings;
 
     /**
      * Divante_VueStoreFrontElasticSearch_Model_Observer_LogEventObserver constructor.
@@ -75,7 +75,7 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Category_Save
     /**
      * @param Mage_Catalog_Model_Category $category
      */
-    private function updateParentCategories(Category $category)
+    protected function updateParentCategories(Category $category)
     {
         $path = $category->getPath();
         $categoryIds = explode('/', $path);

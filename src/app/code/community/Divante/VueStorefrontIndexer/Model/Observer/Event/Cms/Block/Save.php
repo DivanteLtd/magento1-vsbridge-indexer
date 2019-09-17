@@ -19,7 +19,7 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Cms_Block_Save
     /**
      * @var EventHandler
      */
-    private $eventHandler;
+    protected $eventHandler;
 
     /**
      * Divante_VueStoreFrontElasticSearch_Model_Observer_LogEventObserver constructor.

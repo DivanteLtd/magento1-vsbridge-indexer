@@ -18,17 +18,17 @@ class Divante_VueStorefrontIndexer_Model_Observer_Event_Category_Delete
     /**
      * @var EventHandler
      */
-    private $eventHandler;
+    protected $eventHandler;
 
     /**
      * @var Mage_Catalog_Model_Resource_Category
      */
-    private $categoryResource;
+    protected $categoryResource;
 
     /**
      * @var array
      */
-    private $logEvents = [];
+    protected $logEvents = [];
 
     /**
      * Divante_VueStoreFrontElasticSearch_Model_Observer_LogEventObserver constructor.

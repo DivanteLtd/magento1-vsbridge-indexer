@@ -15,7 +15,7 @@ class Divante_VueStorefrontIndexer_Model_Data_Filter
     /**
      * @var array
      */
-    private $longProperties = [];
+    protected $longProperties = [];
 
     /**
      * Divante_VueStorefrontIndexer_Model_Data_Filter constructor.

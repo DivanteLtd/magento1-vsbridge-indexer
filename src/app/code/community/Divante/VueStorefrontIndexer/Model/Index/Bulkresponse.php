@@ -17,7 +17,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Bulkresponse implements BulkRespo
     /**
      * @var array
      */
-    private $rawResponse;
+    protected $rawResponse;
 
     /**
      * Constructor.

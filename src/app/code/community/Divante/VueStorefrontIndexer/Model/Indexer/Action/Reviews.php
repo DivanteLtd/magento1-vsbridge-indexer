@@ -15,12 +15,12 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Action_Reviews
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Review
      */
-    private $resourceModel;
+    protected $resourceModel;
 
     /**
      * @var Divante_VueStorefrontIndexer_Model_Data_Filter
      */
-    private $dataFilter;
+    protected $dataFilter;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Action_Category_Full constructor.
@@ -63,7 +63,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Action_Reviews
      *
      * @return mixed
      */
-    private function filterData(array $reviewData)
+    protected function filterData(array $reviewData)
     {
         return $this->dataFilter->execute($reviewData);
     }

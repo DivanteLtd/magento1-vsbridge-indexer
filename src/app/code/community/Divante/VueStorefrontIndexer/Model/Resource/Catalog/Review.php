@@ -14,17 +14,17 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Review
     /**
      * @var Mage_Core_Model_Resource
      */
-    private $coreResource;
+    protected $coreResource;
 
     /**
      * @var Varien_Db_Adapter_Interface
      */
-    private $connection;
+    protected $connection;
 
     /**
      * @var int
      */
-    private $isActiveAttributeId;
+    protected $isActiveAttributeId;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Attribute_Full constructor.
@@ -81,7 +81,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Review
      *
      * @return Varien_Db_Select
      */
-    private function joinReviewDetails(Varien_Db_Select $select)
+    protected function joinReviewDetails(Varien_Db_Select $select)
     {
         $backendTable = 'review_detail';
 

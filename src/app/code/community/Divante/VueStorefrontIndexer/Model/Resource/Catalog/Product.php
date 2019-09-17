@@ -15,22 +15,22 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product
     /**
      * @var Mage_Core_Model_Resource
      */
-    private $coreResource;
+    protected $coreResource;
 
     /**
      * @var Varien_Db_Adapter_Interface
      */
-    private $connection;
+    protected $connection;
 
     /**
      * @var Divante_VueStorefrontIndexer_Model_Config_Catalogsettings
      */
-    private $catalogSettings;
+    protected $catalogSettings;
 
     /**
      * @var int
      */
-    private $isActiveAttributeId;
+    protected $isActiveAttributeId;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Attribute_Full constructor.
@@ -111,7 +111,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product
      * @return Varien_Db_Select
      * @throws Mage_Core_Model_Store_Exception
      */
-    private function addWebsiteFilter(Varien_Db_Select $select, $storeId)
+    protected function addWebsiteFilter(Varien_Db_Select $select, $storeId)
     {
         $websiteId = Mage::app()->getStore($storeId)->getWebsiteId();
         $indexTable = $this->coreResource->getTableName('catalog_product_website');
@@ -132,7 +132,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product
      *
      * @return Varien_Db_Select
      */
-    private function addProductTypeFilter(Varien_Db_Select $select, $storeId)
+    protected function addProductTypeFilter(Varien_Db_Select $select, $storeId)
     {
         $types = $this->catalogSettings->getAllowedProductTypes($storeId);
 
@@ -169,7 +169,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product
      *
      * @return Varien_Db_Select
      */
-    private function addStatusFilter(Varien_Db_Select $select, $storeId)
+    protected function addStatusFilter(Varien_Db_Select $select, $storeId)
     {
         $backendTable = $this->coreResource->getTableName(
             [
@@ -209,7 +209,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product
      *
      * @return int
      */
-    private function getStatusAttributeId()
+    protected function getStatusAttributeId()
     {
         if ($this->isActiveAttributeId === null) {
             $bind = array(

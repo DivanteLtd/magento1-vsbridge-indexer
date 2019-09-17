@@ -19,14 +19,14 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
      *
      * @var array
      */
-    private $configurableProductIds;
+    protected $configurableProductIds;
 
     /**
      * All associated simple products from configurables in $configurableProductIds
      *
      * @var array
      */
-    private $simpleProducts;
+    protected $simpleProducts;
 
     /**
      * Array of associated simple product ids.
@@ -35,7 +35,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
      *
      * @var array
      */
-    private $associatedSimpleProducts;
+    protected $associatedSimpleProducts;
 
     /**
      * Array keys are the configurable product ids,
@@ -43,35 +43,35 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
      *
      * @var array
      */
-    private $configurableProductAttributes;
+    protected $configurableProductAttributes;
 
     /**
      * @var array
      */
-    private $configurableAttributesInfo;
+    protected $configurableAttributesInfo;
 
     /**
      * @var array
      */
-    private $productsData;
+    protected $productsData;
     /**
      * @var
      */
-    private $superAttributeOptions;
+    protected $superAttributeOptions;
     /**
      * @var
      */
-    private $productSuperAttributeIds;
+    protected $productSuperAttributeIds;
 
     /**
      * @var Mage_Core_Model_Resource
      */
-    private $resource;
+    protected $resource;
 
     /**
      * @var Varien_Db_Adapter_Interface
      */
-    private $connection;
+    protected $connection;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Links constructor.
@@ -147,7 +147,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
      *
      * @return array
      */
-    private function getConfigurableProductAttributes()
+    protected function getConfigurableProductAttributes()
     {
         if (!$this->configurableProductAttributes) {
             $productIds = $this->getConfigurableProductIds();
@@ -163,7 +163,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
      *
      * @return array
      */
-    private function getSuperAttributePricing(array $superAttributeId)
+    protected function getSuperAttributePricing(array $superAttributeId)
     {
         $select = $this->connection->select()
             ->from(
@@ -191,7 +191,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
      *
      * @return array
      */
-    private function getConfigurableAttributesForProductsFromResource(array $productIds)
+    protected function getConfigurableAttributesForProductsFromResource(array $productIds)
     {
         $select = $this->connection->select()
             ->from(
@@ -227,7 +227,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
      *
      * @return array
      */
-    private function prepareConfigurableAttributesFullInfo()
+    protected function prepareConfigurableAttributesFullInfo()
     {
         if (null === $this->configurableAttributesInfo) {
             // build list of all configurable attribute codes for the current collection
@@ -277,7 +277,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
      *
      * @return array
      */
-    private function getConfigurableProductIds()
+    protected function getConfigurableProductIds()
     {
         if (null === $this->configurableProductIds) {
             $this->configurableProductIds = array();

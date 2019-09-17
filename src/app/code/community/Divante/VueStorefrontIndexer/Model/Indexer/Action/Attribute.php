@@ -14,7 +14,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Action_Attribute
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Attribute
      */
-    private $resourceModel;
+    protected $resourceModel;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Action_Attribute_Full constructor.
@@ -52,7 +52,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Action_Attribute
      *
      * @return array
      */
-    private function filterData(array $attributeData)
+    protected function filterData(array $attributeData)
     {
         if (isset($attributeData['position'])) {
             $attributeData['position'] = (int)$attributeData['position'];

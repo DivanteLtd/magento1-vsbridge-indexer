@@ -14,22 +14,22 @@ class Divante_VueStorefrontIndexer_Model_Cache_Processor
     /**
      * @var Divante_VueStorefrontIndexer_Model_Cache_Settings
      */
-    private $settings;
+    protected $settings;
     /**
      * @var Divante_VueStorefrontIndexer_Model_Cache_Logger
      */
-    private $logger;
+    protected $logger;
     /**
      * @var array
      */
-    private $defaultCacheTags = [
+    protected $defaultCacheTags = [
         'category' => 'C',
         'product' => 'P',
     ];
     /**
      * @var array
      */
-    private $cacheTags;
+    protected $cacheTags;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Observer_Cache constructor.
@@ -89,7 +89,7 @@ class Divante_VueStorefrontIndexer_Model_Cache_Processor
      * @param string $storeId
      * @param string $uri
      */
-    private function call($storeId, $uri)
+    protected function call($storeId, $uri)
     {
         $http = new Varien_Http_Adapter_Curl();
         $config = $this->settings->getConnectionOptions($storeId);
@@ -112,7 +112,7 @@ class Divante_VueStorefrontIndexer_Model_Cache_Processor
      *
      * @return string
      */
-    private function getCacheInvalidateUrl($storeId, $type, array $ids)
+    protected function getCacheInvalidateUrl($storeId, $type, array $ids)
     {
         $fullUrl = $this->getInvalidateCacheUrl($storeId);
         $params = $this->prepareTagsByDocIds($type, $ids);
@@ -124,7 +124,7 @@ class Divante_VueStorefrontIndexer_Model_Cache_Processor
     /**
      * @return string
      */
-    private function getInvalidateCacheUrl($storeId)
+    protected function getInvalidateCacheUrl($storeId)
     {
         $url = $this->settings->getVsfBaseUrl($storeId);
         $url .= sprintf('invalidate?key=%s&tag=', $this->settings->getInvalidateCacheKey($storeId));
