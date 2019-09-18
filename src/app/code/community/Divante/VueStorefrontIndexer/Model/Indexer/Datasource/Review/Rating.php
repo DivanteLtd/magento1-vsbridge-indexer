@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Rating
+ * Class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Review_Rating
  *
  * @package     Divante
  * @category    VueStoreFrontIndexer
@@ -9,7 +9,7 @@
  * @copyright   Copyright (C) 2019 Divante Sp. z o.o.
  * @license     See LICENSE_DIVANTE.txt for license details.
  */
-class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Rating
+class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Review_Rating
 {
      /**
      * @var Mage_Core_Model_Resource
@@ -61,9 +61,9 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Rating
             $select->where('e.review_id IN (?)', $reviewIds);
     
             $select->joinLeft(
-                ['title' => $this->coreResource->getTableName('rating_title')],
-                'e.rating_id = title.rating_id AND title.store_id = ' . $storeId,
-                ['title' => 'value']
+                ['r' => $this->coreResource->getTableName('rating')],
+                'e.rating_id = r.rating_id',
+                ['rating_code' => 'title']
             )->order('e.review_id ASC');
       
             $this->ratings = $this->connection->fetchAll($select);
@@ -84,7 +84,6 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Rating
             foreach ($this->ratings as $rating) {
                 if ($rating['review_id'] === $reviewId) {
                     $ratings[] = [
-                      'rating_id' => (int) $rating['rating_id'],
                       'percent' => (int) $rating['percent'],
                       'value' => (int) $rating['value'],
                       'title' => (string) $rating['title'],

@@ -63,9 +63,8 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Review implements Mapping
                 'customer_id' => ['type' => FieldInterface::TYPE_INTEGER],
                 'ratings' => [
                     'properties' => [
-                        'rating_id' => ['type' => FieldInterface::TYPE_INTEGER],
-                        'percent' => ['type' => FieldInterface::TYPE_INTEGER],
-                        'value' => ['type' => FieldInterface::TYPE_INTEGER],
+                        'percent' => ['type' => FieldInterface::TYPE_SHORT],
+                        'value' => ['type' => FieldInterface::TYPE_SHORT],
                         'title' => ['type' => FieldInterface::TYPE_TEXT],
                     ],
                 ]
