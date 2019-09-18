@@ -239,6 +239,7 @@
                             <mapping>Divante_VueStorefrontIndexer_Model_Index_Mapping_Review</mapping>
                             <datasources>
                                 <transaction_key>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Transactionkey</transaction_key>
+                                <ratings>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Review_Rating</ratings>
                             </datasources>
                         </review>
                     </types>

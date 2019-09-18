@@ -1,5 +1,7 @@
 <?php
 
+use Divante_VueStorefrontIndexer_Api_DatasourceInterface as DataSourceInterface;
+
 /**
  * Class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Review_Rating
  *
@@ -9,89 +11,33 @@
  * @copyright   Copyright (C) 2019 Divante Sp. z o.o.
  * @license     See LICENSE_DIVANTE.txt for license details.
  */
-class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Review_Rating
+class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Review_Rating implements DataSourceInterface
 {
-     /**
-     * @var Mage_Core_Model_Resource
+    /**
+     * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Rating
      */
-    protected $coreResource;
+    protected $resourceModel;
 
     /**
-     * @var Varien_Db_Adapter_Interface
-     */
-    protected $connection;
-
-    /**
-     * @var Array
-     */
-    protected $ratings;
-
-    /**
-     * Constructor
+     * Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Review_Rating constructor.
      */
     public function __construct()
     {
-        $this->coreResource = Mage::getSingleton('core/resource');
-        $this->connection = $this->coreResource->getConnection('catalog_read');
+        $this->resourceModel = Mage::getResourceModel('vsf_indexer/catalog_rating');
     }
 
     /**
-     * @param int   $storeId
-     * @param array $reviewIds
-     *
-     * @return array
+     * @inheritdoc
      */
-    public function getRatings($storeId = 1, array $reviewIds = [])
+    public function addData(array $indexData, $storeId)
     {
-        if (empty($reviewIds)) {
-            return array();
+        $reviewResultIds = array_column($indexData, 'id');
+        $this->resourceModel->getRatings($storeId, $reviewResultIds);
+
+        foreach ($indexData as $key => &$review) {
+            $review['ratings'] = $this->resourceModel->getRatingsByReviewId($review['id']);
         }
 
-        if (!$this->ratings) {
-            $select = $this->connection->select()->from(
-                ['e' => $this->coreResource->getTableName('rating_option_vote')],
-                [
-                    'review_id',
-                    'rating_id',
-                    'percent',
-                    'value',
-                ]
-            );
-    
-            $select->where('e.review_id IN (?)', $reviewIds);
-    
-            $select->joinLeft(
-                ['r' => $this->coreResource->getTableName('rating')],
-                'e.rating_id = r.rating_id',
-                ['rating_code' => 'title']
-            )->order('e.review_id ASC');
-      
-            $this->ratings = $this->connection->fetchAll($select);
-        }
-
-        return $this->ratings;
-    }
-
-    /**
-     * @param int|string $reviewId
-     * @return array
-     */
-    public function getRatingsByReviewId($reviewId)
-    {
-        $ratings = array();
-        $ratingReviewIds = array_column($this->ratings, 'review_id');
-        if (in_array($reviewId, $ratingReviewIds)) {
-            foreach ($this->ratings as $rating) {
-                if ($rating['review_id'] === $reviewId) {
-                    $ratings[] = [
-                      'percent' => (int) $rating['percent'],
-                      'value' => (int) $rating['value'],
-                      'title' => (string) $rating['title'],
-                    ];
-                }
-            }
-        }
-
-        return $ratings;
+        return $indexData;
     }
 }
