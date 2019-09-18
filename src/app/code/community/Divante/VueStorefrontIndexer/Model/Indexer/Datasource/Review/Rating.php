@@ -32,10 +32,18 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Review_Rating implem
     public function addData(array $indexData, $storeId)
     {
         $reviewResultIds = array_column($indexData, 'id');
-        $this->resourceModel->getRatings($storeId, $reviewResultIds);
+        $ratings = $this->resourceModel->getRatings($storeId, $reviewResultIds);
 
-        foreach ($indexData as $key => &$review) {
-            $review['ratings'] = $this->resourceModel->getRatingsByReviewId($review['id']);
+        foreach ($ratings as $rating) {
+            $reviewId = (int) $rating['review_id'];
+            $ratingId = (int) $rating['rating_id'];
+            $title = $this->resourceModel->getRatingTitleById($ratingId, $storeId);
+
+            $indexData[$reviewId]['ratings'][] = [
+                'percent' => (int) $rating['percent'],
+                'value' => (int) $rating['value'],
+                'title' => $title,
+            ];
         }
 
         return $indexData;

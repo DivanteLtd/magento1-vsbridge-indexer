@@ -19,12 +19,17 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Rating
     /**
      * @var Varien_Db_Adapter_Interface
      */
-    protected $connection;
+    private $connection;
 
     /**
-     * @var Array
+     * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Review
      */
-    protected $ratings;
+    private $reviewResource;
+
+    /**
+     * @var
+     */
+    private $ratingTitlesByStore;
 
     /**
      * Constructor
@@ -33,6 +38,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Rating
     {
         $this->coreResource = Mage::getSingleton('core/resource');
         $this->connection = $this->coreResource->getConnection('catalog_read');
+        $this->reviewResource = Mage::getResourceSingleton('vsf_indexer/catalog_review');
     }
 
     /**
@@ -41,57 +47,67 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Rating
      *
      * @return array
      */
-    public function getRatings($storeId = 1, array $reviewIds = [])
+    public function getRatings($storeId = 1, array $reviewIds)
     {
-        if (empty($reviewIds)) {
-            return array();
-        }
+        $select = $this->connection->select()->from(
+            ['e' => $this->coreResource->getTableName('rating_option_vote')],
+            [
+                'review_id',
+                'rating_id',
+                'percent',
+                'value',
+            ]
+        );
 
-        if (!$this->ratings) {
-            $select = $this->connection->select()->from(
-                ['e' => $this->coreResource->getTableName('rating_option_vote')],
-                [
-                    'review_id',
-                    'rating_id',
-                    'percent',
-                    'value',
-                ]
-            );
-    
-            $select->where('e.review_id IN (?)', $reviewIds);
-    
-            $select->joinLeft(
-                ['r' => $this->coreResource->getTableName('rating')],
-                'e.rating_id = r.rating_id',
-                ['title' => 'rating_code']
-            )->order('e.review_id ASC');
-      
-            $this->ratings = $this->connection->fetchAll($select);
-        }
+        $select->where('e.review_id IN (?)', $reviewIds)->order('e.review_id ASC');
 
-        return $this->ratings;
+        return $this->connection->fetchAll($select);
     }
 
     /**
-     * @param int|string $reviewId
-     * @return array
+     * @param int $ratingId
+     * @param int $storeId
+     *
+     * @return string
      */
-    public function getRatingsByReviewId($reviewId)
+    public function getRatingTitleById($ratingId, $storeId)
     {
-        $ratings = array();
-        $ratingReviewIds = array_column($this->ratings, 'review_id');
-        if (in_array($reviewId, $ratingReviewIds)) {
-            foreach ($this->ratings as $rating) {
-                if ((int) $rating['review_id'] === $reviewId) {
-                    $ratings[] = [
-                      'percent' => (int) $rating['percent'],
-                      'value' => (int) $rating['value'],
-                      'title' => (string) $rating['title'],
-                    ];
-                }
-            }
+        $titles = $this->getRatingTitle($storeId);
+
+        return (string) $titles[$ratingId];
+    }
+
+    /**
+     * @param int $storeId
+     *
+     * @return string
+     */
+    public function getRatingTitle($storeId)
+    {
+        if (!isset($this->ratingTitlesByStore[$storeId])) {
+            $entityId = $this->reviewResource->getProductEntityId();
+            $connection = $this->getConnection();
+            $table = $this->coreResource->getTableName('rating');
+            $select = $connection->select()->from($table, ['rating_id']);
+            $select->where('entity_id = ?', $entityId);
+            $codeExpr = $connection->getIfNullSql('title.value', "{$table}.rating_code");
+            $select->joinLeft(
+                ['title' => $this->coreResource->getTableName('rating_title')],
+                $connection->quoteInto("{$table}.rating_id = title.rating_id AND title.store_id = ?", $storeId),
+                ['title' => $codeExpr]
+            );
+
+            $this->ratingTitlesByStore[$storeId] = $connection->fetchPairs($select);
         }
 
-        return $ratings;
+        return $this->ratingTitlesByStore[$storeId];
+    }
+
+    /**
+     * @return Varien_Db_Adapter_Interface
+     */
+    public function getConnection()
+    {
+        return $this->connection;
     }
 }
