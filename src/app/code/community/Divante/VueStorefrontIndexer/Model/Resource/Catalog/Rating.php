@@ -63,7 +63,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Rating
             $select->joinLeft(
                 ['r' => $this->coreResource->getTableName('rating')],
                 'e.rating_id = r.rating_id',
-                ['rating_code' => 'title']
+                ['title' => 'rating_code']
             )->order('e.review_id ASC');
       
             $this->ratings = $this->connection->fetchAll($select);
@@ -82,7 +82,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Rating
         $ratingReviewIds = array_column($this->ratings, 'review_id');
         if (in_array($reviewId, $ratingReviewIds)) {
             foreach ($this->ratings as $rating) {
-                if ($rating['review_id'] === $reviewId) {
+                if ((int) $rating['review_id'] === $reviewId) {
                     $ratings[] = [
                       'percent' => (int) $rating['percent'],
                       'value' => (int) $rating['value'],
