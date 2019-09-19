@@ -244,19 +244,18 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
                 continue;
             }
 
-            $configurableChildren = $indexData[$productId]['configurable_children'];
+            $configurableChildren = $productDTO['configurable_children'];
             $productAttributeOptions =
                 $this->configurableResource->getProductConfigurableAttributes($productDTO);
 
             foreach ($productAttributeOptions as $productAttribute) {
                 $attributeCode = $productAttribute['attribute_code'];
 
-                if (!isset($indexData[$productId][$attributeCode . '_options'])) {
-                    $indexData[$productId][$attributeCode . '_options'] = [];
+                if (!isset($productDTO[$attributeCode . '_options'])) {
+                    $productDTO[$attributeCode . '_options'] = [];
                 }
 
                 $values = [];
-                $areChildInStock = 0;
 
                 foreach ($configurableChildren as $index => $child) {
                     $specialPrice = 0;
@@ -264,10 +263,6 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
 
                     if (isset($value)) {
                         $values[] = intval($value);
-                    }
-
-                    if ($child['stock']['is_in_stock']) {
-                        $areChildInStock = 1;
                     }
 
                     if (!$this->configSettings->useSimplePriceForConfigurableChildren()
@@ -289,7 +284,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
                     }
                 }
 
-                $indexData[$productId]['configurable_children'] = $configurableChildren;
+                $productDTO['configurable_children'] = $configurableChildren;
                 $values = array_values(array_unique($values));
 
                 foreach ($values as $value) {
@@ -297,20 +292,51 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
                 }
 
                 unset($productAttribute['pricing']);
-                $productStockStatus = $indexData[$productId]['stock']['stock_status'];
-                $isInStock = $indexData[$productId]['stock']['is_in_stock'];
 
-                if (!$isInStock || !$productStockStatus || ($productStockStatus && !$areChildInStock)) {
-                    $indexData[$productId]['stock']['stock_status'] = 0;
-                    $indexData[$productId]['stock']['is_in_stock'] = 0;
-                }
-
-                $indexData[$productId]['configurable_options'][] = $productAttribute;
-                $indexData[$productId][$productAttribute['attribute_code'] . '_options'] = $values;
+                $productDTO['configurable_options'][] = $productAttribute;
+                $productDTO[$attributeCode . '_options'] = $values;
             }
+
+            $indexData[$productId]  = $this->prepareConfigurableProduct($productDTO);
         }
 
         return $indexData;
+    }
+
+    /**
+     * @param array $productDTO
+     *
+     * @return array
+     */
+    public function prepareConfigurableProduct(array $productDTO)
+    {
+        $configurableChildren = $productDTO['configurable_children'];
+        $areChildInStock = 0;
+        $childPrice = [];
+
+        foreach ($configurableChildren as $child) {
+            $childPrice[] = $child['price'];
+
+            if ($child['stock']['is_in_stock']) {
+                $areChildInStock = 1;
+            }
+        }
+
+        $isInStock = $productDTO['stock']['is_in_stock'];
+
+        if (!$isInStock || !$areChildInStock) {
+            $productDTO['stock']['is_in_stock'] = false;
+            $productDTO['stock']['stock_status'] = 0;
+        }
+
+        if (!empty($childPrice)) {
+            $minPrice = min($childPrice);
+            $productDTO['price'] = $minPrice;
+            $productDTO['final_price'] = $minPrice;
+            $productDTO['regular_price'] = $minPrice;
+        }
+
+        return $productDTO;
     }
 
     /**

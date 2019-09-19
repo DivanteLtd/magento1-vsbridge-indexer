@@ -49,18 +49,27 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Review implements Mapping
     public function getMappingProperties()
     {
         if (null === $this->properties) {
-            $attributes = $this->getAttributes();
-            $attributesMapping  = [];
+            $properties = [
+                'created_at' => [
+                    'type' => FieldInterface::TYPE_DATE,
+                    'format' => FieldInterface::DATE_FORMAT,
+                ],
+                'id' => ['type' => FieldInterface::TYPE_LONG],
+                'product_id' => ['type' => FieldInterface::TYPE_LONG],
+                'title' => ['type' => FieldInterface::TYPE_TEXT],
+                'detail' => ['type' => FieldInterface::TYPE_TEXT],
+                'nickname' => ['type' => FieldInterface::TYPE_TEXT],
+                'review_status' => ['type' => FieldInterface::TYPE_INTEGER],
+                'customer_id' => ['type' => FieldInterface::TYPE_INTEGER],
+                'ratings' => [
+                    'properties' => [
+                        'percent' => ['type' => FieldInterface::TYPE_SHORT],
+                        'value' => ['type' => FieldInterface::TYPE_SHORT],
+                        'title' => ['type' => FieldInterface::TYPE_TEXT],
+                    ],
+                ]
+            ];
 
-            foreach ($attributes as $attributeCode => $attribute) {
-                $attributesMapping[$attributeCode] =  $this->getAttributeMapping($attributeCode, $attribute);            
-            }
-            /**
-             * @var $generalMapping GeneralMapping
-             */
-            $generalMapping = Mage::getModel('vsf_indexer/index_mapping_generalmapping');
-            $properties = array_merge($attributesMapping, $generalMapping->getCommonProperties());
- 
             $mapping = ['properties' => $properties];
 
             $mappingObject = new Varien_Object($mapping);
@@ -70,53 +79,5 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Review implements Mapping
         }
 
         return $this->properties;
-    }
-
-    /**
-     *
-     * @return array
-     */
-    public function getAttributes()
-    {
-       $attributes = array(
-           'product_id' => ['type' => FieldInterface::TYPE_LONG],
-           'detail' => ['type' => FieldInterface::TYPE_TEXT],
-           'nickname' => ['type' => FieldInterface::TYPE_TEXT],
-           'review_status' => ['type' => FieldInterface::TYPE_INT],
-           'customer_id' => ['type' => FieldInterface::TYPE_INT]
-       );
-       return $attributes;
-    }
-
-    /**
-     * Return mapping for an attribute.
-     *
-     * @param Attribute $attribute Attribute we want the mapping for.
-     *
-     * @return array
-     */
-    public function getAttributeMapping($attributeCode, $attribute)
-    {
-        $mapping = [];
-
-        $type = $attribute['type'];
-
-        if ($type === 'text') {
-            $fieldName = $attributeCode;
-            $mapping[$fieldName] = [
-                'type' => $type,
-                'fielddata' => true,
-                'fields' => [
-                    'keyword' => [
-                        'type' => FieldInterface::TYPE_KEYWORD,
-                        'ignore_above' => 256
-                    ]
-                ]
-            ];
-        
-        } else {
-            $mapping[$attributeCode] = ['type' => $type];
-        }
-        return $mapping;
     }
 }

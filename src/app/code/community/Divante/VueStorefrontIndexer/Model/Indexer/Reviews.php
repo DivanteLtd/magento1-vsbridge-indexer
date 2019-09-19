@@ -24,7 +24,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Reviews implements IndexerInter
     private $indexHandler;
 
     /**
-     * @var Divante_VueStorefrontIndexer_Model_Indexer_Action_Product
+     * @var Divante_VueStorefrontIndexer_Model_Indexer_Action_Reviews
      */
     private $action;
 
@@ -34,7 +34,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Reviews implements IndexerInter
     private $storeHelper;
 
     /**
-     * Divante_VueStorefrontIndexer_Model_Indexer_Attribute constructor.
+     * Divante_VueStorefrontIndexer_Model_Indexer_Reviews constructor.
      */
     public function __construct()
     {
@@ -73,7 +73,8 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Reviews implements IndexerInter
 
         if (!empty($ids)) {
             foreach ($stores as $store) {
-                $this->indexHandler->deleteDocuments($idsToDelete, $store);
+                $this->indexHandler->deleteDocuments($ids, $store);
+                $this->indexHandler->invalidateCache($store->getId(), $ids);
             }
         }
     }
