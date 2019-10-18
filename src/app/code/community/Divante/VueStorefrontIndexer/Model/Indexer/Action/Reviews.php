@@ -27,7 +27,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Action_Reviews
      */
     public function __construct()
     {
-        $this->resourceModel = Mage::getResourceModel('vsf_indexer/catalog_review');
+        $this->resourceModel = Mage::getResourceSingleton('vsf_indexer/catalog_review');
         $this->dataFilter = Mage::getSingleton('vsf_indexer/data_filter');
     }
 
@@ -52,6 +52,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Action_Reviews
 
                 unset($review['review_id'], $review['entity_pk_value'], $review['status_id']);
                 $lastReviewId = $review['id'];
+                $review['ratings'] = [];
 
                 yield $lastReviewId => $this->filterData($review);
             }
