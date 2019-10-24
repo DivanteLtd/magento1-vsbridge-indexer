@@ -3,8 +3,8 @@
 use Divante_VueStorefrontIndexer_Api_IndexerInterface as IndexerInterface;
 use Divante_VueStorefrontIndexer_Api_Indexer_UpdateInterface as IndexerUpdateInterface;
 use Divante_VueStorefrontIndexer_Model_Index_Operations as IndexOperation;
+use Divante_VueStorefrontIndexer_Model_Index_ResolveIndex as ResolveIndex;
 use Divante_VueStoreFrontIndexer_Model_Event_Delete as DeleteEvent;
-use Divante_VueStorefrontIndexer_Model_Indexer_Productcategories as ProductCategories;
 
 /**
  * Class Divante_VueStorefrontIndexer_Model_Tools
@@ -19,6 +19,15 @@ class Divante_VueStorefrontIndexer_Model_Tools
 {
 
     /**
+     * Skip reindex for partial product/category update
+     * @var array
+     */
+    private $notAllowedTypes = [
+        'product_categories',
+        'category_grid_per_page',
+    ];
+
+    /**
      * @var string
      */
     const MAPPING_CONF_ROOT_NODE = 'global/vsf_indexer/indexer';
@@ -27,6 +36,11 @@ class Divante_VueStorefrontIndexer_Model_Tools
      * @var IndexOperation
      */
     private $indexOperation;
+
+    /**
+     * @var ResolveIndex
+     */
+    private $resolveIndex;
 
     /**
      * @var deleteEvent
@@ -39,6 +53,7 @@ class Divante_VueStorefrontIndexer_Model_Tools
     public function __construct()
     {
         $this->indexOperation = Mage::getSingleton('vsf_indexer/index_operations');
+        $this->resolveIndex = Mage::getSingleton('vsf_indexer/index_resolveindex');
         $this->deleteEvent = Mage::getSingleton('vsf_indexer/event_delete');
     }
 
@@ -52,9 +67,33 @@ class Divante_VueStorefrontIndexer_Model_Tools
         $mappingConfig = Mage::getConfig()->getNode(self::MAPPING_CONF_ROOT_NODE)->asArray();
         $types = array_keys($mappingConfig);
 
+        /**
+         * It will create new index index where data will be pushed, at the
+         */
+        $index = $this->getIndex($storeId, true);
+
         foreach ($types as $type) {
-            $this->runFullReindexByType($type, $storeId);
+            if (!in_array($type, $this->notAllowedTypes)) {
+                $this->runFullReindexByType($type, $storeId);
+            }
         }
+
+        $this->indexOperation->refreshIndex($index);
+        $this->indexOperation->switchIndexer($index->getName(), $index->getIdentifier());
+    }
+
+    /**
+     * @param      $storeId
+     * @param bool $createNew
+     *
+     * @return Divante_VueStorefrontIndexer_Model_Index_Index
+     * @throws Mage_Core_Model_Store_Exception
+     */
+    private function getIndex($storeId, $createNew = false)
+    {
+        $store = Mage::app()->getStore($storeId);
+
+        return $this->resolveIndex->getIndex($store, $createNew);
     }
 
     /**
@@ -70,11 +109,15 @@ class Divante_VueStorefrontIndexer_Model_Tools
     }
 
     /**
-     * @param string $type
-     * @param null|int $storeId
+     * @param      $type
+     * @param null $storeId
+     *
+     * @return Divante_VueStorefrontIndexer_Model_Index_Index
      */
     public function runFullReindexByType($type, $storeId = null)
     {
+        $index = $this->getIndex($storeId);
+
         $mappingConfig = Mage::getConfig()->getNode(self::MAPPING_CONF_ROOT_NODE)->asArray();
 
         if (isset($mappingConfig[$type])) {
@@ -88,6 +131,12 @@ class Divante_VueStorefrontIndexer_Model_Tools
                 $this->deleteEvent->execute($type);
             }
         }
+
+        if ($index->isNew()) {
+            $this->indexOperation->switchIndexer($index->getName(), $index->getIdentifier());
+        }
+
+        return $index;
     }
 
     /**

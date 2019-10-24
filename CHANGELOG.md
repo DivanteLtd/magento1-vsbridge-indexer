@@ -1,5 +1,8 @@
 ## [Unreleased]
 
+### Added
+- Support for aliases
+
 ## [1.2.0] (2019.10.24)
 
 ### Fixes 

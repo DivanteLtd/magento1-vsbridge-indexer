@@ -1,5 +1,7 @@
 <?php
 
+use Mage_Core_Model_Store as Store;
+
 /**
  * Class Divante_VueStorefrontIndexer_Model_Index_Settings
  *
@@ -48,6 +50,70 @@ class Divante_VueStorefrontIndexer_Model_Index_Settings
         $path = self::INDICES_SETTINGS_CONFIG_XML_PREFIX . '/' . $configField;
 
         return Mage::getStoreConfig($path);
+    }
+
+    /**
+     * @param Store $store
+     *
+     * @return string
+     */
+    public function createIndexName(Store $store)
+    {
+        $name = $this->getIndexAlias($store);
+        $currentDate = new \Zend_Date();
+
+        return $name . '_' . $currentDate->getTimestamp();
+    }
+
+    /**
+     * @param Store  $store
+     *
+     * @return string
+     */
+    public function getIndexAlias(Store $store)
+    {
+        $indexNamePrefix = $this->getIndexNamePrefix();
+        $storeIdentifier = $this->getStoreIdentifier($store);
+
+        if ($storeIdentifier) {
+            $indexNamePrefix .= '_' . $storeIdentifier;
+        }
+
+        return $indexNamePrefix;
+    }
+
+    /**
+     * @param Store $store
+     *
+     * @return string
+     */
+    private function getStoreIdentifier(Store $store)
+    {
+        if (!$this->addIdentifierToDefaultStoreView()) {
+            $defaultStoreView = Mage::app()->getDefaultStoreView();
+
+            if ($defaultStoreView->getId() === $store->getId()) {
+                return '';
+            }
+        }
+
+        return ('code' === $this->getIndexIdentifier()) ? $store->getCode() : (string) $store->getId();
+    }
+
+    /**
+     * @return string
+     */
+    private function getIndexIdentifier()
+    {
+        return (string) $this->getConfigParam('index_identifier');
+    }
+
+    /**
+     * @return bool
+     */
+    private function addIdentifierToDefaultStoreView()
+    {
+        return (bool) $this->getConfigParam('add_identifier_to_default');
     }
 
     /**

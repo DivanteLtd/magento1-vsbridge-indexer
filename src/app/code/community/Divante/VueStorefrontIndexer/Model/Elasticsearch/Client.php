@@ -67,6 +67,32 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Client
     }
 
     /**
+     * @param string $indexAlias
+     *
+     * @return array
+     */
+    public function getIndicesNameByAlias($indexAlias)
+    {
+        $indices = [];
+
+        try {
+            $indices = $this->esClient->indices()->getMapping(['index' => $indexAlias]);
+        } catch (\Elasticsearch\Common\Exceptions\Missing404Exception $e) {
+        }
+
+        return array_keys($indices);
+    }
+
+    /**
+     * @param array $aliasActions
+     * @return void
+     */
+    public function updateAliases(array $aliasActions)
+    {
+        $this->esClient->indices()->updateAliases(['body' => ['actions' => $aliasActions]]);
+    }
+
+    /**
      * @param string $indexName
      *
      * @return bool

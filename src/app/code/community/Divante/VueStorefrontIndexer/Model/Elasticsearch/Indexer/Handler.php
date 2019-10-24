@@ -1,6 +1,7 @@
 <?php
 
 use Divante_VueStorefrontIndexer_Model_Index_Operations as IndexOperation;
+use Divante_VueStorefrontIndexer_Model_Index_ResolveIndex as ResolveIndex;
 use Divante_VueStorefrontIndexer_Model_ElasticSearch_Client as Client;
 use Divante_VueStorefrontIndexer_Model_Index_Convertdatatypes as ConvertDataTypes;
 use Mage_Core_Model_Store as Store;
@@ -43,6 +44,11 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Indexer_Handler
     private $indexIdentifier;
 
     /**
+     * @var ResolveIndex
+     */
+    private $resolveIndex;
+
+    /**
      * @var int|string
      */
     private $transactionKey;
@@ -70,6 +76,7 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Indexer_Handler
         $this->cacheProcessor = Mage::getSingleton('vsf_indexer/cache_processor');
         $this->client = Mage::getSingleton('vsf_indexer/elasticsearch_client');
         $this->indexOperation = Mage::getSingleton('vsf_indexer/index_operations');
+        $this->resolveIndex = Mage::getSingleton('vsf_indexer/index_resolveindex');
         /** @var Divante_VueStorefrontIndexer_Model_Transactionkey $transactionKeyModel */
         $transactionKeyModel = Mage::getSingleton('vsf_indexer/transactionkey');
         $this->transactionKey = $transactionKeyModel->load();
@@ -84,7 +91,7 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Indexer_Handler
      */
     public function cleanUpByTransactionKey(Store $store, array $docIds = null)
     {
-        $indexName = $this->indexOperation->getIndexName($store);
+        $indexName = $this->indexOperation->getIndexAlias($store);
 
         if ($this->indexOperation->indexExists($indexName)) {
             $index = $this->indexOperation->getIndexByName($this->indexIdentifier, $store);
@@ -112,7 +119,7 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Indexer_Handler
      */
     public function deleteDocuments(array $docIds, Store $store)
     {
-        $indexName = $this->indexOperation->getIndexName($store);
+        $indexName = $this->indexOperation->getIndexAlias($store);
 
         if ($this->indexOperation->indexExists($indexName)) {
             $index = $this->indexOperation->getIndexByName($this->indexIdentifier, $store);
@@ -244,13 +251,7 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Indexer_Handler
      */
     private function getIndex(Store $store)
     {
-        try {
-            $index = $this->indexOperation->getIndexByName($this->indexIdentifier, $store);
-        } catch (\Exception $e) {
-            $index = $this->indexOperation->createIndex($this->indexIdentifier, $store);
-        }
-
-        return $index;
+        return $this->resolveIndex->getIndex($store);
     }
 
     /**

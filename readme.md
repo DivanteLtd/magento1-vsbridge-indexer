@@ -47,6 +47,16 @@ Module listen on following Magento1 events:
 - Magento >= 1.9
 - Vue Storefront >= 1.7
 
+## Overview
+
+### Support for aliases.
+Command ` php -f vsf_tools.php -- --action full_reindex --store X` will reindex all data to new index.
+It will create new index and switch aliases at the end.
+
+If you used previous versions, you will have to delete index from ES manually.
+If you won't do that, you will get error when running
+`"error":{"root_cause":[{"type":"invalid_alias_name_exception","reason":"Invalid alias name [vue_storefront_magento_1], an index exists with the same name as the alias"`
+
 ## Installation Instructions/Getting Stared
 
 ### Install Magento Module
@@ -73,7 +83,12 @@ Go to the new ‘Indexer’ section (Stores → Configuration → Vuestorefront 
    Batch Indexing Size → select size of packages by which you intend to send data to ElasticSrearch. Depending on the project you might need to adjust package size to the number of products, attributes, configurable products variation, etc). By default Batch, Indexing Size is set up for 1000.
    Indicies settings. Adjust indexing batch size to your data.
     
-   Index Name Prefix → define prefixes for ElasticSearch indexes. The panel allows adding prefix only to the catalog name e.g.: "vue_storefront_catalog". For each store (store view) index name is generated on the base of defined prefix and ID. Aliases cannot be created. 
+   Index Alias Prefix → define prefixes for ElasticSearch indexes. The panel allows adding prefix only to the catalog name e.g.: "vue_storefront_catalog". For each store (store view) index name is generated on the base of defined prefix and ID. Aliases cannot be created.
+   Note: change to "vue_storefront_catalog" to make it compatible with [mage2vuestorefront](https://github.com/DivanteLtd/mage2vuestorefront/) import.
+   
+   Index Identifier → defines the unique store identifier to append to the ElasticSearch indexes. The default value is ID which will append the Store ID to the index name e.g.: "vue_storefront_catalog_1". You can choose to change this to Store Code which will add the Store Code to the index name e.g.: "vue_storefront_catalog_storecode".
+   
+   Add Index Identifier to Default Store View → defines if we should add Index Identifier to Magento Default Store View. Select "No" - to make it compatible with [mage2vuestorefront](https://github.com/DivanteLtd/mage2vuestorefront/) import.  
  
    Example: When we define following indexes: "vue_storefront_catalog_1", "vue_storefront_catalog_2", "vue_storefront_catalog_3", their name will remain unchanged, and only product and category names will be updated. 
    Important: It is crucial to update this configuration in the VSF and VSF-API (one change at the beginning of the whole configuration process).   
