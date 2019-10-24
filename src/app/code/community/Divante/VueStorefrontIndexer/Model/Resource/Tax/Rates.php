@@ -50,6 +50,6 @@ class Divante_VueStorefrontIndexer_Model_Resource_Tax_Rates
             ->where('tax_calculation_rule_id IN (?)', $ruleIds);
         $select->distinct(true);
 
-        return $this->connection->fetchAssoc($select);
+        return $this->connection->fetchAll($select);
     }
 }

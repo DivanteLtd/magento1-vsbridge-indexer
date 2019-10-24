@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [1.2.0] (2019.10.24)
+
+### Fixes 
+- Export all tax rates ([#29](https://github.com/DivanteLtd/magento1-vsbridge-indexer/issues/29))
+
+### Added
+- Export ratings for reviews
+
 ## [1.1.0] (2019.08.30)
 
 ### Added
