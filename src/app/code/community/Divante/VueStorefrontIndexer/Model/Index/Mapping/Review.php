@@ -61,6 +61,13 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Review implements Mapping
                 'nickname' => ['type' => FieldInterface::TYPE_TEXT],
                 'review_status' => ['type' => FieldInterface::TYPE_INTEGER],
                 'customer_id' => ['type' => FieldInterface::TYPE_INTEGER],
+                'ratings' => [
+                    'properties' => [
+                        'percent' => ['type' => FieldInterface::TYPE_SHORT],
+                        'value' => ['type' => FieldInterface::TYPE_SHORT],
+                        'title' => ['type' => FieldInterface::TYPE_TEXT],
+                    ],
+                ]
             ];
 
             $mapping = ['properties' => $properties];
