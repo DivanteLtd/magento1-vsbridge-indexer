@@ -20,6 +20,16 @@ class Divante_VueStorefrontIndexer_Model_Index_Index
     private $name;
 
     /**
+     * @var
+     */
+    private $identifier;
+
+    /**
+     * @var
+     */
+    private $isNew;
+
+    /**
      * Index types.
      *
      * @var
@@ -33,13 +43,10 @@ class Divante_VueStorefrontIndexer_Model_Index_Index
      */
     public function __construct(array $params = [])
     {
-        if (isset($params['name'])) {
-            $this->name = $params['name'];
-        }
-
-        if (isset($params['types'])) {
-            $this->types = $this->prepareTypes($params['types']);
-        }
+        $this->name = $params['name'];
+        $this->identifier = $params['identifier'];
+        $this->isNew = $params['isNew'];
+        $this->types = $this->prepareTypes($params['types']);
     }
 
     /**
@@ -72,6 +79,22 @@ class Divante_VueStorefrontIndexer_Model_Index_Index
     public function getTypes()
     {
         return $this->types;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNew()
+    {
+        return $this->isNew;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        return $this->identifier;
     }
 
     /**

@@ -19,19 +19,23 @@ class Divante_VueStorefrontIndexer_Model_Event_Handler
      * @param string $entityType
      * @param string $eventType
      *
-     * @return Divante_VueStorefrontIndexer_Model_Event
+     * @return Divante_VueStorefrontIndexer_Model_Event|null
      * @throws Exception
      */
     public function logEvent($entityId, $entityType, $eventType)
     {
-        /** @var Divante_VueStorefrontIndexer_Model_Event $event */
-        $event = Mage::getModel('vsf_indexer/event')
-            ->setEntity($entityType)
-            ->setType($eventType)
-            ->setEntityPk($entityId);
+        if ($entityId) {
+            /** @var Divante_VueStorefrontIndexer_Model_Event $event */
+            $event = Mage::getModel('vsf_indexer/event')
+                ->setEntity($entityType)
+                ->setType($eventType)
+                ->setEntityPk($entityId);
 
-        $event->save();
+            $event->save();
 
-        return $event;
+            return $event;
+        }
+
+        return null;
     }
 }
