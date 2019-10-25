@@ -18,12 +18,12 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Inventory im
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Inventory
      */
-    private $resource;
+    protected $resource;
 
     /**
      * @var GeneralMapping
      */
-    private $generalMapping;
+    protected $generalMapping;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Action_Category_Full constructor.

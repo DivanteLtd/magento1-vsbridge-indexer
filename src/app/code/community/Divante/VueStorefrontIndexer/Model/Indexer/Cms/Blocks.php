@@ -22,7 +22,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Cms_Blocks implements IndexerIn
     /**
      * @var IndexerHandler
      */
-    private $indexHandler;
+    protected $indexHandler;
 
     /**
      * @var Action

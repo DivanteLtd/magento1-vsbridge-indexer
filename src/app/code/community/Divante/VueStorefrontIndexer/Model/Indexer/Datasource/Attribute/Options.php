@@ -116,7 +116,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Attribute_Options im
      *
      * @return bool
      */
-    private function useSource(array $attributeData)
+    protected function useSource(array $attributeData)
     {
         return $attributeData['frontend_input'] === 'select' || $attributeData['frontend_input'] === 'multiselect'
                || $attributeData['source_model'] != '';
@@ -127,7 +127,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Attribute_Options im
      *
      * @return array
      */
-    private function getStoreLabelsByAttributeId($attributeId)
+    protected function getStoreLabelsByAttributeId($attributeId)
     {
         /** @var Mage_Eav_Model_Resource_Entity_Attribute $attributeResource */
         $attributeResource = Mage::getResourceModel('eav/entity_attribute');

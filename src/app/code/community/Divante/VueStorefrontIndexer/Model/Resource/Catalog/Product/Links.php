@@ -35,19 +35,19 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Links
     private $links;
 
     /**
+     * @var array
+     */
+    private $positionAttribute;
+
+    /**
      * @var Mage_Core_Model_Resource
      */
-    private $resource;
+    protected $resource;
 
     /**
      * @var Varien_Db_Adapter_Interface
      */
-    private $connection;
-
-    /**
-     * @var array
-     */
-    private $positionAttribute;
+    protected $connection;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Links constructor.
@@ -111,7 +111,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Links
      *
      * @return string|null
      */
-    private function getLinkType($typeId)
+    protected function getLinkType($typeId)
     {
         if (isset($this->typeMap[$typeId])) {
             return $this->typeMap[$typeId];
@@ -123,7 +123,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Links
     /**
      * @return array
      */
-    private function getAllLinkedProducts()
+    protected function getAllLinkedProducts()
     {
         if (null === $this->links) {
             $select = $this->prepareLinksSelect();
@@ -145,7 +145,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Links
     /**
      * @return Varien_Db_Select
      */
-    private function prepareLinksSelect()
+    protected function prepareLinksSelect()
     {
         $productIds = $this->getProductsIds();
 
@@ -177,7 +177,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Links
      *
      * @return Varien_Db_Select
      */
-    private function joinPositionAttribute(Varien_Db_Select $select)
+    protected function joinPositionAttribute(Varien_Db_Select $select)
     {
         $alias = 'link_position';
         $attributePosition = $this->fetchPositionAttributeData();
@@ -208,7 +208,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Links
     /**
      * @return array
      */
-    private function fetchPositionAttributeData()
+    protected function fetchPositionAttributeData()
     {
         if (null === $this->positionAttribute) {
             $select = $this->connection->select()
@@ -233,7 +233,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Links
      *
      * @return string
      */
-    private function getAttributeTypeTable($type)
+    protected function getAttributeTypeTable($type)
     {
         return 'catalog/product_link_attribute_' . $type;
     }
@@ -243,7 +243,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Links
      *
      * @return int[]
      */
-    private function getProductsIds()
+    protected function getProductsIds()
     {
         $products = $this->getProducts();
 
@@ -253,7 +253,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Links
     /**
      * @return array
      */
-    private function getProducts()
+    protected function getProducts()
     {
         return $this->products;
     }

@@ -33,7 +33,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Relation_Paren
      *
      * @return array
      */
-    private function getParentIds(array $productId)
+    protected function getParentIds(array $productId)
     {
         $configurableIds = Mage::getResourceSingleton('catalog/product_type_configurable')
             ->getParentIdsByChild($productId);

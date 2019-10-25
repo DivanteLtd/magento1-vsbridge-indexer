@@ -17,30 +17,9 @@ use Divante_VueStorefrontIndexer_Model_Index_Mapping_Generalmapping as GeneralMa
 class Divante_VueStorefrontIndexer_Model_Index_Mapping_Category extends AbstractMapping implements MappingInterface
 {
     /**
-     * @var string
-     */
-    private $type;
-
-    /**
      * @var array
      */
     private $properties;
-
-    /**
-     * @inheritdoc
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
 
     /**
      * @inheritdoc

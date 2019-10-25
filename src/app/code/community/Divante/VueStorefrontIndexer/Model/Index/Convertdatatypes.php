@@ -17,7 +17,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Convertdatatypes
     /**
      * @var array
      */
-    private $castMapping = [
+    protected $castMapping = [
         'integer' => 'int',
         'text' => 'string',
         'long' => 'int',
@@ -68,7 +68,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Convertdatatypes
      *
      * @return array
      */
-    private function convert(array $indexData, array $mappingProperties)
+    protected function convert(array $indexData, array $mappingProperties)
     {
         foreach ($mappingProperties as $fieldKey => $options) {
             if (isset($options['type'])) {
@@ -95,7 +95,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Convertdatatypes
      *
      * @return array
      */
-    private function convertChildrenData(array $category, $mappingProperties)
+    protected function convertChildrenData(array $category, $mappingProperties)
     {
         $childrenData = $category['children_data'];
 

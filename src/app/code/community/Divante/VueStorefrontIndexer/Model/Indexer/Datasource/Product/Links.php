@@ -17,7 +17,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Links implem
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Links
      */
-    private $linkedProductResource;
+    protected $linkedProductResource;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Links constructor.
