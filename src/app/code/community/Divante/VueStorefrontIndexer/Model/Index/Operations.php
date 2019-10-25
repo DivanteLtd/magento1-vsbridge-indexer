@@ -22,22 +22,22 @@ class Divante_VueStorefrontIndexer_Model_Index_Operations
     /**
      * @var Client
      */
-    private $client;
+    protected $client;
 
     /**
      * @var IndexSettings
      */
-    private $indexSettings;
+    protected $indexSettings;
 
     /**
      * @var array
      */
-    private $indicesConfiguration;
+    protected $indicesConfiguration;
 
     /**
      * @var array
      */
-    private $indicesByIdentifier;
+    protected $indicesByIdentifier;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Index_Operations constructor.

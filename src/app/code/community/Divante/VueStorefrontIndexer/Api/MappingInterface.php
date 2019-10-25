@@ -13,18 +13,6 @@ interface Divante_VueStorefrontIndexer_Api_MappingInterface
 {
 
     /**
-     * @param string $type
-     *
-     * @return $this
-     */
-    public function setType($type);
-
-    /**
-     * @return string
-     */
-    public function getType();
-
-    /**
      * @return array
      */
     public function getMappingProperties();

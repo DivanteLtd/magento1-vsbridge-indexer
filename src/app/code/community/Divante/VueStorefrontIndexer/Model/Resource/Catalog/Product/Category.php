@@ -15,22 +15,22 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Category
     /**
      * @var Mage_Core_Model_Resource
      */
-    private $coreResource;
+    protected $coreResource;
 
     /**
      * @var Varien_Db_Adapter_Interface
      */
-    private $connection;
+    protected $connection;
 
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Category
      */
-    private $categoryResource;
+    protected $categoryResource;
 
     /**
      * @var array Local cache for category names
      */
-    private $categoryNameCache = [];
+    protected $categoryNameCache = [];
 
     /**
      * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Attribute_Full constructor.
@@ -77,7 +77,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Category
      * @return array|mixed
      * @throws Mage_Core_Exception
      */
-    private function loadCategoryNames(array $categoryIds, $storeId)
+    protected function loadCategoryNames(array $categoryIds, $storeId)
     {
         $loadCategoryIds = $categoryIds;
 
@@ -106,7 +106,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Category
      * @return Varien_Db_Select
      * @throws Mage_Core_Exception
      */
-    private function prepareCategoryNameSelect(array $loadCategoryIds, $storeId)
+    protected function prepareCategoryNameSelect(array $loadCategoryIds, $storeId)
     {
         /** @var Mage_Catalog_Model_Resource_Category_Collection $categoryCollection */
         $categoryCollection = Mage::getResourceModel('catalog/category_collection');

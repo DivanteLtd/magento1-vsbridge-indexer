@@ -18,17 +18,17 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Attributes i
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Attributes
      */
-    private $resourceModel;
+    protected $resourceModel;
 
     /**
      * @var Divante_VueStorefrontIndexer_Model_Config_Catalogsettings
      */
-    private $settings;
+    protected $settings;
 
     /**
      * @var SlugGenerator
      */
-    private $slugGenerator;
+    protected $slugGenerator;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Attributes constructor.

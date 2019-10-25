@@ -15,12 +15,12 @@ class Divante_VueStorefrontIndexer_Model_Resource_Cms_Block
     /**
      * @var Mage_Core_Model_Resource
      */
-    private $coreResource;
+    protected $coreResource;
 
     /**
      * @var Varien_Db_Adapter_Interface
      */
-    private $connection;
+    protected $connection;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Attribute_Full constructor.

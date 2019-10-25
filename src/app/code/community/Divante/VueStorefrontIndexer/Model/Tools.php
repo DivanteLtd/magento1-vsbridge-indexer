@@ -89,7 +89,7 @@ class Divante_VueStorefrontIndexer_Model_Tools
      * @return Divante_VueStorefrontIndexer_Model_Index_Index
      * @throws Mage_Core_Model_Store_Exception
      */
-    private function getIndex($storeId, $createNew = false)
+    protected function getIndex($storeId, $createNew = false)
     {
         $store = Mage::app()->getStore($storeId);
 
@@ -179,7 +179,7 @@ class Divante_VueStorefrontIndexer_Model_Tools
      *
      * @return bool
      */
-    private function runFullIndexing($entityType)
+    protected function runFullIndexing($entityType)
     {
         /** @var Divante_VueStorefrontIndexer_Model_Resource_Event_Collection $collection */
         $collection = Mage::getResourceModel('vsf_indexer/event_collection');
@@ -200,7 +200,7 @@ class Divante_VueStorefrontIndexer_Model_Tools
      * @param Divante_VueStorefrontIndexer_Api_IndexerInterface|Divante_VueStorefrontIndexer_Api_Indexer_UpdateInterface $indexerModel
      * @param int|null $storeId
      */
-    private function runPartialIndexing($indexerModel, $storeId = null)
+    protected function runPartialIndexing($indexerModel, $storeId = null)
     {
         $type = $indexerModel->getTypeName();
 
@@ -229,7 +229,7 @@ class Divante_VueStorefrontIndexer_Model_Tools
      *
      * @return array
      */
-    private function getUpdateEventLists($entityType, $eventType = 'save')
+    protected function getUpdateEventLists($entityType, $eventType = 'save')
     {
         $limit = $this->indexOperation->getBatchIndexingSize();
         /** @var Divante_VueStorefrontIndexer_Model_Resource_Event_Collection $collection */

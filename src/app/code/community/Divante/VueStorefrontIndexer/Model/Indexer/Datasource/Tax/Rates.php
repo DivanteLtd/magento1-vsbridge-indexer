@@ -17,7 +17,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Tax_Rates implements
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Tax_Rates
      */
-    private $resourceModel;
+    protected $resourceModel;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Action_Taxrule constructor.

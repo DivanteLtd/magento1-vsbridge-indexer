@@ -15,12 +15,12 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Groupprices
     /**
      * @var Mage_Core_Model_Resource
      */
-    private $resource;
+    protected $resource;
 
     /**
      * @var Varien_Db_Adapter_Interface
      */
-    private $connection;
+    protected $connection;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Stock constructor.

@@ -21,42 +21,42 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Indexer_Handler
     /**
      * @var IndexOperation
      */
-    private $indexOperation;
+    protected $indexOperation;
 
     /**
      * @var Client
      */
-    private $client;
+    protected $client;
 
     /**
      * @var Divante_VueStorefrontIndexer_Model_Cache_Processor
      */
-    private $cacheProcessor;
+    protected $cacheProcessor;
 
     /**
      * @var string
      */
-    private $typeName;
+    protected $typeName;
 
     /**
      * @var string
      */
-    private $indexIdentifier;
+    protected $indexIdentifier;
 
     /**
      * @var ResolveIndex
      */
-    private $resolveIndex;
+    protected $resolveIndex;
 
     /**
      * @var int|string
      */
-    private $transactionKey;
+    protected $transactionKey;
 
     /**
      * @var ConvertDataTypes
      */
-    private $convertDataTypes;
+    protected $convertDataTypes;
 
     /**
      * constructor.
