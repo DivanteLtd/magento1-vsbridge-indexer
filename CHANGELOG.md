@@ -7,6 +7,7 @@
 
 ### Fixes 
 - Export all tax rates ([#29](https://github.com/DivanteLtd/magento1-vsbridge-indexer/issues/29))
+- Wrong product-children website configurable prices when more than one website-price exists - @cewald (#46)
 
 ### Added
 - Export ratings for reviews
