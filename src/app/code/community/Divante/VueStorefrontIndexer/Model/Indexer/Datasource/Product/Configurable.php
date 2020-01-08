@@ -116,7 +116,8 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      */
     protected function prepareConfigurableChildrenAttributes(array $indexData, $storeId)
     {
-        $allChildren = $this->configurableResource->getSimpleProducts($storeId);
+        $this->configurableResource->setStoreId($storeId);
+        $allChildren = $this->configurableResource->getSimpleProducts();
 
         if (null === $allChildren) {
             return $indexData;
@@ -276,7 +277,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
                         $priceInfo = $productAttribute['pricing'][$value];
                         $configurablePrice = $this->calcSelectionPrice($priceInfo, $childPrice);
                         $configurableChildren[$index]['price'] = $childPrice + $configurablePrice;
-
+                        
                         if ($specialPrice) {
                             $confSpecialPrice = $this->calcSelectionPrice($priceInfo, $specialPrice);
                             $configurableChildren[$index]['special_price'] = $specialPrice + $confSpecialPrice;
