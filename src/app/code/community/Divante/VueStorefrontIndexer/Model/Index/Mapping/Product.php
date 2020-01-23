@@ -77,6 +77,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Product extends AbstractM
             Mage::dispatchEvent('elasticsearch_product_mapping_properties', ['mapping' => $mappingObject]);
 
             $this->properties = $mappingObject->getData();
+
         }
 
         return $this->properties;
@@ -102,6 +103,47 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Product extends AbstractM
                             'can_change_quantity' => ['type' => FieldInterface::TYPE_BOOLEAN],
                             'price' => ['type' => FieldInterface::TYPE_DOUBLE],
                             'price_type' => ['type' => FieldInterface::TYPE_TEXT],
+                            'position' => ['type' => FieldInterface::TYPE_LONG],
+                            'sku' => ['type' => FieldInterface::TYPE_KEYWORD],
+                        ],
+                    ],
+                ],
+            ],
+            'custom_options' => [
+                'properties' => [
+                    'option_id' => ['type' => FieldInterface::TYPE_LONG],
+                    'position' => ['type' => FieldInterface::TYPE_LONG],
+                    'type' => ['type' => FieldInterface::TYPE_TEXT],
+                    'is_required' => ['type' => FieldInterface::TYPE_LONG],
+                    'sort_order' => ['type' => FieldInterface::TYPE_LONG],
+                    'max_characters' => ['type' => FieldInterface::TYPE_LONG],
+                    'file_extension' => ['type' => FieldInterface::TYPE_LONG],
+                    'image_size_x' => ['type' => FieldInterface::TYPE_LONG],
+                    'image_size_y' => ['type' => FieldInterface::TYPE_LONG],
+                    'default_title' => ['type' => FieldInterface::TYPE_TEXT],
+                    'store_title' => ['type' => FieldInterface::TYPE_TEXT],
+                    'title' => ['type' => FieldInterface::TYPE_TEXT],
+                    'default_price' => ['type' => FieldInterface::TYPE_DOUBLE],
+                    'default_price_type' => ['type' => FieldInterface::TYPE_TEXT],
+                    'store_price' => ['type' => FieldInterface::TYPE_DOUBLE],
+                    'store_price_type' => ['type' => FieldInterface::TYPE_TEXT],
+                    'price' => ['type' => FieldInterface::TYPE_DOUBLE],
+                    'price_type' => ['type' => FieldInterface::TYPE_TEXT],
+                    'sku' => ['type' => FieldInterface::TYPE_KEYWORD],
+                    'values' => [
+                        'properties' => [
+                            'option_id' => ['type' => FieldInterface::TYPE_LONG],
+                            'option_type_id' => ['type' => FieldInterface::TYPE_LONG],
+                            'sort_order' => ['type' => FieldInterface::TYPE_LONG],
+                            'title' => ['type' => FieldInterface::TYPE_TEXT],
+                            'default_title' => ['type' => FieldInterface::TYPE_TEXT],
+                            'store_title' => ['type' => FieldInterface::TYPE_TEXT],
+                            'price' => ['type' => FieldInterface::TYPE_DOUBLE],
+                            'price_type' => ['type' => FieldInterface::TYPE_TEXT],
+                            'default_price' => ['type' => FieldInterface::TYPE_DOUBLE],
+                            'default_price_type' => ['type' => FieldInterface::TYPE_TEXT],
+                            'store_price' => ['type' => FieldInterface::TYPE_DOUBLE],
+                            'store_price_type' => ['type' => FieldInterface::TYPE_TEXT],
                             'position' => ['type' => FieldInterface::TYPE_LONG],
                             'sku' => ['type' => FieldInterface::TYPE_KEYWORD],
                         ],
