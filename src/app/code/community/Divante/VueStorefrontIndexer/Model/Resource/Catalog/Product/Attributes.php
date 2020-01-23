@@ -15,17 +15,24 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Attributes ext
 {
 
     /**
-     * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Attributes constructor.
-     *
-     * @param array $params
+     * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Loadattributes
      */
-    public function __construct(array $params)
-    {
-        $params = [
-            'entity_type' => 'catalog_product',
-            'collection_model' => 'catalog/product_attribute_collection',
-        ];
+    private $loadAttributes;
 
-        parent::__construct($params);
+    /**
+     * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Attributes constructor.
+     */
+    public function __construct()
+    {
+        $this->loadAttributes = Mage::getResourceSingleton('vsf_indexer/catalog_product_loadattributes');
+        parent::__construct();
+    }
+
+    /**
+     * @return array
+     */
+    public function initAttributes()
+    {
+        return $this->loadAttributes->execute();
     }
 }

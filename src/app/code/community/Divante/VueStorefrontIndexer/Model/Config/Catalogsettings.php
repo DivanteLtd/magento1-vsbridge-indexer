@@ -38,6 +38,14 @@ class Divante_VueStorefrontIndexer_Model_Config_Catalogsettings
     }
 
     /**
+     * @return bool
+     */
+    public function canExportAttributesMetadata()
+    {
+        return (bool) $this->getConfigParam('export_attributes_metadata');
+    }
+
+    /**
      * @param int $storeId
      * @return array
      */
