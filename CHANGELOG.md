@@ -1,6 +1,7 @@
 ## [Unreleased]
 
 ### Added
+- Add option label for configurable_options.values
 - Add option to export "attributes_metadata" for products. Only user defined attributes are exported by default.
 Sample: `docs/sample/attribute-metadata.json`
 More information here:  https://github.com/DivanteLtd/vue-storefront/pull/4001

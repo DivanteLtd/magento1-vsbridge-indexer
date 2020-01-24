@@ -81,7 +81,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
     /**
      * @var Divante_VueStorefrontIndexer_Model_Attribute_Loadoptionlabelbyid
      */
-    protected $loadOptionById;
+    protected $loadOptionLabelById;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Action_Category_Full constructor.
@@ -94,7 +94,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
         $this->generalMapping = Mage::getSingleton('vsf_indexer/index_mapping_generalmapping');
         $this->inventoryResource = Mage::getResourceModel('vsf_indexer/catalog_product_inventory');
         $this->configSettings = Mage::getSingleton('vsf_indexer/config_catalogsettings');
-        $this->loadOptionById = Mage::getResourceModel('vsf_indexer/attribute_loadoptionlabelbyid');
+        $this->loadOptionLabelById = Mage::getSingleton('vsf_indexer/attribute_loadoptionlabelbyid');
     }
 
     /**
@@ -106,7 +106,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
         $this->configurableResource->setProducts($indexData);
 
         $indexData = $this->prepareConfigurableChildrenAttributes($indexData, $storeId);
-        $indexData = $this->addConfigurableAttributes($indexData);
+        $indexData = $this->addConfigurableAttributes($indexData, $storeId);
 
         $this->configurableResource->clear();
 
@@ -244,7 +244,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      *
      * @return array
      */
-    protected function addConfigurableAttributes(array $indexData)
+    protected function addConfigurableAttributes(array $indexData, $storeId)
     {
         foreach ($indexData as $productId => $productDTO) {
             if (!isset($productDTO['configurable_children'])) {
@@ -296,9 +296,10 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
                 $values = array_values(array_unique($values));
 
                 foreach ($values as $value) {
-                    $option =
+                    $label = $this->loadOptionLabelById->execute($attributeCode, $value, $storeId);
                     $productAttribute['values'][] = [
                         'value_index' => $value,
+                        'label' => $label,
                     ];
                 }
 
