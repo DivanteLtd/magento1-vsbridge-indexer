@@ -87,9 +87,12 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Metaattribut
 
     /**
      * @param array $productDTO
-     * @param       $storeId
+     * @param int   $storeId
      *
      * @return array
+     * @throws Mage_Exception
+     *
+     * @access private
      */
     private function getAttributeMetaData(array $productDTO, $storeId)
     {
@@ -104,7 +107,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Metaattribut
             }
 
             $metaAttribute = $this->copyColumns($attribute);
-            $productOptions = $this->getOptions($productDTO, $attributeCode);
+            $productOptions = $this->getOptions($productDTO, $attributeCode, $storeId);
             $metaAttribute['options'] = $productOptions;
 
             $metaAttributes[] = $metaAttribute;
@@ -114,10 +117,14 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Metaattribut
     }
 
     /**
-     * @param array $productDTO
-     * @param       $attributeCode
+     * @param array     $productDTO
+     * @param string    $attributeCode
+     * @param int       $storeId
      *
      * @return array
+     * @throws Mage_Exception
+     *
+     * @access private
      */
     private function getOptions(array $productDTO, $attributeCode, $storeId)
     {
