@@ -1,6 +1,9 @@
 ## [Unreleased]
 
 ### Added
+- Add option to export "attributes_metadata" for products. Only user defined attributes are exported by default.
+Sample: `docs/sample/attribute-metadata.json`
+More information here:  https://github.com/DivanteLtd/vue-storefront/pull/4001
 - Support for aliases
 
 ## [1.2.0] (2019.10.24)

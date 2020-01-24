@@ -1,6 +1,7 @@
 <?php
 
 use Divante_VueStorefrontIndexer_Api_DatasourceInterface as DataSourceInterface;
+use Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable_Product as PrepareConfigurableProduct;
 use Divante_VueStorefrontIndexer_Model_Index_Mapping_Generalmapping as GeneralMapping;
 
 /**
@@ -78,6 +79,11 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
     protected $configSettings;
 
     /**
+     * @var Divante_VueStorefrontIndexer_Model_Attribute_Loadoptionlabelbyid
+     */
+    protected $loadOptionById;
+
+    /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Action_Category_Full constructor.
      */
     public function __construct()
@@ -88,6 +94,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
         $this->generalMapping = Mage::getSingleton('vsf_indexer/index_mapping_generalmapping');
         $this->inventoryResource = Mage::getResourceModel('vsf_indexer/catalog_product_inventory');
         $this->configSettings = Mage::getSingleton('vsf_indexer/config_catalogsettings');
+        $this->loadOptionById = Mage::getResourceModel('vsf_indexer/attribute_loadoptionlabelbyid');
     }
 
     /**
@@ -289,7 +296,10 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
                 $values = array_values(array_unique($values));
 
                 foreach ($values as $value) {
-                    $productAttribute['values'][] = ['value_index' => $value];
+                    $option =
+                    $productAttribute['values'][] = [
+                        'value_index' => $value,
+                    ];
                 }
 
                 unset($productAttribute['pricing']);
@@ -311,33 +321,11 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      */
     public function prepareConfigurableProduct(array $productDTO)
     {
-        $configurableChildren = $productDTO['configurable_children'];
-        $areChildInStock = 0;
-        $childPrice = [];
+        /** @var PrepareConfigurableProduct $prepareConfigurableProductModel */
+        $prepareConfigurableProductModel
+            = Mage::getSingleton('vsf_indexer/indexer_datasource_product_configurable_product');
 
-        foreach ($configurableChildren as $child) {
-            $childPrice[] = $child['price'];
-
-            if ($child['stock']['is_in_stock']) {
-                $areChildInStock = 1;
-            }
-        }
-
-        $isInStock = $productDTO['stock']['is_in_stock'];
-
-        if (!$isInStock || !$areChildInStock) {
-            $productDTO['stock']['is_in_stock'] = false;
-            $productDTO['stock']['stock_status'] = 0;
-        }
-
-        if (!empty($childPrice)) {
-            $minPrice = min($childPrice);
-            $productDTO['price'] = $minPrice;
-            $productDTO['final_price'] = $minPrice;
-            $productDTO['regular_price'] = $minPrice;
-        }
-
-        return $productDTO;
+        return $prepareConfigurableProductModel->prepareConfigurableProduct($productDTO);
     }
 
     /**

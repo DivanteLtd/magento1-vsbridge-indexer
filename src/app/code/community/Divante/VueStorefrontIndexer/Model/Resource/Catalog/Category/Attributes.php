@@ -7,7 +7,6 @@ use Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav as Eav;
  *
  * @package     Divante
  * @category    VueStoreFrontIndexer
- * @author      Agata Firlejczyk <afirlejczyk@divante.pl
  * @copyright   Copyright (C) 2018 Divante Sp. z o.o.
  * @license     See LICENSE_DIVANTE.txt for license details.
  */
@@ -15,17 +14,24 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Category_Attributes ex
 {
 
     /**
-     * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Attributes constructor.
-     *
-     * @param array $params
+     * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Category_Loadattributes
      */
-    public function __construct(array $params)
-    {
-        $params = [
-            'entity_type' => 'catalog_category',
-            'collection_model' => 'catalog/category_attribute_collection',
-        ];
+    private $loadAttributes;
 
-        parent::__construct($params);
+    /**
+     * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Attributes constructor.
+     */
+    public function __construct()
+    {
+        $this->loadAttributes = Mage::getResourceSingleton('vsf_indexer/catalog_category_loadattributes');
+        parent::__construct();
+    }
+
+    /**
+     * @return array
+     */
+    public function initAttributes()
+    {
+        return $this->loadAttributes->execute();
     }
 }

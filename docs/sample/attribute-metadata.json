@@ -1,0 +1,89 @@
+{
+  "attributes_metadata": [
+    {
+      "id": 177,
+      "default_frontend_label": "Style",
+      "is_visible_on_front": true,
+      "is_visible": true,
+      "attribute_id": 177,
+      "entity_type_id": 4,
+      "frontend_input": "select",
+      "is_user_defined": true,
+      "is_comparable": false,
+      "attribute_code": "style",
+      "options": []
+    },
+    {
+      "id": 178,
+      "default_frontend_label": "Sleeve Length",
+      "is_visible_on_front": false,
+      "is_visible": true,
+      "attribute_id": 178,
+      "entity_type_id": 4,
+      "frontend_input": "select",
+      "is_user_defined": true,
+      "is_comparable": false,
+      "attribute_code": "sleeve_length",
+      "options": [
+        {
+          "value": "47",
+          "label": "Long Sleeve",
+          "sort_order": 0
+        }
+      ]
+    },
+    {
+      "id": 179,
+      "default_frontend_label": "Fit",
+      "is_visible_on_front": false,
+      "is_visible": true,
+      "attribute_id": 179,
+      "entity_type_id": 4,
+      "frontend_input": "select",
+      "is_user_defined": true,
+      "is_comparable": false,
+      "attribute_code": "fit",
+      "options": [
+        {
+          "value": "51",
+          "label": "Regular",
+          "sort_order": 0
+        }
+      ]
+    },
+    {
+      "id": 180,
+      "default_frontend_label": "Size",
+      "is_visible_on_front": true,
+      "is_visible": true,
+      "attribute_id": 180,
+      "entity_type_id": 4,
+      "frontend_input": "select",
+      "is_user_defined": true,
+      "is_comparable": false,
+      "attribute_code": "size",
+      "options": [
+        {
+          "value": "81",
+          "label": "XS",
+          "sort_order": 1
+        },
+        {
+          "value": "79",
+          "label": "M",
+          "sort_order": 3
+        },
+        {
+          "value": "78",
+          "label": "L",
+          "sort_order": 4
+        },
+        {
+          "value": "77",
+          "label": "XL",
+          "sort_order": 5
+        }
+      ]
+    }
+  ]
+}
