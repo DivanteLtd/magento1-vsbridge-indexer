@@ -1,9 +1,6 @@
 <?php
 
 use Mage_Eav_Model_Resource_Entity_Attribute_Option_Collection as OptionCollection;
-use Magento\Eav\Model\Entity\Attribute;
-use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
-use Magento\Eav\Model\Entity\Attribute\Source\Table as SourceTable;
 
 /**
  * Class Divante_VueStorefrontIndexer_Model_Attribute_Loadoptions
@@ -15,8 +12,6 @@ use Magento\Eav\Model\Entity\Attribute\Source\Table as SourceTable;
  */
 class Divante_VueStorefrontIndexer_Model_Attribute_Loadoptions
 {
-
-    const DEFAULT_SOURCE_MODEL = 'eav/entity_attribute_source_table';
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Loadattributes
      */
@@ -36,7 +31,7 @@ class Divante_VueStorefrontIndexer_Model_Attribute_Loadoptions
 
     /**
      * @param array $attributeData
-     * @param       $storeId
+     * @param int $storeId
      *
      * @return array
      */
@@ -120,7 +115,7 @@ class Divante_VueStorefrontIndexer_Model_Attribute_Loadoptions
     }
 
     /**
-     * @param Attribute $attribute
+     * @param $attribute
      *
      * @return bool
      */
@@ -128,6 +123,7 @@ class Divante_VueStorefrontIndexer_Model_Attribute_Loadoptions
     {
         $source = $attribute->getSource();
 
-        return ($source instanceof Mage_Eav_Model_Entity_Attribute_Source_Abstract && !($source instanceof Mage_Eav_Model_Entity_Attribute_Source_Table));
+        return ($source instanceof Mage_Eav_Model_Entity_Attribute_Source_Abstract
+                && !($source instanceof Mage_Eav_Model_Entity_Attribute_Source_Table));
     }
 }

@@ -1,7 +1,5 @@
 <?php
 
-use Mage_Eav_Model_Resource_Entity_Attribute_Option_Collection as OptionCollection;
-
 /**
  * Class Divante_VueStorefrontIndexer_Model_Attribute_Loadoptionbyid
  *
@@ -12,26 +10,17 @@ use Mage_Eav_Model_Resource_Entity_Attribute_Option_Collection as OptionCollecti
  */
 class Divante_VueStorefrontIndexer_Model_Attribute_Loadoptionbyid
 {
-    const DEFAULT_SOURCE_MODEL = 'eav/entity_attribute_source_table';
-
-    /**
-     * @var array
-     */
-    private $optionsByAttribute = [];
-
     /**
      * @var Divante_VueStorefrontIndexer_Model_Attribute_Loadoptions
      */
     private $loadOptions;
 
     /**
-     * LoadOptionById constructor.
-     *
-     * @param LoadOptions $loadOptions
+     * Divante_VueStorefrontIndexer_Model_Attribute_Loadoptionlabelbyid constructor.
      */
-    public function __construct(LoadOptions $loadOptions)
+    public function __construct()
     {
-        $this->loadOptions = $loadOptions;
+        $this->loadOptions = Mage::getSingleton('vsf_indexer/attribute_loadoptions');
     }
 
     /**

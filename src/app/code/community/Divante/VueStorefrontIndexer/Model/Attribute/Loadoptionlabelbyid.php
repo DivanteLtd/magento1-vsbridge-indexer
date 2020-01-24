@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Class Divante_VueStorefrontIndexer_Model_Attribute_Loadoptionlabelbyid
  *
@@ -11,13 +10,6 @@
  */
 class Divante_VueStorefrontIndexer_Model_Attribute_Loadoptionlabelbyid
 {
-    const DEFAULT_SOURCE_MODEL = 'eav/entity_attribute_source_table';
-
-    /**
-     * @var array
-     */
-    private $optionsByAttribute = [];
-
     /**
      * @var Divante_VueStorefrontIndexer_Model_Attribute_Loadoptions
      */
@@ -28,7 +20,7 @@ class Divante_VueStorefrontIndexer_Model_Attribute_Loadoptionlabelbyid
      */
     public function __construct()
     {
-        $this->loadOptions = Mage::getResourceModel('vsf_indexer/attribute_loadoptions');
+        $this->loadOptions = Mage::getSingleton('vsf_indexer/attribute_loadoptions');
     }
 
     /**
