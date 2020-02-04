@@ -30,22 +30,24 @@ class Divante_VueStorefrontIndexer_Model_Attribute_Loadoptions
     }
 
     /**
-     * @param array $attributeData
-     * @param int $storeId
+     * @param string    $attributeCode
+     * @param int       $storeId
      *
      * @return array
+     * @throws Mage_Exception
+     *
+     * @access public
      */
     public function execute($attributeCode, $storeId)
     {
         $attributeModel = $this->loadAttributes->getAttributeByCode($attributeCode);
         $attributeModel->setStoreId($storeId);
 
-        return $this->getOptions($attributeModel, $storeId);
+        return $this->getOptions($attributeModel);
     }
 
     /**
-     * @param array $attributeData
-     * @param       $storeId
+     * @param object $attribute
      *
      * @return array
      */
