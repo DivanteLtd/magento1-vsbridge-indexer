@@ -31,6 +31,11 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Attributes i
     protected $slugGenerator;
 
     /**
+     * @var Varien_Filter_Template
+     */
+    protected $pageTemplateProcessor;
+
+    /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Attributes constructor.
      */
     public function __construct()
@@ -38,6 +43,9 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Attributes i
         $this->resourceModel = Mage::getResourceModel('vsf_indexer/catalog_product_attributes');
         $this->settings = Mage::getSingleton('vsf_indexer/config_catalogsettings');
         $this->slugGenerator = Mage::getSingleton('vsf_indexer/sluggenerator');
+
+        $helper = Mage::helper('cms');
+        $this->pageTemplateProcessor = $helper->getPageTemplateProcessor();
     }
 
     /**
@@ -59,7 +67,9 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Attributes i
                 $slug = $this->slugGenerator->generate($productData['name'], $entityId);
                 $productData['slug'] = $slug;
             }
-
+            if($productData['short_description']){
+                $productData['short_description'] = $this->pageTemplateProcessor->filter($productData['short_description']);
+            }
             $indexData[$entityId] = $productData;
         }
 
