@@ -83,7 +83,6 @@ Usage:  php -f vsf_tools.php -- [options]
         --action <action_name>
                 full_reindex --store STORE_ID|OPTIONAL [--type categories|products|taxrules|attributes|cms_blocks|cms_pages|reviews]
                 reindex --store STORE_ID|OPTIONAL
-                delete_indices
 
 USAGE;
     }
