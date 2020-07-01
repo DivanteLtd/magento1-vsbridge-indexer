@@ -14,26 +14,6 @@ use Divante_VueStorefrontIndexer_Api_Mapping_FieldInterface as FieldInterface;
  */
 class Divante_VueStorefrontIndexer_Model_Index_Mapping_Cms_Block implements MappingInterface
 {
-    /**
-     * @var string
-     */
-    private $type;
-
-    /**
-     * @inheritdoc
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
 
     /**
      * @inheritdoc

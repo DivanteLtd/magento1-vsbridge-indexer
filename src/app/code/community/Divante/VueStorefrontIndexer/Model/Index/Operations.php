@@ -22,22 +22,22 @@ class Divante_VueStorefrontIndexer_Model_Index_Operations
     /**
      * @var Client
      */
-    private $client;
+    protected $client;
 
     /**
      * @var IndexSettings
      */
-    private $indexSettings;
+    protected $indexSettings;
 
     /**
      * @var array
      */
-    private $indicesConfiguration;
+    protected $indicesConfiguration;
 
     /**
      * @var array
      */
-    private $indicesByName;
+    protected $indicesByIdentifier;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Index_Operations constructor.
@@ -125,7 +125,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Operations
     {
         $exists = true;
 
-        if (!isset($this->indicesByName[$indexName])) {
+        if (!isset($this->indicesByIdentifier[$indexName])) {
             $exists = $this->client->indexExists($indexName);
         }
 
@@ -140,19 +140,19 @@ class Divante_VueStorefrontIndexer_Model_Index_Operations
      */
     public function getIndexByName($indexIdentifier, Store $store)
     {
-        $indexName = $this->getIndexName($store);
+        $indexName = $this->getIndexAlias($store);
 
-        if (!isset($this->indicesByName[$indexName])) {
+        if (!isset($this->indicesByIdentifier[$indexName])) {
             if (!$this->indexExists($indexName)) {
                 throw new \LogicException(
                     "{$indexIdentifier} index does not exist yet."
                 );
             }
 
-            $this->initIndex($indexIdentifier, $store);
+            $this->initIndex($indexIdentifier, $store, true);
         }
 
-        return $this->indicesByName[$indexName];
+        return $this->indicesByIdentifier[$indexName];
     }
 
     /**
@@ -160,11 +160,19 @@ class Divante_VueStorefrontIndexer_Model_Index_Operations
      *
      * @return string
      */
-    public function getIndexName(Store $store)
+    public function getIndexAlias(Store $store)
     {
-        $name = $this->indexSettings->getIndexNamePrefix();
+        return $this->indexSettings->getIndexAlias($store);
+    }
 
-        return $name . '_' . $store->getId();
+    /**
+     * @param Store $store
+     *
+     * @return string
+     */
+    private function createIndexName(Store $store)
+    {
+        return $this->indexSettings->createIndexName($store);
     }
 
     /**
@@ -175,7 +183,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Operations
      */
     public function createIndex($indexIdentifier, Store $store)
     {
-        $index = $this->initIndex($indexIdentifier, $store);
+        $index = $this->initIndex($indexIdentifier, $store, false);
         $this->client->createIndex(
             $index->getName(),
             $this->indexSettings->getEsConfig()
@@ -198,15 +206,38 @@ class Divante_VueStorefrontIndexer_Model_Index_Operations
     }
 
     /**
-     * @param string $indexIdentifier
-     * @param Mage_Core_Model_Store $store
+     * @inheritdoc
      */
-    public function deleteIndex($indexIdentifier, Store $store)
+    public function switchIndexer($indexName, $indexAlias)
     {
-        $index = $this->initIndex($indexIdentifier, $store);
+        $aliasActions   = [
+            [
+                'add' => [
+                    'index' => $indexName,
+                    'alias' => $indexAlias,
+                ]
+            ],
+        ];
 
-        if ($this->client->indexExists($index->getName())) {
-            $this->client->deleteIndex($index->getName());
+        $deletedIndices = [];
+        $oldIndices = $this->client->getIndicesNameByAlias($indexAlias);
+
+        foreach ($oldIndices as $oldIndexName) {
+            if ($oldIndexName != $indexName) {
+                $deletedIndices[] = $oldIndexName;
+                $aliasActions[]   = [
+                    'remove' => [
+                        'index' => $oldIndexName,
+                        'alias' => $indexAlias,
+                    ]
+                ];
+            }
+        }
+
+        $this->client->updateAliases($aliasActions);
+
+        foreach ($deletedIndices as $deletedIndex) {
+            $this->client->deleteIndex($deletedIndex);
         }
     }
 
@@ -227,10 +258,11 @@ class Divante_VueStorefrontIndexer_Model_Index_Operations
      *
      * @param string $indexIdentifier
      * @param Store  $store
+     * @param bool $existingIndex
      *
      * @return Index
      */
-    private function initIndex($indexIdentifier, Store $store)
+    private function initIndex($indexIdentifier, Store $store, $existingIndex)
     {
         if (!isset($this->indicesConfiguration[$indexIdentifier])) {
             throw new \LogicException("No configuration found");
@@ -239,18 +271,26 @@ class Divante_VueStorefrontIndexer_Model_Index_Operations
         $config = $this->indicesConfiguration[$indexIdentifier];
         $types = $config['types'];
 
-        $indexName = $this->getIndexName($store);
+        $indexName = $this->createIndexName($store);
+        $indexAlias = $this->getIndexAlias($store);
+
+        if ($existingIndex) {
+            $indexName = $indexAlias;
+        }
+
         $index = Mage::getModel(
             'vsf_indexer/index_index',
             [
                 'name' => $indexName,
                 'types' => $types,
+                'isNew' => !$existingIndex,
+                'identifier' => $indexAlias,
             ]
         );
 
-        $this->indicesByName[$indexName] = $index;
+        $this->indicesByIdentifier[$indexName] = $index;
 
-        return $this->indicesByName[$indexName];
+        return $this->indicesByIdentifier[$indexName];
     }
 
     /**

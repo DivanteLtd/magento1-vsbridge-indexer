@@ -15,7 +15,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Helper_Store
     /**
      * @var Divante_VueStorefrontIndexer_Model_Config_Generalsettings
      */
-    private $configSettings;
+    protected $configSettings;
 
     /**
      * Divante_VueStoreFrontElasticSearch_Model_Observer_LogEventObserver constructor.

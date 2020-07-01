@@ -1,6 +1,7 @@
 <?php
 
 use Divante_VueStorefrontIndexer_Api_DatasourceInterface as DataSourceInterface;
+use Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable_Product as PrepareConfigurableProduct;
 use Divante_VueStorefrontIndexer_Model_Index_Mapping_Generalmapping as GeneralMapping;
 
 /**
@@ -22,7 +23,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
     /**
      * @var array
      */
-    private $childBlackListConfig = [
+    protected $childBlackListConfig = [
         'entity_id',
         'parent_id',
         'parent_ids',
@@ -33,7 +34,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      * (depends on number of child/parent number, and number of required attributes)
      * @var array
      */
-    private $requireChildrenAttributes = [
+    protected $requireChildrenAttributes = [
         'name',
         'small_image',
         'thumbnail',
@@ -47,7 +48,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      * Images
      * @var array
      */
-    private $imageAttributes = [
+    protected $imageAttributes = [
         'image',
         'small_image',
         'thumbnail'
@@ -55,27 +56,32 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
     /**
      * @var Divante_VueStorefrontIndexer_Model_Data_Filter
      */
-    private $dataFilter;
+    protected $dataFilter;
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
      */
-    private $configurableResource;
+    protected $configurableResource;
     /**
      * @var  Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Attributes
      */
-    private $resourceAttributeModel;
+    protected $resourceAttributeModel;
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Inventory
      */
-    private $inventoryResource;
+    protected $inventoryResource;
     /**
      * @var GeneralMapping
      */
-    private $generalMapping;
+    protected $generalMapping;
     /**
      * @var Divante_VueStorefrontIndexer_Model_Config_Catalogsettings
      */
-    private $configSettings;
+    protected $configSettings;
+
+    /**
+     * @var Divante_VueStorefrontIndexer_Model_Attribute_Loadoptionlabelbyid
+     */
+    protected $loadOptionLabelById;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Action_Category_Full constructor.
@@ -88,6 +94,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
         $this->generalMapping = Mage::getSingleton('vsf_indexer/index_mapping_generalmapping');
         $this->inventoryResource = Mage::getResourceModel('vsf_indexer/catalog_product_inventory');
         $this->configSettings = Mage::getSingleton('vsf_indexer/config_catalogsettings');
+        $this->loadOptionLabelById = Mage::getSingleton('vsf_indexer/attribute_loadoptionlabelbyid');
     }
 
     /**
@@ -99,7 +106,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
         $this->configurableResource->setProducts($indexData);
 
         $indexData = $this->prepareConfigurableChildrenAttributes($indexData, $storeId);
-        $indexData = $this->addConfigurableAttributes($indexData);
+        $indexData = $this->addConfigurableAttributes($indexData, $storeId);
 
         $this->configurableResource->clear();
 
@@ -114,9 +121,10 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      * @throws Mage_Core_Exception
      * @throws Mage_Core_Model_Store_Exception
      */
-    private function prepareConfigurableChildrenAttributes(array $indexData, $storeId)
+    protected function prepareConfigurableChildrenAttributes(array $indexData, $storeId)
     {
-        $allChildren = $this->configurableResource->getSimpleProducts($storeId);
+        $this->configurableResource->setStoreId($storeId);
+        $allChildren = $this->configurableResource->getSimpleProducts();
 
         if (null === $allChildren) {
             return $indexData;
@@ -204,7 +212,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      *
      * @return float
      */
-    private function getNotifyForQtyBelowDefaultValue($storeId)
+    protected function getNotifyForQtyBelowDefaultValue($storeId)
     {
         return (float)Mage::getStoreConfig(Mage_CatalogInventory_Model_Stock_Item::XML_PATH_NOTIFY_STOCK_QTY, $storeId);
     }
@@ -236,7 +244,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      *
      * @return array
      */
-    private function addConfigurableAttributes(array $indexData)
+    protected function addConfigurableAttributes(array $indexData, $storeId)
     {
         foreach ($indexData as $productId => $productDTO) {
             if (!isset($productDTO['configurable_children'])) {
@@ -276,7 +284,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
                         $priceInfo = $productAttribute['pricing'][$value];
                         $configurablePrice = $this->calcSelectionPrice($priceInfo, $childPrice);
                         $configurableChildren[$index]['price'] = $childPrice + $configurablePrice;
-
+                        
                         if ($specialPrice) {
                             $confSpecialPrice = $this->calcSelectionPrice($priceInfo, $specialPrice);
                             $configurableChildren[$index]['special_price'] = $specialPrice + $confSpecialPrice;
@@ -288,7 +296,11 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
                 $values = array_values(array_unique($values));
 
                 foreach ($values as $value) {
-                    $productAttribute['values'][] = ['value_index' => $value];
+                    $label = $this->loadOptionLabelById->execute($attributeCode, $value, $storeId);
+                    $productAttribute['values'][] = [
+                        'value_index' => $value,
+                        'label' => $label,
+                    ];
                 }
 
                 unset($productAttribute['pricing']);
@@ -310,33 +322,11 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      */
     public function prepareConfigurableProduct(array $productDTO)
     {
-        $configurableChildren = $productDTO['configurable_children'];
-        $areChildInStock = 0;
-        $childPrice = [];
+        /** @var PrepareConfigurableProduct $prepareConfigurableProductModel */
+        $prepareConfigurableProductModel
+            = Mage::getSingleton('vsf_indexer/indexer_datasource_product_configurable_product');
 
-        foreach ($configurableChildren as $child) {
-            $childPrice[] = $child['price'];
-
-            if ($child['stock']['is_in_stock']) {
-                $areChildInStock = 1;
-            }
-        }
-
-        $isInStock = $productDTO['stock']['is_in_stock'];
-
-        if (!$isInStock || !$areChildInStock) {
-            $productDTO['stock']['is_in_stock'] = false;
-            $productDTO['stock']['stock_status'] = 0;
-        }
-
-        if (!empty($childPrice)) {
-            $minPrice = min($childPrice);
-            $productDTO['price'] = $minPrice;
-            $productDTO['final_price'] = $minPrice;
-            $productDTO['regular_price'] = $minPrice;
-        }
-
-        return $productDTO;
+        return $prepareConfigurableProductModel->prepareConfigurableProduct($productDTO);
     }
 
     /**
@@ -345,7 +335,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      *
      * @return float|int
      */
-    private function calcSelectionPrice(array $priceInfo, $productPrice)
+    protected function calcSelectionPrice(array $priceInfo, $productPrice)
     {
         if ($priceInfo['is_percent']) {
             $ratio = floatval($priceInfo['pricing_value']) / 100;
@@ -364,7 +354,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      *
      * @return mixed
      */
-    private function loadChildrenRawAttributesInBatches($storeId, array $allChildren, array $requiredAttributes)
+    protected function loadChildrenRawAttributesInBatches($storeId, array $allChildren, array $requiredAttributes)
     {
         $requiredAttribute = array_unique($requiredAttributes);
         $childIds = [];
@@ -417,7 +407,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Configurable
      *
      * @return array
      */
-    private function filterData(array $productData)
+    protected function filterData(array $productData)
     {
         return $this->dataFilter->execute($productData, $this->childBlackListConfig);
     }

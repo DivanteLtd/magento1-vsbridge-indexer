@@ -6,7 +6,7 @@ use Divante_VueStorefrontIndexer_Model_Index_Mapping_Eav_Abstract as AbstractMap
 use Divante_VueStorefrontIndexer_Model_Index_Mapping_Generalmapping as GeneralMapping;
 
 /**
- * Class Divante_VueStorefrontIndexer_Model_Index_Mapping_Product
+ * Class Divante_VueStorefrontIndexer_Model_Index_Mapping_Review
  *
  * @package     Divante
  * @category    VueStoreFrontIndexer
@@ -16,32 +16,10 @@ use Divante_VueStorefrontIndexer_Model_Index_Mapping_Generalmapping as GeneralMa
  */
 class Divante_VueStorefrontIndexer_Model_Index_Mapping_Review implements MappingInterface
 {
-
-    /**
-     * @var string
-     */
-    private $type;
-
     /**
      * @var array
      */
     private $properties;
-
-    /**
-     * @inheritdoc
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
 
     /**
      * @inheritdoc

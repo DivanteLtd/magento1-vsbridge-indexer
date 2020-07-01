@@ -17,12 +17,12 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Media implem
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Media
      */
-    private $resource;
+    protected $resource;
 
     /**
      * @var Divante_VueStorefrontIndexer_Model_Data_Gallery
      */
-    private $galleryData;
+    protected $galleryData;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Links constructor.

@@ -9,23 +9,18 @@
  * @copyright   Copyright (C) 2018 Divante Sp. z o.o.
  * @license     See LICENSE_DIVANTE.txt for license details.
  */
-class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
+abstract class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
 {
 
     /**
      * @var Mage_Core_Model_Resource
      */
-    private $coreResource;
+    protected $coreResource;
 
     /**
      * @var Varien_Db_Adapter_Interface
      */
-    private $connection;
-
-    /**
-     * @var
-     */
-    private $attributeCollectionModel;
+    protected $connection;
 
     /**
      * @var array
@@ -35,30 +30,28 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
     /**
      * @var
      */
-    private $entityType;
-
-    /**
-     * @var
-     */
     private $valuesByEntityId;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav constructor.
-     *
-     * @param array $params
      */
-    public function __construct(array $params)
+    public function __construct()
     {
         $this->coreResource = Mage::getSingleton('core/resource');
         $this->connection = $this->coreResource->getConnection('read');
+    }
 
-        if (isset($params['entity_type'])) {
-            $this->entityType = $params['entity_type'];
-        }
+    /**
+     * @return array
+     */
+    abstract public function initAttributes();
 
-        if (isset($params['collection_model'])) {
-            $this->attributeCollectionModel = $params['collection_model'];
-        }
+    /**
+     * @return array
+     */
+    public function getAttributesById()
+    {
+        return $this->initAttributes();
     }
 
     /**
@@ -69,7 +62,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
      */
     public function loadAttributesData($storeId, array $entityIds, array $requiredAttributes = null)
     {
-        $this->getAttributesById();
+        $this->attributesById = $this->initAttributes();
         $tableAttributes = [];
         $attributeTypes = [];
         $selects = [];
@@ -93,6 +86,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
 
         if (!empty($selects)) {
             foreach ($selects as $select) {
+
                 $values = $this->connection->fetchAll($select);
                 $this->prepareValues($values);
             }
@@ -107,7 +101,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
      *
      * @return bool
      */
-    private function canReindex($attribute, $allowedAttributes)
+    protected function canReindex($attribute, $allowedAttributes)
     {
         if ($attribute->isStatic()) {
             return false;
@@ -125,7 +119,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
      *
      * @return array
      */
-    private function prepareValues(array $values)
+    protected function prepareValues(array $values)
     {
         foreach ($values as $value) {
             $entityId = $value['entity_id'];
@@ -143,17 +137,6 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
     }
 
     /**
-     * @return Mage_Eav_Model_Entity_Type
-     */
-    private function getEntityType()
-    {
-        /** @var Mage_Eav_Model_Entity_Type $entityType */
-        $entityType = Mage::getModel('eav/entity_type')->loadByCode($this->entityType);
-
-        return $entityType;
-    }
-
-    /**
      * Retrieve attributes load select
      *
      * @param int    $storeId
@@ -163,7 +146,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
      *
      * @return Varien_Db_Select
      */
-    private function getLoadAttributesSelect($storeId, $table, array $attributeIds, array $entityIds)
+    protected function getLoadAttributesSelect($storeId, $table, array $attributeIds, array $entityIds)
     {
         $joinStoreCondition = [
             't_default.entity_id=t_store.entity_id',
@@ -193,26 +176,5 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
             ->where('t_default.attribute_id IN (?)', $attributeIds);
 
         return $select;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAttributesById()
-    {
-        if (null === $this->attributesById) {
-            $this->attributesById = [];
-            $entityType = $this->getEntityType();
-
-            $attributes = Mage::getResourceModel($this->attributeCollectionModel)
-                ->setEntityTypeFilter($entityType->getEntityTypeId());
-
-            /** @var  $attribute */
-            foreach ($attributes as $attribute) {
-                $this->attributesById[$attribute->getAttributeId()] = $attribute;
-            }
-        }
-
-        return $this->attributesById;
     }
 }

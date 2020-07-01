@@ -19,30 +19,9 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Product extends AbstractM
 {
 
     /**
-     * @var string
-     */
-    private $type;
-
-    /**
      * @var array
      */
     private $properties;
-
-    /**
-     * @inheritdoc
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
 
     /**
      * @inheritdoc
@@ -106,7 +85,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Product extends AbstractM
     /**
      * @return array
      */
-    private function getCustomProperties()
+    public function getCustomProperties()
     {
         return [
             'attribute_set_id' => ['type' => FieldInterface::TYPE_LONG],

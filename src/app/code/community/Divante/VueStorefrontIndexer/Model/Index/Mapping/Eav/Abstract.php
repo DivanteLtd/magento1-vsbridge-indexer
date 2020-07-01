@@ -34,7 +34,7 @@ abstract class Divante_VueStorefrontIndexer_Model_Index_Mapping_Eav_Abstract
     /**
      * @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
      */
-    private $resourceModel;
+    protected $resourceModel;
 
     /**
      * @return string

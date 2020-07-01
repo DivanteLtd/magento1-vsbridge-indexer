@@ -221,6 +221,8 @@
                                 <category_data>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Categories</category_data>
                                 <price_data>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Prices</price_data>
                                 <media_gallery>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Media</media_gallery>
+                                <!--should be load last, or at least after attributes and configurable data has been loaded-->
+                                <meta_attributes>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Metaattributes</meta_attributes>
                             </datasources>
                         </product>
                         <cms_block>
@@ -291,6 +293,8 @@
             <indices_settings>
                 <batch_indexing_size>1000</batch_indexing_size>
                 <index_name>vue_storefront_magento</index_name>
+                <index_identifier>id</index_identifier>
+                <add_identifier_to_default>1</add_identifier_to_default>
                 <fields_limit>1000</fields_limit>
             </indices_settings>
             <redis_cache_settings>
@@ -302,6 +306,7 @@
             <catalog_settings>
                 <use_magento_url_keys>0</use_magento_url_keys>
                 <configurable_children_use_simple_price>0</configurable_children_use_simple_price>
+                <export_attributes_metadata>1</export_attributes_metadata>
             </catalog_settings>
         </vuestorefront>
     </default>

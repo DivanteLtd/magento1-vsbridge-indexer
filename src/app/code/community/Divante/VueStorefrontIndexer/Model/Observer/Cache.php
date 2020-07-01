@@ -17,15 +17,16 @@ class Divante_VueStorefrontIndexer_Model_Observer_Cache
     /**
      * @var Divante_VueStorefrontIndexer_Model_Cache_Settings
      */
-    private $settings;
+    protected $settings;
     /**
      * @var Divante_VueStorefrontIndexer_Model_Cache_Logger
      */
-    private $logger;
+    protected $logger;
+
     /**
      * @var array
      */
-    private $cacheTags = [
+    protected $cacheTags = [
         'category' => 'C',
         'product'  => 'P',
     ];
@@ -97,7 +98,7 @@ class Divante_VueStorefrontIndexer_Model_Observer_Cache
      *
      * @return string
      */
-    private function getCacheInvalidateUrl($type, array $ids)
+    protected function getCacheInvalidateUrl($type, array $ids)
     {
         $baseUrl = $this->getInvalidateCacheUrl();
         $params = $this->prepareParams($type, $ids);
@@ -109,7 +110,7 @@ class Divante_VueStorefrontIndexer_Model_Observer_Cache
     /**
      * @return string
      */
-    private function getInvalidateCacheUrl()
+    protected function getInvalidateCacheUrl()
     {
         $url = $this->settings->getVsfBaseUrl();
         $url .= sprintf('invalidate?key=%s&tag=', $this->settings->getInvalidateCacheKey());
@@ -123,7 +124,7 @@ class Divante_VueStorefrontIndexer_Model_Observer_Cache
      *
      * @return string
      */
-    private function prepareParams($type, array $ids)
+    protected function prepareParams($type, array $ids)
     {
         $params = '';
 

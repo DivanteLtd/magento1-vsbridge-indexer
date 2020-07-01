@@ -17,12 +17,12 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Media
     /**
      * @var Mage_Core_Model_Resource
      */
-    private $resource;
+    protected $resource;
 
     /**
      * @var Varien_Db_Adapter_Interface
      */
-    private $connection;
+    protected $connection;
 
     /**
      * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Links constructor.
@@ -49,7 +49,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Media
     /**
      * @return int
      */
-    private function getMediaGalleryAttributeId()
+    protected function getMediaGalleryAttributeId()
     {
         $attribute = Mage::getModel('eav/entity_attribute')
             ->loadByCode(Mage_Catalog_Model_Product::ENTITY, 'media_gallery');
@@ -63,7 +63,7 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Media
      *
      * @return Varien_Db_Select
      */
-    private function getLoadGallerySelect(array $productIds, $storeId)
+    protected function getLoadGallerySelect(array $productIds, $storeId)
     {
         $attributeId = $this->getMediaGalleryAttributeId();
         $adapter = $this->connection;

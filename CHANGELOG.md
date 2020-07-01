@@ -1,9 +1,17 @@
 ## [Unreleased]
 
+### Added
+- Add option label for configurable_options.values
+- Add option to export "attributes_metadata" for products. Only user defined attributes are exported by default.
+Sample: `docs/sample/attribute-metadata.json`
+More information here:  https://github.com/DivanteLtd/vue-storefront/pull/4001
+- Support for aliases
+
 ## [1.2.0] (2019.10.24)
 
 ### Fixes 
 - Export all tax rates ([#29](https://github.com/DivanteLtd/magento1-vsbridge-indexer/issues/29))
+- Wrong product-children website configurable prices when more than one website-price exists - @cewald (#46)
 
 ### Added
 - Export ratings for reviews

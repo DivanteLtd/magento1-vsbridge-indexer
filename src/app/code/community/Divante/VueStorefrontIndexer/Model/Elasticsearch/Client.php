@@ -21,7 +21,7 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Client
     /**
      * @var \Elasticsearch\Client|null
      */
-    private $esClient = null;
+    protected $esClient = null;
 
     /**
      * Divante_VueStorefrontIndexer_Model_ElasticSearch_Client constructor.
@@ -64,6 +64,32 @@ class Divante_VueStorefrontIndexer_Model_Elasticsearch_Client
     public function refreshIndex($indexName)
     {
         $this->esClient->indices()->refresh(['index' => $indexName]);
+    }
+
+    /**
+     * @param string $indexAlias
+     *
+     * @return array
+     */
+    public function getIndicesNameByAlias($indexAlias)
+    {
+        $indices = [];
+
+        try {
+            $indices = $this->esClient->indices()->getMapping(['index' => $indexAlias]);
+        } catch (\Elasticsearch\Common\Exceptions\Missing404Exception $e) {
+        }
+
+        return array_keys($indices);
+    }
+
+    /**
+     * @param array $aliasActions
+     * @return void
+     */
+    public function updateAliases(array $aliasActions)
+    {
+        $this->esClient->indices()->updateAliases(['body' => ['actions' => $aliasActions]]);
     }
 
     /**

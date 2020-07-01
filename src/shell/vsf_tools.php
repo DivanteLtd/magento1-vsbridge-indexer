@@ -66,12 +66,6 @@ class Divante_VueStorefrontIndexer_Tools extends Mage_Shell_Abstract
             case 'reindex':
                 $tools->reindex($storeId);
                 break;
-            case 'delete_indices':
-                /** @var Divante_VueStorefrontIndexer_Model_Tools_Index $indexTools */
-                $indexTools = Mage::getSingleton('vsf_indexer/tools_index');
-                $indexTools->deleteIndices();
-                echo "Indices has been deleted from ES. \n";
-                break;
             default:
                 echo $this->usageHelp();
                 break;
@@ -89,7 +83,6 @@ Usage:  php -f vsf_tools.php -- [options]
         --action <action_name>
                 full_reindex --store STORE_ID|OPTIONAL [--type categories|products|taxrules|attributes|cms_blocks|cms_pages|reviews]
                 reindex --store STORE_ID|OPTIONAL
-                delete_indices
 
 USAGE;
     }

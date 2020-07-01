@@ -54,10 +54,12 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
      * @var array
      */
     private $productsData;
+
     /**
      * @var
      */
     private $superAttributeOptions;
+
     /**
      * @var
      */
@@ -74,12 +76,32 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
     private $connection;
 
     /**
+     * @var int
+     */
+    private $storeId;
+
+    /**
      * Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Links constructor.
      */
     public function __construct()
     {
         $this->resource = Mage::getSingleton('core/resource');
         $this->connection = $this->resource->getConnection('read');
+    }
+
+    /**
+     * @param int $storeId
+     * @return self
+     */
+    public function setStoreId($storeId)
+    {
+        $this->storeId = $storeId;
+        return $this;
+    }
+
+    protected function getStore()
+    {
+        return Mage::app()->getStore($this->storeId);
     }
 
     /**
@@ -165,6 +187,8 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
      */
     private function getSuperAttributePricing(array $superAttributeId)
     {
+        $websiteId = $this->getStore()->getWebsite()->getId();
+
         $select = $this->connection->select()
             ->from(
                 $this->resource->getTableName('catalog/product_super_attribute_pricing'),
@@ -176,7 +200,8 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
                     'pricing_value',
                 ]
             )
-            ->where('product_super_attribute_id IN (?)', $superAttributeId);
+            ->where('product_super_attribute_id IN (?)', $superAttributeId)
+            ->where('website_id IN(?)', array($websiteId, 0));
 
         $attributes = $this->connection->fetchAssoc($select);
 
@@ -298,13 +323,12 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Configurable
      * the current product collection.
      * Array key is the configurable product
      *
-     * @param int $storeId
-     *
      * @return array
      */
-    public function getSimpleProducts($storeId)
+    public function getSimpleProducts()
     {
         if (null === $this->simpleProducts) {
+            $storeId = $this->getStore()->getId();
             $parentIds = $this->getConfigurableProductIds();
             /** @var Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product $resource */
             $resource = Mage::getModel('Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product');

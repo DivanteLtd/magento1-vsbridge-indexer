@@ -120,7 +120,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Attributes 
      *
      * @return array
      */
-    private function sortChildrenById(array $children)
+    protected function sortChildrenById(array $children)
     {
         $sortChildrenById = [];
 
@@ -138,7 +138,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Attributes 
      *
      * @return array
      */
-    private function plotTree(array $categories, $rootId)
+    protected function plotTree(array $categories, $rootId)
     {
         $return = [];
 
@@ -171,7 +171,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Attributes 
      *
      * @return array
      */
-    private function prepareCategory(array $categoryDTO)
+    protected function prepareCategory(array $categoryDTO)
     {
         $categoryDTO = $this->addSlug($categoryDTO);
         $categoryDTO['id'] = intval($categoryDTO['entity_id']);
@@ -189,7 +189,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Attributes 
      *
      * @return array
      */
-    private function addSlug(array $categoryDTO)
+    protected function addSlug(array $categoryDTO)
     {
         if ($this->settings->useMagentoUrlKeys()) {
             if (!isset($categoryDTO['url_key'])) {
@@ -215,7 +215,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Attributes 
      *
      * @return array
      */
-    private function filterData(array $categoryData)
+    protected function filterData(array $categoryData)
     {
         return $this->dataFilter->execute($categoryData, $this->fieldsToDelete);
     }
