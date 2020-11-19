@@ -120,12 +120,12 @@ abstract class Divante_VueStorefrontIndexer_Model_Index_Mapping_Eav_Abstract
 
         $type = FieldInterface::TYPE_TEXT;
 
-        if ($attribute->getBackendType() == 'int' || $attribute->getFrontendClass() == 'validate-digits') {
+        if ($attribute->getSourceModel() == 'eav/entity_attribute_source_boolean') {
+            $type = FieldInterface::TYPE_BOOLEAN;
+        } elseif ($attribute->getBackendType() == 'int' || $attribute->getFrontendClass() == 'validate-digits') {
             $type = FieldInterface::TYPE_LONG;
         } elseif ($attribute->getBackendType() == 'decimal' || $attribute->getFrontendClass() == 'validate-number') {
             $type = FieldInterface::TYPE_DOUBLE;
-        } elseif ($attribute->getSourceModel() == 'eav/entity_attribute_source_boolean') {
-            $type = FieldInterface::TYPE_BOOLEAN;
         } elseif ($attribute->getBackendType() == 'datetime') {
             $type = FieldInterface::TYPE_DATE;
         } elseif ($attribute->usesSource()) {
