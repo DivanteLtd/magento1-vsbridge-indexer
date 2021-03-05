@@ -4,7 +4,6 @@
         <Divante_VueStorefrontIndexer>
             <active>true</active>
             <codePool>community</codePool>
-            <depends></depends>
         </Divante_VueStorefrontIndexer>
     </modules>
 </config>

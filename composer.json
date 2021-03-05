@@ -1,6 +1,6 @@
 {
-    "name": "divante/magento1-bridge-indexer",
-    "license": "",
+    "name": "ambimax/magento-module-vsf-indexer",
+    "license": "MIT",
     "type": "magento-module",
     "description": "",
     "require": {
