@@ -11,6 +11,7 @@
  */
 abstract class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
 {
+    const BRAND_ATTRIBUTE_ID = 296 ;
 
     /**
      * @var Mage_Core_Model_Resource
@@ -55,7 +56,7 @@ abstract class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
     }
 
     /**
-     * @param int   $storeId
+     * @param int $storeId
      * @param array $entityIds
      *
      * @return array
@@ -116,20 +117,24 @@ abstract class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
 
     /**
      * @param array $values
-     *
-     * @return array
+     * @return mixed
+     * @throws Mage_Core_Exception
      */
     protected function prepareValues(array $values)
     {
         foreach ($values as $value) {
             $entityId = $value['entity_id'];
             $attribute = $this->attributesById[$value['attribute_id']];
+            if ($value['attribute_id'] == self::BRAND_ATTRIBUTE_ID) {
+                $value['value'] = $attribute->getSource()->getOptionText($value['value']);
+            }
 
             if ($attribute->getFrontendInput() === 'multiselect') {
                 $value['value'] = explode(',', $value['value']);
             }
 
             $attributeCode = $attribute->getAttributeCode();
+
             $this->valuesByEntityId[$entityId][$attributeCode] = $value['value'];
         }
 
@@ -139,10 +144,10 @@ abstract class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
     /**
      * Retrieve attributes load select
      *
-     * @param int    $storeId
+     * @param int $storeId
      * @param string $table
-     * @param array  $attributeIds
-     * @param array  $entityIds
+     * @param array $attributeIds
+     * @param array $entityIds
      *
      * @return Varien_Db_Select
      */
