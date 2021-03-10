@@ -42,7 +42,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Attributes i
 
     /**
      * @param array $indexData
-     * @param int   $storeId
+     * @param int $storeId
      *
      * @return array
      */

@@ -38,7 +38,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Product extends AbstractM
     {
         if (null === $this->properties) {
             $attributes = $this->getAttributes();
-            $attributesMapping  = [];
+            $attributesMapping = [];
 
             /** @var Attribute $attribute */
             foreach ($attributes as $attribute) {
@@ -53,6 +53,7 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Product extends AbstractM
             $generalMapping = Mage::getSingleton('vsf_indexer/index_mapping_generalmapping');
             $attributesMapping['stock']['properties'] = $generalMapping->getStockMapping();
             $attributesMapping['slug'] = ['type' => FieldInterface::TYPE_KEYWORD];
+            $attributesMapping['brand'] = ['type' => FieldInterface::TYPE_TEXT];
 
             $attributesMapping['media_gallery'] = [
                 'properties' => [
