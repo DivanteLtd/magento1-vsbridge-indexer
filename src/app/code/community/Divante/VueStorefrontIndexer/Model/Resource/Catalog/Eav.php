@@ -137,7 +137,6 @@ abstract class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Eav
             $this->valuesByEntityId[$entityId][$attributeCode] = $value['value'];
         }
 
-        Mage::log($this->valuesByEntityId,6,'blah1.log');
         return $this->valuesByEntityId;
     }
 
