@@ -69,6 +69,24 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product
     }
 
     /**
+     * @param int   $storeId
+     * @param string $id
+     *
+     * @return mixed
+     */
+    public function getProductById($storeId = 1, string $id)
+    {
+        $select = $this->connection->select()->from(['e' => $this->coreResource->getTableName('catalog/product')]);
+
+        $select->where('e.entity_id = (?)', $id);
+        $select = $this->addStatusFilter($select, $storeId);
+        $select = $this->addWebsiteFilter($select, $storeId);
+        $select = $this->addProductTypeFilter($select, $storeId);
+
+        return $this->connection->fetchAll($select)[0];
+    }
+
+    /**
      * @param array $parentIds
      * @param int $storeId
      *

@@ -81,7 +81,7 @@ class Divante_VueStorefrontIndexer_Tools extends Mage_Shell_Abstract
 Usage:  php -f vsf_tools.php -- [options]
 
         --action <action_name>
-                full_reindex --store STORE_ID|OPTIONAL [--type categories|products|taxrules|attributes|cms_blocks|cms_pages|reviews]
+                full_reindex --store STORE_ID|OPTIONAL [--type categories|products|taxrules|attributes|cms_blocks|cms_pages|reviews|salespromotion]
                 reindex --store STORE_ID|OPTIONAL
 
 USAGE;

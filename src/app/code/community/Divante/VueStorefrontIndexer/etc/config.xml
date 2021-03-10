@@ -244,6 +244,13 @@
                                 <ratings>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Review_Rating</ratings>
                             </datasources>
                         </review>
+                        <salespromotion>
+                            <mapping>Divante_VueStorefrontIndexer_Model_Index_Mapping_Salespromotion</mapping>
+                            <datasources>
+                                <transaction_key>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Transactionkey</transaction_key>
+                                <productdata>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Salespromotion_ProductData</productdata>
+                            </datasources>
+                        </salespromotion>
                     </types>
                 </vue_storefront_catalog>
             </indices_config>
@@ -270,6 +277,9 @@
                 <reviews>
                     <class>Divante_VueStorefrontIndexer_Model_Indexer_Reviews</class>
                 </reviews>
+                <salespromotion>
+                    <class>Divante_VueStorefrontIndexer_Model_Indexer_Salespromotion</class>
+                </salespromotion>
                 <!--indexers used for partial data update-->
                 <product_categories><!--only update product categories-->
                     <class>Divante_VueStorefrontIndexer_Model_Indexer_Productcategories</class>
