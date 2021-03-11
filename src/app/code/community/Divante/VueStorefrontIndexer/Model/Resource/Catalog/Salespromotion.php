@@ -65,4 +65,27 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Salespromotion
 
         return $this->connection->fetchAll($select);
     }
+
+    /**
+     * Get promotions for the given products.
+     *
+     * @param int   $storeId
+     * @param array $productIds
+     *
+     * @return array
+     */
+    public function getPromotionsForProducts($storeId = 1, array $productIds = [])
+    {
+        $select = $this->connection->select()->from(['e' => $this->coreResource->getTableName('delphin_salespromotion/weekly_product')]);
+        $select->where('e.product_id IN (?)', $productIds);
+
+        $promotions = $this->connection->fetchAll($select);
+        $result = [];
+
+        foreach ($promotions as $promotion) {
+            $result[$promotion['product_id']] = $promotion;
+        }
+
+        return $result;
+    }
 }

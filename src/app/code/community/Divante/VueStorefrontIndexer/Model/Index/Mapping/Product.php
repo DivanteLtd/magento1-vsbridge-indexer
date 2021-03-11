@@ -152,6 +152,9 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Product extends AbstractM
                     ],
                 ],
             ],
+            'salespromotion_sold_amount' => [
+                'type' => FieldInterface::TYPE_INTEGER
+            ]
         ];
     }
 }

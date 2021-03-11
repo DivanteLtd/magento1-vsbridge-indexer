@@ -223,6 +223,7 @@
                                 <media_gallery>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Media</media_gallery>
                                 <!--should be load last, or at least after attributes and configurable data has been loaded-->
                                 <meta_attributes>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Metaattributes</meta_attributes>
+                                <productdata>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Salespromotion_ProductSoldAmount</productdata>
                             </datasources>
                         </product>
                         <cms_block>
