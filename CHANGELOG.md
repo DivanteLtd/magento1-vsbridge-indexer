@@ -1,3 +1,11 @@
+# [1.4.0](https://github.com/ambimax/magento-module-vsf-indexer/compare/1.3.2...1.4.0) (2021-03-11)
+
+
+### Features
+
+* **DELPHIN-1480:** Add `salespromotion` index action ([941abab](https://github.com/ambimax/magento-module-vsf-indexer/commit/941ababe7a358be0a91c13d6063d0e6ecac5610c))
+* **DELPHIN-1480:** Products in the index now contain a new `salespromotion_sold_amount` property used by the salespromotion ([2a64de6](https://github.com/ambimax/magento-module-vsf-indexer/commit/2a64de6893a9c163c40856b3b6a5d5dfda338221))
+
 # 1.0.0 (2021-03-11)
 
 
