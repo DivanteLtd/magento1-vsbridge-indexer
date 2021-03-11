@@ -1,4 +1,6 @@
 {
+    "branches": ["master", { "name": "pre", "pre": true }],
+    "tagFormat": "${version}",
     "plugins": [
         "@semantic-release/commit-analyzer",
         "@semantic-release/release-notes-generator",
@@ -22,6 +24,5 @@
                 "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
             }
         ]
-    ],
-    "branches": ["master", { "name": "pre", "pre": true }]
+    ]
 }
