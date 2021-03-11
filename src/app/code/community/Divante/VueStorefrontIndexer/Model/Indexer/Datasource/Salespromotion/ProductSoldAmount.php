@@ -34,9 +34,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Salespromotion_Produ
         $promotions = $this->resourceModel->getPromotionsForProducts($storeId, $productIds);
 
         foreach ($indexData as $productId => $product) {
-            $indexData[$productId]['salespromotion_sold_amount'] = $promotions[$productId]['sold_amount'];
-            var_dump($productId);
-            var_dump($promotions);
+            $indexData[$productId]['salespromotion_sold_amount'] = $promotions[$productId]['sold_amount'] ?? 0;
         }
 
         return $indexData;
