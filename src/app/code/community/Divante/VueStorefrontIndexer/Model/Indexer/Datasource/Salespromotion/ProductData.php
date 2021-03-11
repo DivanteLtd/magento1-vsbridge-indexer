@@ -54,7 +54,6 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Salespromotion_Produ
             }
 
             if (!array_key_exists($productId, $productsById)) {
-                // print("$productId\n");
                 $productsById[$productId] = $indexData[$promotionId]['product'] = [
                     'entity_id' => $productId
                 ];
