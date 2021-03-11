@@ -6,10 +6,11 @@
     "require": {
         "magento-hackathon/magento-composer-installer": "*"
     },
-    "authors":[
+    "authors": [
         {
-            "name":"Agata Firlejczyk",
-            "email":"afirlejczyk@divante.pl"
+            "name": "Agata Firlejczyk",
+            "email": "afirlejczyk@divante.pl"
         }
-    ]
+    ],
+    "version": "1.0.0"
 }

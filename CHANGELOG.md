@@ -1,3 +1,10 @@
+# 1.0.0 (2021-03-11)
+
+
+### Bug Fixes
+
+* The install script doesn't crash anymore when run twice ([4f81b91](https://github.com/ambimax/magento-module-vsf-indexer/commit/4f81b91a22c44f6f04a339e1d9181344ed0e108c))
+
 ## [Unreleased]
 
 ### Added
