@@ -25,12 +25,18 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Media implem
     protected $galleryData;
 
     /**
+     * @var Ambimax_LazyCatalogImages_Model_Catalog_Image
+     */
+    protected $_lazyCatalog;
+
+    /**
      * Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Links constructor.
      */
     public function __construct()
     {
         $this->resource = Mage::getResourceModel('vsf_indexer/catalog_product_media');
         $this->galleryData = Mage::getModel('vsf_indexer/data_gallery');
+        $this->_lazyCatalog = Mage::getModel('ambimax_lazycatalogimages/catalog_image');
     }
 
     /**
@@ -44,9 +50,33 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Media implem
         $galleryPerProduct = $this->galleryData->prepareMediaGallery($gallerySet);
 
         foreach ($galleryPerProduct as $productId => $mediaGallery) {
-            $indexData[$productId]['media_gallery'] = $mediaGallery;
+            $indexData[$productId]['media_gallery'] = $this->applyLazyCatalogSettings($mediaGallery);
         }
 
         return $indexData;
+    }
+
+    protected function applyLazyCatalogSettings(array $mediaGallery): array
+    {
+        foreach ($mediaGallery as $i => $item) {
+            $imageName = $this->getImageNameByPath($item);
+
+            $mediaGallery[$i]['image'] = $this->_lazyCatalog
+                ->setHeight(0)
+                ->setWidth(0)
+                ->setImagePath($item['image'])
+                ->setImageName($imageName)
+                ->getImageUrl();
+        }
+
+        return $mediaGallery;
+    }
+
+    protected function getImageNameByPath(array $item): string
+    {
+        // e. g. $item == '/Hund/Bilder/547334_2.jpg'
+        $arr = explode('/', $item['image']);
+        // get string from last '/' to next '.'
+        return explode('.', array_pop($arr))[0];
     }
 }
