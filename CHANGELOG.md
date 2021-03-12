@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/ambimax/magento-module-vsf-indexer/compare/1.4.0...1.5.0) (2021-03-12)
+
+
+### Features
+
+* **DELPHIN-1481:** Apply LazyCatalog to all images ([792372a](https://github.com/ambimax/magento-module-vsf-indexer/commit/792372ac7f00e205dc61f3993ce5e8577a0df7b0))
+
 # [1.4.0](https://github.com/ambimax/magento-module-vsf-indexer/compare/1.3.2...1.4.0) (2021-03-11)
 
 
