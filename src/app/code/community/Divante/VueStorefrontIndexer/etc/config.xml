@@ -207,6 +207,7 @@
                                 <attributes_data>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Attributes</attributes_data>
                                 <grid_per_page>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Gridperpage</grid_per_page>
                                 <transaction_key>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Transactionkey</transaction_key>
+                                <image_data>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Category_Images</image_data>
                             </datasources>
                         </category>
                         <product>
@@ -224,6 +225,7 @@
                                 <!--should be load last, or at least after attributes and configurable data has been loaded-->
                                 <meta_attributes>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Metaattributes</meta_attributes>
                                 <productdata>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Salespromotion_ProductSoldAmount</productdata>
+                                <image_data>Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Images</image_data>
                             </datasources>
                         </product>
                         <cms_block>
