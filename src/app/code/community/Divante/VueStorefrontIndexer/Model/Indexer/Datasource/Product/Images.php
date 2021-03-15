@@ -16,9 +16,7 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Images imple
     public function __construct()
     {
         $this->_lazyCatalog = Mage::getModel('ambimax_lazycatalogimages/catalog_image');
-        $this->_lazyCatalog
-            ->setHeight(180)
-            ->setWidth(180);
+        $this->_lazyCatalog;
     }
 
     /**
@@ -40,6 +38,8 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Images imple
             $indexData[$productId]['thumbnail'] = $this->_lazyCatalog
                 ->setImagePath($product['thumbnail'])
                 ->setImageName($product['name'])
+                ->setHeight(180)
+                ->setWidth(180)
                 ->getImageUrl();
         }
         return $indexData;
