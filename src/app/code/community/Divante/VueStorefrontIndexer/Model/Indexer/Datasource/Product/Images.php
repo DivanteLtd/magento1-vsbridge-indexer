@@ -30,10 +30,14 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Images imple
             $indexData[$productId]['image'] = $this->_lazyCatalog
                 ->setImagePath($product['image'])
                 ->setImageName($product['name'])
+                ->setHeight(0)
+                ->setWidth(0)
                 ->getImageUrl();
             $indexData[$productId]['small_image'] = $this->_lazyCatalog
                 ->setImagePath($product['small_image'])
                 ->setImageName($product['name'])
+                ->setHeight(0)
+                ->setWidth(0)
                 ->getImageUrl();
             $indexData[$productId]['thumbnail'] = $this->_lazyCatalog
                 ->setImagePath($product['thumbnail'])
