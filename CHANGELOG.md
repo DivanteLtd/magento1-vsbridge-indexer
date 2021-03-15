@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/ambimax/magento-module-vsf-indexer/compare/1.5.0...1.5.1) (2021-03-15)
+
+
+### Bug Fixes
+
+* **DELPHIN-1481:** Fix thumbnail image in products ([55cc5dc](https://github.com/ambimax/magento-module-vsf-indexer/commit/55cc5dcf609315a290750fd3d595d79076f23a39))
+
 # [1.5.0](https://github.com/ambimax/magento-module-vsf-indexer/compare/1.4.0...1.5.0) (2021-03-12)
 
 
