@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/ambimax/magento-module-vsf-indexer/compare/1.5.1...1.5.2) (2021-03-15)
+
+
+### Bug Fixes
+
+* Fix original image sizes ([8791c93](https://github.com/ambimax/magento-module-vsf-indexer/commit/8791c93bac70236075b7006dc9e99af08274bff4))
+
 ## [1.5.1](https://github.com/ambimax/magento-module-vsf-indexer/compare/1.5.0...1.5.1) (2021-03-15)
 
 
