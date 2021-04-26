@@ -66,9 +66,11 @@ class Divante_VueStorefrontIndexer_Model_Index_Mapping_Product extends AbstractM
 
             $attributesMapping['final_price'] = ['type' => FieldInterface::TYPE_DOUBLE];
             $attributesMapping['regular_price'] = ['type' => FieldInterface::TYPE_DOUBLE];
+            
+            $attributesMapping['sortierung'] = ['type' => FieldInterface::TYPE_INTEGER];
 
             $properties = $this->getCustomProperties();
-
+            
             $properties = array_merge($properties, $attributesMapping);
             $properties = array_merge($properties, $generalMapping->getCommonProperties());
 
