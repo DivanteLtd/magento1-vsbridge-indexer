@@ -1,3 +1,10 @@
+## [1.5.3](https://github.com/ambimax/magento-module-vsf-indexer/compare/1.5.2...1.5.3) (2021-04-26)
+
+
+### Bug Fixes
+
+* **DELPHIN-1481:** Added sortierung field to es mappings ([3741661](https://github.com/ambimax/magento-module-vsf-indexer/commit/3741661e2cb9d8274d8c997a37f3ee46d588314a))
+
 ## [1.5.2](https://github.com/ambimax/magento-module-vsf-indexer/compare/1.5.1...1.5.2) (2021-03-15)
 
 
