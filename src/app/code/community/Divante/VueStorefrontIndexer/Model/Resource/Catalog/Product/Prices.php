@@ -50,6 +50,8 @@ class Divante_VueStorefrontIndexer_Model_Resource_Catalog_Product_Prices
                     'entity_id',
                     'price',
                     'final_price',
+                    'min_price',
+                    'max_price'
                 ]
             )
             ->where('p.customer_group_id = 0')

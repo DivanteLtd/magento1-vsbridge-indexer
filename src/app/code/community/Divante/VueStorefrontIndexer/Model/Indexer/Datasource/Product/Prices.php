@@ -51,6 +51,8 @@ class Divante_VueStorefrontIndexer_Model_Indexer_Datasource_Product_Prices imple
             $productId = $priceDataRow['entity_id'];
             $indexData[$productId]['final_price'] = $priceDataRow['final_price'];
             $indexData[$productId]['regular_price'] = $priceDataRow['price'];
+            $indexData[$productId]['min_price'] = $priceDataRow['min_price'];
+            $indexData[$productId]['max_price'] = $priceDataRow['max_price'];
         }
 
         return $this->applyTierGroupPrices($indexData, $storeId);
